@@ -8,9 +8,7 @@ public class TreeCreator {
 	public TreeCreator() {
 
 		Node root = new Node(null);
-
-		Node activeNode = root;
-
+		
 		createTree(root, treeDepth, maxBranches);
 
 	}
