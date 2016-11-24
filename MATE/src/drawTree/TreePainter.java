@@ -12,6 +12,7 @@ import org.abego.treelayout.util.DefaultConfiguration;
 
 import tree.Node;
 import tree.TreeCreator;
+import tree.TreeCreator.treeTypes;
 
 public class TreePainter {
 
@@ -31,7 +32,8 @@ public class TreePainter {
 		//create a new tree
 
 		Node root= new Node(null);
-		TreeCreator.addTree(root, 20, 4);
+		TreeCreator creator = new TreeCreator();
+		creator.addTree(root);
 		
 		TreeForTreeLayout treeForLayout = new TreeForTreeLayout(root);
 			
@@ -51,6 +53,7 @@ public class TreePainter {
 		// Create a panel that draws the nodes and edges and show the panel
 		TextInBoxTreePane panel = new TextInBoxTreePane(treeLayout);
 		showInDialog(panel);
+
 	}
 	
 }
