@@ -6,10 +6,10 @@ import java.util.Random;
 
 public class TreeCreator {
 
-	private int maxTreeDepth = 10;
-	private int minTreeDepth=5;
+	private int maxTreeDepth = 50;
+	private int minTreeDepth=20;
 	private int maxBranches = 5;
-	private int minBranches = 0;
+	private int minBranches = 1;
 	private Random numberGenerator = new Random();
 
 	public enum treeTypes {

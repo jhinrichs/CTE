@@ -7,13 +7,13 @@ public class NodeExtentProvider<Node> implements org.abego.treelayout.NodeExtent
 	@Override
 	public double getHeight(Node node) {
 		// TODO Auto-generated method stub
-		return 2;
+		return 5;
 	}
 
 	@Override
 	public double getWidth(Node node) {
 		// TODO Auto-generated method stub
-		return 2;
+		return 5;
 	}
 
 }

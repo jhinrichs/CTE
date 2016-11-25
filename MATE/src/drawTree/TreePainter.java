@@ -1,15 +1,18 @@
 package drawTree;
 
+import java.awt.Color;
 import java.awt.Container;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JPanel;
 import javax.swing.tree.TreeNode;
 
 import org.abego.treelayout.TreeLayout;
 import org.abego.treelayout.util.DefaultConfiguration;
 
+import gui.GuiBuilder;
 import tree.Node;
 import tree.TreeCreator;
 import tree.TreeCreator.treeTypes;
@@ -24,16 +27,11 @@ public class TreePainter {
 		contentPane.add(panel);
 		dialog.pack();
 		dialog.setLocationRelativeTo(null);
-		dialog.setVisible(true);
+		dialog.setVisible(true);		
 	}
 	
-	public static void main(String args[]){
+	public void drawTree(Node root, JPanel panel2){
 
-		//create a new tree
-
-		Node root= new Node(null);
-		TreeCreator creator = new TreeCreator();
-		creator.addTree(root);
 		
 		TreeForTreeLayout treeForLayout = new TreeForTreeLayout(root);
 			
@@ -52,7 +50,16 @@ public class TreePainter {
 		
 		// Create a panel that draws the nodes and edges and show the panel
 		TextInBoxTreePane panel = new TextInBoxTreePane(treeLayout);
-		showInDialog(panel);
+		showInDialog(panel, panel2);
+//		showInDialog(panel);
+		
+		
+
+	}
+
+	private void showInDialog(TextInBoxTreePane panel, JPanel panel2) {
+
+		panel2.add(panel);
 
 	}
 	
