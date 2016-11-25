@@ -7,6 +7,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.tree.TreeNode;
 
 import org.abego.treelayout.TreeLayout;
@@ -38,7 +39,7 @@ public class TreePainter {
 		
 		// setup the tree layout configuration
 		double gapBetweenLevels = 10;
-		double gapBetweenNodes = 2;
+		double gapBetweenNodes = 5;
 		DefaultConfiguration<Node> configuration = new DefaultConfiguration<Node>(
 				gapBetweenLevels, gapBetweenNodes);
 		
@@ -61,6 +62,37 @@ public class TreePainter {
 
 		panel2.add(panel);
 
+	}
+
+	public void drawTree(Node root, JScrollPane scrollPane) {
+		// TODO Auto-generated method stub
+
+		
+		TreeForTreeLayout treeForLayout = new TreeForTreeLayout(root);
+			
+		
+		// setup the tree layout configuration
+		double gapBetweenLevels = 10;
+		double gapBetweenNodes = 2;
+		DefaultConfiguration<Node> configuration = new DefaultConfiguration<Node>(
+				gapBetweenLevels, gapBetweenNodes);
+		
+		// create the NodeExtentProvider for TextInBox nodes
+		NodeExtentProvider<Node> nodeExtentProvider = new NodeExtentProvider<Node>();
+		
+		
+		TreeLayout<Node> treeLayout = new TreeLayout<Node>(treeForLayout, nodeExtentProvider, configuration);
+		
+		// Create a panel that draws the nodes and edges and show the panel
+		TextInBoxTreePane panel = new TextInBoxTreePane(treeLayout);
+		showInDialog(panel, scrollPane);
+//		showInDialog(panel);
+		
+	}
+
+	private void showInDialog(TextInBoxTreePane panel, JScrollPane scrollPane) {
+		// TODO Auto-generated method stub
+		scrollPane.add(panel);
 	}
 	
 }

@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 import java.awt.Color;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JInternalFrame;
 import java.awt.Component;
@@ -30,10 +31,39 @@ import java.awt.event.KeyEvent;
 import javax.swing.BoxLayout;
 import java.awt.SystemColor;
 import javax.swing.border.MatteBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.JScrollPane;
+import javax.swing.JSlider;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
+import java.awt.event.MouseEvent;
+import javax.swing.JTextPane;
+import javax.swing.JLabel;
+import java.awt.GridLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import java.awt.CardLayout;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.RowSpec;
+import net.miginfocom.swing.MigLayout;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 
 public class GuiBuilder {
 
 	private JFrame frame;
+	private ArrayList<JPanel> treeComponents = new ArrayList<>();
+	private JTextField textField;
+	private JTextField textField_1;
+	private JTextField textField_2;
+	private JTextField textField_3;
+	private JTextField textField_4;
+	private JTextField textField_5;
+	private JTextField textField_6;
 
 	/**
 	 * Launch the application.
@@ -66,11 +96,7 @@ public class GuiBuilder {
 		frame.setBounds(100, 100, 1024, 720);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-
 		JPanel panel = new JPanel();
-		panel.setBounds(153, 11, 845, 659);
-		frame.getContentPane().add(panel);
-
 		JButton btnCreateTree = new JButton("create tree");
 		btnCreateTree.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -81,150 +107,226 @@ public class GuiBuilder {
 
 			}
 		});
-		btnCreateTree.setBounds(26, 346, 89, 23);
+		btnCreateTree.setBounds(29, 528, 101, 23);
 		frame.getContentPane().add(btnCreateTree);
 
-		TextField textField = new TextField();
+		JPanel standartTree = createTypeSelectionPanel("Standard Tree", "Creates a standart Tree", 6, 10);
+		treeComponents.add(standartTree);
 
-		TextField textField_1 = new TextField();
-		TextField textField_2 = new TextField();
+		JPanel fanTree = createTypeSelectionPanel("FanTree",
+				"When enabled the tree will contain some Nodes that have a lot of leaves", 6, 60);
+		treeComponents.add(fanTree);
 
-		JProgressBar progressBar = new JProgressBar();
-		JProgressBar progressBar_1 = new JProgressBar();
-		JProgressBar progressBar_2 = new JProgressBar();
+		JPanel snakeTree = createTypeSelectionPanel("SnakeTree",
+				"When enabled the tree will have a snakes with just one child per node", 6, 110);
+		treeComponents.add(snakeTree);
 
-		textField.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent arg0) {
-				System.out.println("Text Changed");
-				if (!textField.getText().isEmpty() && textField.getText().chars().allMatch(Character::isDigit)) {
-					progressBar.setValue(Integer.parseInt(textField.getText()));
-					frame.repaint();
-				}
-			}
-		});
+		// for design purpose only
+		frame.getContentPane().add(snakeTree);
 
-		textField.setText("50");
-		textField.setBounds(101, 97, 31, 22);
-		frame.getContentPane().add(textField);
+		for (JPanel p : treeComponents) {
+			frame.getContentPane().add(p);
+		}
 
-		textField_1.setEditable(false);
-		textField_1.setEnabled(false);
-		textField_1.setText("30");
-		textField_1.setBounds(101, 145, 31, 22);
-		frame.getContentPane().add(textField_1);
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(156, 11, 842, 659);
+		frame.getContentPane().add(scrollPane);
 
-		progressBar.setStringPainted(true);
-		progressBar.setValue(50);
-		progressBar.setBounds(6, 124, 126, 14);
-		frame.getContentPane().add(progressBar);
-
-		progressBar_1.setStringPainted(true);
-		progressBar_1.setBounds(6, 172, 124, 14);
-		frame.getContentPane().add(progressBar_1);
-
-		progressBar_2.setStringPainted(true);
-		progressBar_2.setBounds(6, 223, 126, 14);
-		frame.getContentPane().add(progressBar_2);
-
-		textField_2.setEnabled(false);
-		textField_2.setEditable(false);
-		textField_2.setBounds(101, 193, 31, 22);
+		scrollPane.setViewportView(panel);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBackground(SystemColor.controlHighlight);
+		panel_1.setBounds(6, 164, 140, 171);
+		frame.getContentPane().add(panel_1);
+		panel_1.setLayout(null);
+		
+		JTextPane txtpnSeed = new JTextPane();
+		txtpnSeed.setOpaque(false);
+		txtpnSeed.setText("Seed");
+		txtpnSeed.setBounds(10, 31, 120, 20);
+		panel_1.add(txtpnSeed);
+		
+		textField = new JTextField();
+		textField.setText("0815");
+		textField.setBounds(10, 50, 120, 20);
+		panel_1.add(textField);
+		textField.setColumns(10);
+		
+		JTextPane txtpnTreeSpecifications = new JTextPane();
+		txtpnTreeSpecifications.setBackground(SystemColor.info);
+		txtpnTreeSpecifications.setText("Tree specifications");
+		txtpnTreeSpecifications.setBounds(10, 0, 120, 20);
+		panel_1.add(txtpnTreeSpecifications);
+		
+		JTextPane txtpnMaxNodes = new JTextPane();
+		txtpnMaxNodes.setText("Max Nodes");
+		txtpnMaxNodes.setOpaque(false);
+		txtpnMaxNodes.setBounds(10, 78, 120, 20);
+		panel_1.add(txtpnMaxNodes);
+		
+		textField_1 = new JTextField();
+		textField_1.setText("1000");
+		textField_1.setColumns(10);
+		textField_1.setBounds(10, 97, 120, 20);
+		panel_1.add(textField_1);
+		
+		JTextPane txtpnChaosfactor = new JTextPane();
+		txtpnChaosfactor.setText("Chaosfactor");
+		txtpnChaosfactor.setOpaque(false);
+		txtpnChaosfactor.setBounds(10, 121, 120, 20);
+		panel_1.add(txtpnChaosfactor);
+		
+		textField_6 = new JTextField();
+		textField_6.setText("1000");
+		textField_6.setColumns(10);
+		textField_6.setBounds(10, 140, 120, 20);
+		panel_1.add(textField_6);
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setLayout(null);
+		panel_2.setBackground(SystemColor.controlHighlight);
+		panel_2.setBounds(6, 346, 140, 171);
+		frame.getContentPane().add(panel_2);
+		
+		JTextPane txtpnMaxChildren = new JTextPane();
+		txtpnMaxChildren.setText("max Children");
+		txtpnMaxChildren.setOpaque(false);
+		txtpnMaxChildren.setBounds(10, 31, 120, 20);
+		panel_2.add(txtpnMaxChildren);
+		
+		textField_3 = new JTextField();
+		textField_3.setText("5");
+		textField_3.setColumns(10);
+		textField_3.setBounds(10, 50, 120, 20);
+		panel_2.add(textField_3);
+		
+		JTextPane txtpnNodeSpecification = new JTextPane();
+		txtpnNodeSpecification.setText("Node specification");
+		txtpnNodeSpecification.setBackground(SystemColor.info);
+		txtpnNodeSpecification.setBounds(10, 0, 120, 20);
+		panel_2.add(txtpnNodeSpecification);
+		
+		JTextPane txtpnPlaceholder = new JTextPane();
+		txtpnPlaceholder.setText("Placeholder");
+		txtpnPlaceholder.setOpaque(false);
+		txtpnPlaceholder.setBounds(10, 78, 120, 20);
+		panel_2.add(txtpnPlaceholder);
+		
+		textField_4 = new JTextField();
+		textField_4.setText("1000");
+		textField_4.setColumns(10);
+		textField_4.setBounds(10, 97, 120, 20);
+		panel_2.add(textField_4);
+		
+		JTextPane txtpnPlaceholder_1 = new JTextPane();
+		txtpnPlaceholder_1.setText("Placeholder");
+		txtpnPlaceholder_1.setOpaque(false);
+		txtpnPlaceholder_1.setBounds(10, 121, 120, 20);
+		panel_2.add(txtpnPlaceholder_1);
+		
+		textField_5 = new JTextField();
+		textField_5.setText("0815");
+		textField_5.setColumns(10);
+		textField_5.setBounds(10, 140, 120, 20);
+		panel_2.add(textField_5);
+		
+		JTextPane txtpnTreecode = new JTextPane();
+		txtpnTreecode.setBounds(10, 631, 120, 20);
+		frame.getContentPane().add(txtpnTreecode);
+		txtpnTreecode.setText("TreeCode");
+		txtpnTreecode.setOpaque(false);
+		
+		textField_2 = new JTextField();
+		textField_2.setBounds(10, 650, 120, 20);
 		frame.getContentPane().add(textField_2);
-		textField_2.setText("20");
+		textField_2.setBackground(SystemColor.menu);
+		textField_2.setText("0815");
+		textField_2.setColumns(10);
 
-		JCheckBox chckbxStandartTree = new JCheckBox("Standart Tree");
-		chckbxStandartTree.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				boolean selected = chckbxStandartTree.isSelected();
-				textField.setEnabled(selected);
-				textField.setEditable(selected);
-			}
-		});
-
-		JCheckBox chckbxSnakeTrees = new JCheckBox("Snake Trees");
-		chckbxSnakeTrees.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				boolean selected = chckbxSnakeTrees.isSelected();
-				textField_1.setEnabled(selected);
-				textField_1.setEditable(selected);
-			}
-		});
-		chckbxSnakeTrees.setToolTipText("When enabled the tree will contain more parts with only one child per Node");
-
-		chckbxSnakeTrees.setBounds(6, 145, 97, 23);
-		frame.getContentPane().add(chckbxSnakeTrees);
-
-		JCheckBox chckbxFanTree = new JCheckBox("Fan Trees");
-		chckbxFanTree.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				boolean selected = chckbxFanTree.isSelected();
-				textField_2.setEnabled(selected);
-				textField_2.setEditable(selected);
-			}
-		});
-		chckbxFanTree.setToolTipText("when enabled the tree will contain some Nodes that have a lot of leaves");
-		chckbxFanTree.setBounds(6, 193, 89, 23);
-		frame.getContentPane().add(chckbxFanTree);
-
-		chckbxStandartTree.setSelected(true);
-		chckbxStandartTree.setBounds(6, 97, 97, 23);
-		frame.getContentPane().add(chckbxStandartTree);
-		
-
-		JPanel standartTree = createTypeSelectionPanel("Standard Tree", "Creates a standart Tree");
-		
-		
 	}
 
-	private JPanel createTypeSelectionPanel(String name, String tooltip) {
+	private JPanel createTypeSelectionPanel(String name, String tooltip, int posX, int posY) {
 		JPanel testSelection = new JPanel();
 		testSelection.setBorder(new MatteBorder(2, 2, 2, 2, (Color) null));
-		
+
 		testSelection.setBackground(SystemColor.controlHighlight);
-		testSelection.setBounds(6, 271, 140, 53);
-		frame.getContentPane().add(testSelection);
+		testSelection.setBounds(posX, posY, 140, 50);
 		testSelection.setLayout(null);
-		
-		JCheckBox chckbx = new JCheckBox(name);
-		chckbx.setOpaque(false);
-		
-		chckbx.setToolTipText(tooltip);
-		chckbx.setBounds(8, 3, 89, 23);
-		testSelection.add(chckbx);
-		
+
+		JTextPane title = new JTextPane();
+		title.setOpaque(false);
+		title.setText(name);
+		title.setToolTipText(tooltip);
+		title.setBounds(8, 3, 89, 23);
+		testSelection.add(title, 0);
+
 		TextField percentage = new TextField();
 		percentage.setText("0");
-		percentage.setEnabled(false);
 		percentage.setEditable(false);
-		percentage.setBounds(95, 5, 31, 22);
-		testSelection.add(percentage);
-		
-		JProgressBar percentageBar = new JProgressBar();
-		percentageBar.setValue(0);
-		percentageBar.setStringPainted(true);
-		percentageBar.setBounds(10, 30, 120, 14);
-		testSelection.add(percentageBar);
-		
-		
-		chckbx.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				boolean selected = chckbx.isSelected();
-				percentage.setEnabled(selected);
-				percentage.setEditable(selected);
+		percentage.setBounds(95, 5, 38, 22);
+		testSelection.add(percentage, 1);
+
+		JSlider slider = new JSlider();
+		slider.addMouseMotionListener(new MouseMotionListener() {
+
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				// TODO Auto-generated method stub
+				updatePercentage(slider);
 			}
 		});
-		
-		percentage.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent arg0) {
-				if (!percentage.getText().isEmpty() && percentage.getText().chars().allMatch(Character::isDigit)) {
-					percentageBar.setValue(Integer.parseInt(percentage.getText()));
-					frame.repaint();
+		slider.setBounds(8, 32, 118, 7);
+		slider.setOpaque(false);
+		testSelection.add(slider, 2);
+		slider.getValue();
+
+		return testSelection;
+	}
+
+	/**
+	 * calculates the percentage for all treeTypes and displayes it 
+	 * @param s
+	 */
+	private void updatePercentage(JSlider s) {
+		int sum = 0;
+
+		int threshold=0;
+		for (JPanel p : treeComponents) {
+			JSlider slide = (JSlider) p.getComponent(2);
+			threshold += slide.getValue();
+		}
+		if (threshold >= 102 || threshold<=98) {
+			for (JPanel p : treeComponents) {
+				JSlider slide = (JSlider) p.getComponent(2);
+				if (!slide.equals(s)) {
+
+					sum += slide.getValue();
 				}
 			}
-		});
-		
-		return testSelection;
+			System.out.println("sum = " + sum);
+			for (JPanel p : treeComponents) {
+				TextField text = (TextField) p.getComponent(1);
+				JSlider slide = (JSlider) p.getComponent(2);
+				if (!slide.equals(s)) {
+
+					if (sum == 0) {
+						slide.setValue(Math.round(((float) 100 - (float) s.getValue()) / (float) 2));
+					} else {
+						slide.setValue(
+								Math.round(((float) slide.getValue() / (float) sum * (float) (100 - s.getValue()))));
+					}
+					System.out.println("value after " + slide.getValue());
+				}
+				text.setText(slide.getValue() + "%");
+
+			}
+		}
+
 	}
 }
