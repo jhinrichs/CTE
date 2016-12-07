@@ -48,6 +48,7 @@ public class TreeCreator {
 		typesForTree = new ArrayList<treeTypes>();
 		typesForTree.add(treeTypes.standardTree);
 		typesForTree.add(treeTypes.snakeTree);
+		//test
 
 	}
 

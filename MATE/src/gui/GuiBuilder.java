@@ -112,7 +112,7 @@ public class GuiBuilder {
 
 		JPanel standartTree = createTypeSelectionPanel("Standard Tree", "Creates a standart Tree", 6, 10);
 		treeComponents.add(standartTree);
-
+		
 		JPanel fanTree = createTypeSelectionPanel("FanTree",
 				"When enabled the tree will contain some Nodes that have a lot of leaves", 6, 60);
 		treeComponents.add(fanTree);
@@ -309,7 +309,6 @@ public class GuiBuilder {
 					sum += slide.getValue();
 				}
 			}
-			System.out.println("sum = " + sum);
 			for (JPanel p : treeComponents) {
 				TextField text = (TextField) p.getComponent(1);
 				JSlider slide = (JSlider) p.getComponent(2);
@@ -321,7 +320,6 @@ public class GuiBuilder {
 						slide.setValue(
 								Math.round(((float) slide.getValue() / (float) sum * (float) (100 - s.getValue()))));
 					}
-					System.out.println("value after " + slide.getValue());
 				}
 				text.setText(slide.getValue() + "%");
 
