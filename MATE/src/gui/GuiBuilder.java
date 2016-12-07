@@ -1,69 +1,48 @@
 package gui;
 
-import java.awt.EventQueue;
-import java.awt.Window;
-
-import javax.swing.JFrame;
-
-import treeExploration.Main;
-
-import javax.swing.JButton;
-import java.awt.BorderLayout;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JPanel;
 import java.awt.Color;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JInternalFrame;
-import java.awt.Component;
-import javax.swing.Box;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-import java.awt.TextField;
-import javax.swing.JCheckBox;
-import javax.swing.JProgressBar;
-import java.awt.event.InputMethodListener;
-import java.awt.event.InputMethodEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import javax.swing.BoxLayout;
+import java.awt.EventQueue;
 import java.awt.SystemColor;
-import javax.swing.border.MatteBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.JScrollPane;
-import javax.swing.JSlider;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.TextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
-import java.awt.event.MouseEvent;
+import java.util.Random;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSlider;
+import javax.swing.JTextField;
 import javax.swing.JTextPane;
-import javax.swing.JLabel;
-import java.awt.GridLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.awt.CardLayout;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-import net.miginfocom.swing.MigLayout;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
+import javax.swing.border.MatteBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
+import tree.TreeCreator;
+import tree.TreeSpecifier;
+import tree.TreeTypes;
+import treeExploration.Main;
 
 public class GuiBuilder {
 
 	private JFrame frame;
-	private ArrayList<JPanel> treeComponents = new ArrayList<>();
-	private JTextField textField;
-	private JTextField textField_1;
+	private ArrayList<TreeComponent> treeComponents = new ArrayList<>();
+	private JTextField seedField;
+	private JTextField maxNodesField;
 	private JTextField textField_2;
 	private JTextField textField_3;
 	private JTextField textField_4;
 	private JTextField textField_5;
 	private JTextField textField_6;
+
+	Random rand = new Random();
+	int seed = rand.nextInt();
 
 	/**
 	 * Launch the application.
@@ -100,142 +79,185 @@ public class GuiBuilder {
 		JButton btnCreateTree = new JButton("create tree");
 		btnCreateTree.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				createTree(panel);
+				paintTree(panel);
+			}
+
+			private void paintTree(JPanel panel) {
 				panel.removeAll();
 				panel.repaint();
-				Main.main(panel);
+				seedField.setText("" + rand.nextInt());
+				Main.paintTree(panel);
 				frame.setVisible(true);
+			}
 
+			private void createTree(JPanel panel) {
+				TreeSpecifier treeSpecifier = new TreeSpecifier();
+				for (TreeComponent p : treeComponents) {
+					JSlider slider = (JSlider) p.panel.getComponent(2);
+					treeSpecifier.addTreeType(p.type, slider.getValue());
+				}
+				TreeCreator treeCreator = new TreeCreator(seed,20,5,5,1, treeSpecifier);
+				Main.setRoot(treeCreator.createTree());
+				
 			}
 		});
 		btnCreateTree.setBounds(29, 528, 101, 23);
 		frame.getContentPane().add(btnCreateTree);
 
-		JPanel standartTree = createTypeSelectionPanel("Standard Tree", "Creates a standart Tree", 6, 10);
-		treeComponents.add(standartTree);
-		
+		JPanel standardTree = createTypeSelectionPanel("Standard Tree", "Creates a standart Tree", 6, 10);
+		treeComponents.add(new TreeComponent(TreeTypes.standardTree, standardTree));
+
 		JPanel fanTree = createTypeSelectionPanel("FanTree",
 				"When enabled the tree will contain some Nodes that have a lot of leaves", 6, 60);
-		treeComponents.add(fanTree);
+		treeComponents.add(new TreeComponent(TreeTypes.fanTree, fanTree));
 
 		JPanel snakeTree = createTypeSelectionPanel("SnakeTree",
 				"When enabled the tree will have a snakes with just one child per node", 6, 110);
-		treeComponents.add(snakeTree);
+		treeComponents.add(new TreeComponent(TreeTypes.snakeTree, snakeTree));
 
 		// for design purpose only
 		frame.getContentPane().add(snakeTree);
 
-		for (JPanel p : treeComponents) {
-			frame.getContentPane().add(p);
+		for (TreeComponent p : treeComponents) {
+			frame.getContentPane().add(p.panel);
 		}
+
+		JSlider standardTreeSlider = (JSlider) (standardTree.getComponent(2));
+		standardTreeSlider.setValue(100);
+		updatePercentage(standardTreeSlider);
 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(156, 11, 842, 659);
 		frame.getContentPane().add(scrollPane);
 
 		scrollPane.setViewportView(panel);
-		
+
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(SystemColor.controlHighlight);
 		panel_1.setBounds(6, 164, 140, 171);
 		frame.getContentPane().add(panel_1);
 		panel_1.setLayout(null);
-		
+
 		JTextPane txtpnSeed = new JTextPane();
 		txtpnSeed.setOpaque(false);
 		txtpnSeed.setText("Seed");
 		txtpnSeed.setBounds(10, 31, 120, 20);
 		panel_1.add(txtpnSeed);
-		
-		textField = new JTextField();
-		textField.setText("0815");
-		textField.setBounds(10, 50, 120, 20);
-		panel_1.add(textField);
-		textField.setColumns(10);
-		
+
+		seedField = new JTextField();
+		seedField.setText(seed + "");
+		seedField.setBounds(10, 50, 120, 20);
+		panel_1.add(seedField);
+		seedField.setColumns(10);
+		seedField.getDocument().addDocumentListener(new DocumentListener() {
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				changedUpdate(e);
+			}
+
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+
+				changedUpdate(e);
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				try {
+					seed = Integer.parseInt(seedField.getText());
+				} catch (Exception e2) {
+					seed = 0;
+				}
+				System.out.println("Seed updated");
+			}
+		});
+
 		JTextPane txtpnTreeSpecifications = new JTextPane();
 		txtpnTreeSpecifications.setBackground(SystemColor.info);
 		txtpnTreeSpecifications.setText("Tree specifications");
 		txtpnTreeSpecifications.setBounds(10, 0, 120, 20);
 		panel_1.add(txtpnTreeSpecifications);
-		
+
 		JTextPane txtpnMaxNodes = new JTextPane();
 		txtpnMaxNodes.setText("Max Nodes");
 		txtpnMaxNodes.setOpaque(false);
 		txtpnMaxNodes.setBounds(10, 78, 120, 20);
 		panel_1.add(txtpnMaxNodes);
-		
-		textField_1 = new JTextField();
-		textField_1.setText("1000");
-		textField_1.setColumns(10);
-		textField_1.setBounds(10, 97, 120, 20);
-		panel_1.add(textField_1);
-		
+
+		maxNodesField = new JTextField();
+		maxNodesField.setText("1000");
+		maxNodesField.setColumns(10);
+		maxNodesField.setBounds(10, 97, 120, 20);
+		panel_1.add(maxNodesField);
+
 		JTextPane txtpnChaosfactor = new JTextPane();
 		txtpnChaosfactor.setText("Chaosfactor");
 		txtpnChaosfactor.setOpaque(false);
 		txtpnChaosfactor.setBounds(10, 121, 120, 20);
 		panel_1.add(txtpnChaosfactor);
-		
+
 		textField_6 = new JTextField();
 		textField_6.setText("1000");
 		textField_6.setColumns(10);
 		textField_6.setBounds(10, 140, 120, 20);
 		panel_1.add(textField_6);
-		
+
 		JPanel panel_2 = new JPanel();
 		panel_2.setLayout(null);
 		panel_2.setBackground(SystemColor.controlHighlight);
 		panel_2.setBounds(6, 346, 140, 171);
 		frame.getContentPane().add(panel_2);
-		
+
 		JTextPane txtpnMaxChildren = new JTextPane();
 		txtpnMaxChildren.setText("max Children");
 		txtpnMaxChildren.setOpaque(false);
 		txtpnMaxChildren.setBounds(10, 31, 120, 20);
 		panel_2.add(txtpnMaxChildren);
-		
+
 		textField_3 = new JTextField();
 		textField_3.setText("5");
 		textField_3.setColumns(10);
 		textField_3.setBounds(10, 50, 120, 20);
 		panel_2.add(textField_3);
-		
+
 		JTextPane txtpnNodeSpecification = new JTextPane();
 		txtpnNodeSpecification.setText("Node specification");
 		txtpnNodeSpecification.setBackground(SystemColor.info);
 		txtpnNodeSpecification.setBounds(10, 0, 120, 20);
 		panel_2.add(txtpnNodeSpecification);
-		
+
 		JTextPane txtpnPlaceholder = new JTextPane();
 		txtpnPlaceholder.setText("Placeholder");
 		txtpnPlaceholder.setOpaque(false);
 		txtpnPlaceholder.setBounds(10, 78, 120, 20);
 		panel_2.add(txtpnPlaceholder);
-		
+
 		textField_4 = new JTextField();
 		textField_4.setText("1000");
 		textField_4.setColumns(10);
 		textField_4.setBounds(10, 97, 120, 20);
 		panel_2.add(textField_4);
-		
+
 		JTextPane txtpnPlaceholder_1 = new JTextPane();
 		txtpnPlaceholder_1.setText("Placeholder");
 		txtpnPlaceholder_1.setOpaque(false);
 		txtpnPlaceholder_1.setBounds(10, 121, 120, 20);
 		panel_2.add(txtpnPlaceholder_1);
-		
+
 		textField_5 = new JTextField();
 		textField_5.setText("0815");
 		textField_5.setColumns(10);
 		textField_5.setBounds(10, 140, 120, 20);
 		panel_2.add(textField_5);
-		
+
 		JTextPane txtpnTreecode = new JTextPane();
 		txtpnTreecode.setBounds(10, 631, 120, 20);
 		frame.getContentPane().add(txtpnTreecode);
 		txtpnTreecode.setText("TreeCode");
 		txtpnTreecode.setOpaque(false);
-		
+
 		textField_2 = new JTextField();
 		textField_2.setBounds(10, 650, 120, 20);
 		frame.getContentPane().add(textField_2);
@@ -290,28 +312,30 @@ public class GuiBuilder {
 	}
 
 	/**
-	 * calculates the percentage for all treeTypes and displayes it 
+	 * calculates the percentage for all treeTypes and displayes it
+	 * 
 	 * @param s
 	 */
 	private void updatePercentage(JSlider s) {
 		int sum = 0;
 
-		int threshold=0;
-		for (JPanel p : treeComponents) {
-			JSlider slide = (JSlider) p.getComponent(2);
+		int threshold = 0;
+		for (TreeComponent p : treeComponents) {
+			JSlider slide = (JSlider) p.panel.getComponent(2); // component 2 is
+																// the slider
 			threshold += slide.getValue();
 		}
-		if (threshold >= 102 || threshold<=98) {
-			for (JPanel p : treeComponents) {
-				JSlider slide = (JSlider) p.getComponent(2);
+		if (threshold >= 102 || threshold <= 98) {
+			for (TreeComponent p : treeComponents) {
+				JSlider slide = (JSlider) p.panel.getComponent(2);
 				if (!slide.equals(s)) {
 
 					sum += slide.getValue();
 				}
 			}
-			for (JPanel p : treeComponents) {
-				TextField text = (TextField) p.getComponent(1);
-				JSlider slide = (JSlider) p.getComponent(2);
+			for (TreeComponent p : treeComponents) {
+				TextField text = (TextField) p.panel.getComponent(1);
+				JSlider slide = (JSlider) p.panel.getComponent(2);
 				if (!slide.equals(s)) {
 
 					if (sum == 0) {

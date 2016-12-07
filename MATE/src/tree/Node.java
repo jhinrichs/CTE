@@ -9,13 +9,23 @@ import javax.swing.tree.TreeNode;
 
 public class Node implements TreeNode {
 
-	private UUID id;
+	private static int idCount=0;
+	private int id;
+	private UUID uid;
 	private Node parent;
+	public static int getIdCount() {
+		return idCount;
+	}
+
 	private Boolean finished = false;
 	private ArrayList<Node> children;
-
+	
 	public Node(Node parent) {
-		id = java.util.UUID.randomUUID();
+		uid = java.util.UUID.randomUUID();
+		
+		id = idCount;
+		idCount++;
+		
 		this.parent = parent;
 		children = new ArrayList<Node>();
 		if (parent!=null) {
@@ -26,10 +36,6 @@ public class Node implements TreeNode {
 
 	public void addNode() {
 		new Node(this);
-	}
-
-	public void addNode(Node newNode) {
-		new Node(newNode);
 	}
 
 	public Node getParent() {

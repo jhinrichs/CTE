@@ -1,6 +1,5 @@
 package drawTree;
 
-import java.awt.Color;
 import java.awt.Container;
 
 import javax.swing.BorderFactory;
@@ -8,15 +7,11 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.tree.TreeNode;
 
 import org.abego.treelayout.TreeLayout;
 import org.abego.treelayout.util.DefaultConfiguration;
 
-import gui.GuiBuilder;
 import tree.Node;
-import tree.TreeCreator;
-import tree.TreeCreator.treeTypes;
 
 public class TreePainter {
 
