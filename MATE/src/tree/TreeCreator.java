@@ -10,12 +10,17 @@ public class TreeCreator {
 	private int minDepth;
 	private int maxBranches;
 	private int minBranches;
-	private double branchingfactor = 0.4;
+	private double branchingfactor;
+	private int maxNodes;
+	private int minNodes;
 	private TreeSpecifier treeSpecifier;
 	private Random numberGenerator = new Random();
 
-	public TreeCreator(long seed, int maxDepth, int minDepth, int maxBranches, int minBranches,
-			TreeSpecifier treeSpecifier) {
+	public TreeCreator(long seed, int maxDepth, int minDepth, int maxBranches, int minBranches, int maxNodes,
+			int minNodes,double branchingfactor, TreeSpecifier treeSpecifier) {
+		this.branchingfactor = branchingfactor;
+		this.minNodes = minNodes;
+		this.maxNodes=maxNodes;
 		this.maxBranches = maxBranches;
 		this.maxDepth = maxDepth;
 		this.minBranches = minBranches;
@@ -25,7 +30,7 @@ public class TreeCreator {
 	}
 
 	public TreeCreator(long seed) {
-		this(seed, 10, 5, 5, 0, new TreeSpecifier(TreeTypes.standardTree, 100));
+		this(seed, 10, 5, 5, 0,50000,100,0.4, new TreeSpecifier(TreeTypes.standardTree, 100));
 	}
 
 	/**
@@ -70,7 +75,6 @@ public class TreeCreator {
 	 * @param depth
 	 */
 	public void addStandardTree(Node parent, int depth) {
-		System.out.println("creating tree with depth " + depth);
 		Node newNode = new Node(parent);
 		addTree(newNode, depth - 1);
 	}
@@ -86,13 +90,13 @@ public class TreeCreator {
 	 */
 	public void addTree(Node parent, int depth) {
 
-		if (depth - 1 > 0 && (maxDepth - depth < minDepth || numberGenerator.nextDouble()< branchingfactor)) {
-			for (int i = minBranches + numberGenerator.nextInt(maxBranches - minBranches); i > 0; i--) {
+		if (maxNodes>Node.getIdCount() && depth - 1 > 0 && (maxDepth - depth < minDepth || numberGenerator.nextDouble() > branchingfactor)) {
+			for (int i = minBranches + numberGenerator.nextInt(maxBranches - minBranches+1); i > 0; i--) {
 				switch (treeSpecifier.getTreeType(numberGenerator.nextDouble())) {
 				case standardTree:
 					addStandardTree(parent, depth);
-					break;				
-					case snakeTree:
+					break;
+				case snakeTree:
 					addSnakeTree(parent, depth);
 					break;
 				case fanTree:
@@ -106,9 +110,13 @@ public class TreeCreator {
 	}
 
 	public Node createTree() {
+		Node.setIdCount(0);
 		Node root = new Node(null);
-		addTree(root);
-		System.out.println("Number of node = "+ Node.getIdCount());
+		while(Node.getIdCount()<minNodes){
+			addTree(root);
+		}
+		System.out.println("Number of node = " + Node.getIdCount());
+		
 		return root;
 	}
 

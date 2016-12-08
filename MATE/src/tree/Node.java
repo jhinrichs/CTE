@@ -98,4 +98,9 @@ public class Node implements TreeNode {
 		return children.isEmpty();
 	}
 
+	public static void setIdCount(int i) {
+		idCount=i;
+		
+	}
+
 }
