@@ -66,10 +66,11 @@ public class TextInBoxTreePane extends JComponent {
 	 * that tree.
 	 * 
 	 * @param treeLayout the {@link TreeLayout} to be displayed
+	 * @param bigNodes2 
 	 */
-	public TextInBoxTreePane(TreeLayout<Node> treeLayout) {
+	public TextInBoxTreePane(TreeLayout<Node> treeLayout, boolean bigNodes) {
+		this.bigNodes=bigNodes;		
 		this.treeLayout = treeLayout;
-
 		Dimension size = treeLayout.getBounds().getBounds().getSize();
 		setPreferredSize(size);
 	}

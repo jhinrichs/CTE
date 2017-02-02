@@ -24,7 +24,7 @@ import javax.swing.border.MatteBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import tree.TreeCreator;
+import tree.TreeFactory;
 import tree.TreeSpecifier;
 import tree.TreeTypes;
 import treeExploration.ProgrammManager;
@@ -34,18 +34,18 @@ public class GuiBuilder {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					GuiBuilder window = new GuiBuilder();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					GuiBuilder window = new GuiBuilder();
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
+	
 
 	private JFrame frame;
 	private ArrayList<TreeComponent> treeComponents = new ArrayList<>();
@@ -56,12 +56,12 @@ public class GuiBuilder {
 	private JTextField leafFactorField;
 	private JTextField minChildrenField;
 	private JTextField minDepthField;
-
+	private JCheckBox bigNodesCheckBox;
 	private int maxDepth;
 	private int minDepth;
 	private int maxBranches;
 	private int minBranches;
-	private double branchingfactor;
+	private double leafFactor;
 	private int maxNodes;
 	private int minNodes;
 
@@ -76,6 +76,7 @@ public class GuiBuilder {
 	 */
 	public GuiBuilder() {
 		initialize();
+		frame.setVisible(true);
 	}
 
 	private JPanel createTypeSelectionPanel(String name, String tooltip, int posX, int posY) {
@@ -130,16 +131,15 @@ public class GuiBuilder {
 		frame.setBounds(100, 100, 1228, 871);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-		JPanel panel_3 = new JPanel();
+		JPanel treeInlayPanel = new JPanel();
 		JButton btnCreateTree = new JButton("create tree");
 		btnCreateTree.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
 				try {
-					validateData();
-					
-					createTree(panel_3);
-					paintTree(panel_3);
+					validateData();					
+					createTree();
+					paintTree();
 				} catch (Exception e2) {
 					JOptionPane.showMessageDialog(frame, "Cannot create Tree due to one ore more values are incorrect. Please correct " + e2.getMessage().substring(16));
 				}
@@ -155,26 +155,24 @@ public class GuiBuilder {
 				maxNodes = Integer.parseInt(maxNodesField.getText());
 				minNodes = Integer.parseInt(minNodesField.getText());
 				
-				branchingfactor = Double.parseDouble(leafFactorField.getText().replace(",", "."));
+				leafFactor = Double.parseDouble(leafFactorField.getText().replace(",", "."));
 			}
 
-			private void createTree(JPanel panel) {
+			private void createTree() {
 				TreeSpecifier treeSpecifier = new TreeSpecifier();
 				for (TreeComponent p : treeComponents) {
 					JSlider slider = (JSlider) p.panel.getComponent(2);
 					treeSpecifier.addTreeType(p.type, slider.getValue());
 				}
-				TreeCreator treeCreator = new TreeCreator(seed,maxDepth,minDepth,maxBranches,minBranches,maxNodes,minNodes,branchingfactor, treeSpecifier);
-				ProgrammManager.setRoot(treeCreator.createTree());
-
+				ProgrammManager.createTree(seed,maxDepth,minDepth,maxBranches,minBranches,maxNodes,minNodes,leafFactor, treeSpecifier);
 			}
 
-			private void paintTree(JPanel panel) {
-				panel.removeAll();
-				panel.repaint();
+			private void paintTree() {
+				treeInlayPanel.removeAll();
+				treeInlayPanel.repaint();
 				rand = new Random(Integer.parseInt(seedField.getText()));
 				seedField.setText("" + rand.nextInt());
-				ProgrammManager.paintTree(panel);
+				ProgrammManager.paintTree(treeInlayPanel, bigNodesCheckBox.isSelected());
 				frame.setVisible(true);
 			}
 		});
@@ -207,7 +205,7 @@ public class GuiBuilder {
 		scrollPane.setBounds(156, 11, 1046, 810);
 		frame.getContentPane().add(scrollPane);
 		
-		scrollPane.setViewportView(panel_3);
+		scrollPane.setViewportView(treeInlayPanel);
 
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(SystemColor.controlHighlight);
@@ -381,9 +379,10 @@ public class GuiBuilder {
 		textField_2.setText("0815");
 		textField_2.setColumns(10);
 		
-		JCheckBox chckbxNewCheckBox = new JCheckBox("Big numbered Nodes");
-		chckbxNewCheckBox.setBounds(6, 597, 140, 23);
-		frame.getContentPane().add(chckbxNewCheckBox);
+		bigNodesCheckBox = new JCheckBox("Big numbered Nodes");
+		bigNodesCheckBox.setSelected(true);
+		bigNodesCheckBox.setBounds(6, 597, 140, 23);
+		frame.getContentPane().add(bigNodesCheckBox);
 
 	}
 

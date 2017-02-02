@@ -15,6 +15,7 @@ import tree.Node;
 
 public class TreePainter {
 
+	
 	private static void showInDialog(JComponent panel) {
 		JDialog dialog = new JDialog();
 		Container contentPane = dialog.getContentPane();
@@ -26,7 +27,7 @@ public class TreePainter {
 		dialog.setVisible(true);		
 	}
 	
-	public void drawTree(Node root, JPanel panel2){
+	public void drawTree(Node root, JPanel panel, boolean bigNodes){
 
 		
 		TreeForTreeLayout treeForLayout = new TreeForTreeLayout(root);
@@ -39,53 +40,24 @@ public class TreePainter {
 				gapBetweenLevels, gapBetweenNodes);
 		
 		// create the NodeExtentProvider for TextInBox nodes
+		if(!bigNodes){
+			NodeExtentProvider.height = 5;
+			NodeExtentProvider.width =5;
+			}
+		else{
+			NodeExtentProvider.height = 20;
+			NodeExtentProvider.width =20;
+			}
 		NodeExtentProvider<Node> nodeExtentProvider = new NodeExtentProvider<Node>();
 		
 		
 		TreeLayout<Node> treeLayout = new TreeLayout<Node>(treeForLayout, nodeExtentProvider, configuration);
 		
 		// Create a panel that draws the nodes and edges and show the panel
-		TextInBoxTreePane panel = new TextInBoxTreePane(treeLayout);
-		showInDialog(panel, panel2);
-		
+		TextInBoxTreePane pane = new TextInBoxTreePane(treeLayout,bigNodes);
+		panel.add(pane);
 		
 
-	}
-
-	private void showInDialog(TextInBoxTreePane panel, JPanel panel2) {
-
-		panel2.add(panel);
-
-	}
-
-	public void drawTree(Node root, JScrollPane scrollPane) {
-		// TODO Auto-generated method stub
-
-		
-		TreeForTreeLayout treeForLayout = new TreeForTreeLayout(root);
-			
-		
-		// setup the tree layout configuration
-		double gapBetweenLevels = 10;
-		double gapBetweenNodes = 2;
-		DefaultConfiguration<Node> configuration = new DefaultConfiguration<Node>(
-				gapBetweenLevels, gapBetweenNodes);
-		
-		// create the NodeExtentProvider for TextInBox nodes
-		NodeExtentProvider<Node> nodeExtentProvider = new NodeExtentProvider<Node>();
-		
-		
-		TreeLayout<Node> treeLayout = new TreeLayout<Node>(treeForLayout, nodeExtentProvider, configuration);
-		
-		// Create a panel that draws the nodes and edges and show the panel
-		TextInBoxTreePane panel = new TextInBoxTreePane(treeLayout);
-		showInDialog(panel, scrollPane);
-		
-	}
-
-	private void showInDialog(TextInBoxTreePane panel, JScrollPane scrollPane) {
-		// TODO Auto-generated method stub
-		scrollPane.add(panel);
 	}
 	
 }

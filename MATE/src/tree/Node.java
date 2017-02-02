@@ -3,6 +3,7 @@ package tree;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.UUID;
 
 import javax.swing.tree.TreeNode;
@@ -54,7 +55,7 @@ public class Node implements TreeNode {
 		this.children = children;
 	}
 
-	public Boolean getFinished() {
+	public Boolean isFinished() {
 		return finished;
 	}
 
@@ -105,5 +106,26 @@ public class Node implements TreeNode {
 	public int getId(){
 		return id;
 	}
+		/**
+		 * Returns a list of all nodes that are in the tree.
+		 * @param node
+		 * @param listOfNodes
+		 * @return
+		 */
+		public List<Node> getNodeList(List<Node> listOfNodes){
+			
+			if(isLeaf()){
+				listOfNodes.add(this);
+				return listOfNodes;
+			}
+			else{
+				for(Node child : getChildren()){
+					listOfNodes = child.getNodeList(listOfNodes);
+				}
+				
+				return getNodeList(listOfNodes);
+			}
+		}
+	
 
 }

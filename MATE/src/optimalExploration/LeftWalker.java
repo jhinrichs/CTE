@@ -1,6 +1,6 @@
 package optimalExploration;
 
-public class OptimalAlgorithm {
+public class LeftWalker {
 	
 	
 	

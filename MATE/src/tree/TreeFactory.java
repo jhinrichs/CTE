@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class TreeCreator {
+public class TreeFactory {
 
 	private int maxDepth;
 	private int minDepth;
@@ -16,7 +16,7 @@ public class TreeCreator {
 	private TreeSpecifier treeSpecifier;
 	private Random numberGenerator = new Random();
 
-	public TreeCreator(long seed, int maxDepth, int minDepth, int maxBranches, int minBranches, int maxNodes,
+	public TreeFactory(long seed, int maxDepth, int minDepth, int maxBranches, int minBranches, int maxNodes,
 			int minNodes,double branchingfactor, TreeSpecifier treeSpecifier) {
 		this.branchingfactor = branchingfactor;
 		this.minNodes = minNodes;
@@ -29,7 +29,7 @@ public class TreeCreator {
 		this.numberGenerator = new Random(seed);
 	}
 
-	public TreeCreator(long seed) {
+	public TreeFactory(long seed) {
 		this(seed, 10, 5, 5, 0,50000,100,0.4, new TreeSpecifier(TreeTypes.standardTree, 100));
 	}
 
@@ -118,38 +118,6 @@ public class TreeCreator {
 		System.out.println("Number of node = " + Node.getIdCount());
 		
 		return root;
-	}
-
-	public int getMaxBranches() {
-		return maxBranches;
-	}
-
-	public int getMaxTreeDepth() {
-		return maxDepth;
-	}
-
-	public int getMinBranches() {
-		return minBranches;
-	}
-
-	public int getMinTreeDepth() {
-		return minDepth;
-	}
-
-	public void setMaxBranches(int maxBranches) {
-		this.maxBranches = maxBranches;
-	}
-
-	public void setMaxTreeDepth(int maxTreeDepth) {
-		this.maxDepth = maxTreeDepth;
-	}
-
-	public void setMinBranches(int minBranches) {
-		this.minBranches = minBranches;
-	}
-
-	public void setMinTreeDepth(int minTreeDepth) {
-		this.minDepth = minTreeDepth;
 	}
 
 }
