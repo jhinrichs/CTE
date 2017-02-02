@@ -47,7 +47,6 @@ public class TreePainter {
 		// Create a panel that draws the nodes and edges and show the panel
 		TextInBoxTreePane panel = new TextInBoxTreePane(treeLayout);
 		showInDialog(panel, panel2);
-//		showInDialog(panel);
 		
 		
 
@@ -81,7 +80,6 @@ public class TreePainter {
 		// Create a panel that draws the nodes and edges and show the panel
 		TextInBoxTreePane panel = new TextInBoxTreePane(treeLayout);
 		showInDialog(panel, scrollPane);
-//		showInDialog(panel);
 		
 	}
 

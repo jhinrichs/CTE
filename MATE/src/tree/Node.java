@@ -102,5 +102,8 @@ public class Node implements TreeNode {
 		idCount=i;
 		
 	}
+	public int getId(){
+		return id;
+	}
 
 }

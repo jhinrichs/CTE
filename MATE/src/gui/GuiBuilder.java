@@ -6,14 +6,13 @@ import java.awt.SystemColor;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -28,7 +27,7 @@ import javax.swing.event.DocumentListener;
 import tree.TreeCreator;
 import tree.TreeSpecifier;
 import tree.TreeTypes;
-import treeExploration.Main;
+import treeExploration.ProgrammManager;
 
 public class GuiBuilder {
 
@@ -128,18 +127,19 @@ public class GuiBuilder {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 1024, 720);
+		frame.setBounds(100, 100, 1228, 871);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-		JPanel panel = new JPanel();
+		JPanel panel_3 = new JPanel();
 		JButton btnCreateTree = new JButton("create tree");
 		btnCreateTree.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
 				try {
 					validateData();
-					createTree(panel);
-					paintTree(panel);
+					
+					createTree(panel_3);
+					paintTree(panel_3);
 				} catch (Exception e2) {
 					JOptionPane.showMessageDialog(frame, "Cannot create Tree due to one ore more values are incorrect. Please correct " + e2.getMessage().substring(16));
 				}
@@ -165,19 +165,20 @@ public class GuiBuilder {
 					treeSpecifier.addTreeType(p.type, slider.getValue());
 				}
 				TreeCreator treeCreator = new TreeCreator(seed,maxDepth,minDepth,maxBranches,minBranches,maxNodes,minNodes,branchingfactor, treeSpecifier);
-				Main.setRoot(treeCreator.createTree());
+				ProgrammManager.setRoot(treeCreator.createTree());
 
 			}
 
 			private void paintTree(JPanel panel) {
 				panel.removeAll();
 				panel.repaint();
+				rand = new Random(Integer.parseInt(seedField.getText()));
 				seedField.setText("" + rand.nextInt());
-				Main.paintTree(panel);
+				ProgrammManager.paintTree(panel);
 				frame.setVisible(true);
 			}
 		});
-		btnCreateTree.setBounds(29, 597, 101, 23);
+		btnCreateTree.setBounds(26, 643, 106, 23);
 		frame.getContentPane().add(btnCreateTree);
 
 		JPanel standardTree = createTypeSelectionPanel("Standard Tree", "Creates a standart Tree", 6, 10);
@@ -203,10 +204,10 @@ public class GuiBuilder {
 		updatePercentage(standardTreeSlider);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(156, 11, 842, 659);
+		scrollPane.setBounds(156, 11, 1046, 810);
 		frame.getContentPane().add(scrollPane);
-
-		scrollPane.setViewportView(panel);
+		
+		scrollPane.setViewportView(panel_3);
 
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(SystemColor.controlHighlight);
@@ -265,7 +266,7 @@ public class GuiBuilder {
 
 		maxDepthField = new JTextField();
 		maxDepthField.setToolTipText("Enter an Integer value here");
-		maxDepthField.setText("30");
+		maxDepthField.setText("20");
 		maxDepthField.setColumns(10);
 		maxDepthField.setBounds(10, 90, 120, 20);
 		panel_1.add(maxDepthField);
@@ -293,14 +294,14 @@ public class GuiBuilder {
 
 		maxNodesField = new JTextField();
 		maxNodesField.setToolTipText("Enter an Integer value here");
-		maxNodesField.setText("50000");
+		maxNodesField.setText("500");
 		maxNodesField.setColumns(10);
 		maxNodesField.setBounds(10, 177, 120, 20);
 		panel_1.add(maxNodesField);
 
 		minNodesField = new JTextField();
 		minNodesField.setToolTipText("Enter an Integer value here");
-		minNodesField.setText("100");
+		minNodesField.setText("10");
 		minNodesField.setColumns(10);
 		minNodesField.setBounds(10, 220, 120, 20);
 		panel_1.add(minNodesField);
@@ -347,7 +348,7 @@ public class GuiBuilder {
 
 		leafFactorField = new JTextField();
 		leafFactorField.setToolTipText("Enter a double value here. Seperated with \".\" instead of \",\"");
-		leafFactorField.setText("0.4");
+		leafFactorField.setText("0,6");
 		leafFactorField.setColumns(10);
 		leafFactorField.setBounds(10, 140, 120, 20);
 		panel_2.add(leafFactorField);
@@ -368,17 +369,21 @@ public class GuiBuilder {
 
 		JTextPane txtpnTreecode = new JTextPane();
 		txtpnTreecode.setToolTipText("Copy Paste this code to quickly regenerate Trees. ");
-		txtpnTreecode.setBounds(10, 631, 120, 20);
+		txtpnTreecode.setBounds(15, 670, 120, 20);
 		frame.getContentPane().add(txtpnTreecode);
 		txtpnTreecode.setText("TreeCode");
 		txtpnTreecode.setOpaque(false);
 
 		textField_2 = new JTextField();
-		textField_2.setBounds(10, 650, 120, 20);
+		textField_2.setBounds(15, 694, 120, 20);
 		frame.getContentPane().add(textField_2);
 		textField_2.setBackground(SystemColor.menu);
 		textField_2.setText("0815");
 		textField_2.setColumns(10);
+		
+		JCheckBox chckbxNewCheckBox = new JCheckBox("Big numbered Nodes");
+		chckbxNewCheckBox.setBounds(6, 597, 140, 23);
+		frame.getContentPane().add(chckbxNewCheckBox);
 
 	}
 

@@ -31,6 +31,7 @@ package drawTree;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
@@ -46,6 +47,7 @@ import tree.Node;
 
 public class TextInBoxTreePane extends JComponent {
 	private final TreeLayout<Node> treeLayout;
+	private boolean bigNodes = true;
 
 	private TreeForTreeLayout<Node> getTree() {
 		return treeLayout.getTree();
@@ -97,6 +99,7 @@ public class TextInBoxTreePane extends JComponent {
 
 	private void paintBox(Graphics g, Node Node) {
 		// draw the box in the background
+		
 		g.setColor(BOX_COLOR);
 		Rectangle2D.Double box = getBoundsOfNode(Node);
 		g.fillRoundRect((int) box.x, (int) box.y, (int) box.width - 1,
@@ -104,6 +107,12 @@ public class TextInBoxTreePane extends JComponent {
 		g.setColor(BORDER_COLOR);
 		g.drawRoundRect((int) box.x, (int) box.y, (int) box.width - 1,
 				(int) box.height - 1, ARC_SIZE, ARC_SIZE);
+		
+		if(bigNodes){
+		g.setFont(new Font("Serif", Font.ITALIC, 10));
+		g.drawString(Node.getId()+"", (int) box.x+2, (int) box.y+12);
+		}
+
 	}
 
 	@Override
@@ -116,5 +125,13 @@ public class TextInBoxTreePane extends JComponent {
 		for (Node Node : treeLayout.getNodeBounds().keySet()) {
 			paintBox(g, Node);
 		}
+	}
+
+	public boolean isBigNodes() {
+		return bigNodes;
+	}
+
+	public void setBigNodes(boolean bigNodes) {
+		this.bigNodes = bigNodes;
 	}
 }
