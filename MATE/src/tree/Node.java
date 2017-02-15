@@ -10,26 +10,27 @@ import javax.swing.tree.TreeNode;
 
 public class Node implements TreeNode {
 
-	private static int idCount=0;
+	private static int idCount = 0;
 	private int id;
 	private UUID uid;
 	private Node parent;
+
 	public static int getIdCount() {
 		return idCount;
 	}
 
 	private Boolean finished = false;
 	private ArrayList<Node> children;
-	
+
 	public Node(Node parent) {
 		uid = java.util.UUID.randomUUID();
-		
+
 		id = idCount;
 		idCount++;
-		
+
 		this.parent = parent;
 		children = new ArrayList<Node>();
-		if (parent!=null) {
+		if (parent != null) {
 			this.parent.children.add(this);
 		}
 
@@ -56,11 +57,18 @@ public class Node implements TreeNode {
 	}
 
 	public Boolean isFinished() {
+		if (!finished) {
+			for (Node child : children) {
+				if(!child.isFinished()){
+					return finished;
+				}
+				else{
+					finished = true; 
+					return finished;
+				}
+			}
+		}
 		return finished;
-	}
-
-	public void setFinished(Boolean finished) {
-		this.finished = finished;
 	}
 
 	@Override
@@ -100,32 +108,33 @@ public class Node implements TreeNode {
 	}
 
 	public static void setIdCount(int i) {
-		idCount=i;
-		
+		idCount = i;
+
 	}
-	public int getId(){
+
+	public int getId() {
 		return id;
 	}
-		/**
-		 * Returns a list of all nodes that are in the tree.
-		 * @param node
-		 * @param listOfNodes
-		 * @return
-		 */
-		public List<Node> getNodeList(List<Node> listOfNodes){
-			
-			if(isLeaf()){
-				listOfNodes.add(this);
-				return listOfNodes;
+
+	/**
+	 * Returns a list of all nodes that are in the tree.
+	 * 
+	 * @param node
+	 * @param listOfNodes
+	 * @return
+	 */
+	public List<Node> getNodeList(List<Node> listOfNodes) {
+
+		if (isLeaf()) {
+			listOfNodes.add(this);
+			return listOfNodes;
+		} else {
+			for (Node child : getChildren()) {
+				listOfNodes = child.getNodeList(listOfNodes);
 			}
-			else{
-				for(Node child : getChildren()){
-					listOfNodes = child.getNodeList(listOfNodes);
-				}
-				
-				return getNodeList(listOfNodes);
-			}
+
+			return getNodeList(listOfNodes);
 		}
-	
+	}
 
 }
