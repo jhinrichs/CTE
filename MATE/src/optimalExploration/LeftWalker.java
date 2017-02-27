@@ -1,67 +1,32 @@
 package optimalExploration;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import solutionData.Agent;
 import solutionData.Traversal;
 import tree.Node;
+import tree.TreeDataCalculator;
+import tree.TreeFactory;
 
 public class LeftWalker {
 
 	private Node tree;
-	private int numberOfRobots;
-	private int depth=0;
-	private int nodes;
-	
-	
-	public int getDepth() {
-		if(depth==0){
-			calculateTreeData(tree);
-		}
-		return depth;
-	}
+	private int numberOfRobots = 0;
+	private List<Agent> agents = new ArrayList<Agent>();;
 
-	private void calculateTreeData(Node node) {
-		nodes++;
-		if(node.isLeaf()){
-			calculateDepth(node);
-		}
-		for(Node child : node.getChildren()){
-			calculateTreeData(child);
-		}
-		
-		
-	}
+	TreeDataCalculator treeData;
 
-	private void calculateDepth(Node node) {
-		int length=0;
-		Node parent = node.getParent();
-		while(parent != null){
-			length++;
-			parent = parent.getParent();
-		}
-		
-	}
-
-	public void setDepth(int depth) {
-		this.depth = depth;
-	}
-
-	public int getNodes() {
-		return nodes;
-	}
-
-	public void setNodes(int nodes) {
-		this.nodes = nodes;
-	}
-
-	
 	private Traversal optimumSolution;
-	
+
 	public LeftWalker(Node tree, int numberOfRobots) {
-		this.tree = tree;
+		this.tree = TreeFactory.copyTree(tree);
 		this.numberOfRobots = numberOfRobots;
+		treeData = new TreeDataCalculator(this.tree);
 	}
-	
-	public Traversal getOptimum(){
-		if(optimumSolution == null){
+
+	public Traversal getOptimum() {
+		if (optimumSolution == null) {
 			computeOpt();
 		}
 
@@ -69,10 +34,26 @@ public class LeftWalker {
 	}
 
 	private void computeOpt() {
-		
-		
+		int energy = Integer.max(treeData.getDepth(), (treeData.getNodes() - 1) / numberOfRobots);
+		for (int i = 0; i < numberOfRobots; i++) {
+
+			Agent a = new Agent();
+			a.addNodes(leftWalker(tree, 4 * energy));
+		}
 	}
-	
-	
+
+	private List<Node> leftWalker(Node root, int energy) {
+		while (!root.isFinished() && energy / 2 > 0) {
+
+			for (Node child : tree.getChildren()) {
+				if (!child.isFinished()) {
+					energy--;
+					leftWalker(child, energy);
+				}
+			}
+		}
+		return null;
+
+	}
 
 }

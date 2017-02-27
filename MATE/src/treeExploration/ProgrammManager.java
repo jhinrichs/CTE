@@ -6,9 +6,11 @@ import javax.swing.JPanel;
 
 import drawTree.TreePainter;
 import gui.GuiBuilder;
+import optimalExploration.LeftWalker;
 import solutionData.SolutionManager;
 import solutionData.Traversal;
 import tree.Node;
+import tree.TreeDataCalculator;
 import tree.TreeFactory;
 import tree.TreeSpecifier;
 
@@ -50,6 +52,13 @@ public class ProgrammManager {
 		Traversal bestPath = solutionManager.getOptimum();
 		
 		
+		
+	}
+	
+	public static TreeDataCalculator getTreeDataImprovised(){
+		TreeDataCalculator calcie = new TreeDataCalculator(tree);
+		
+		return calcie;
 		
 	}
 	

@@ -383,6 +383,10 @@ public class GuiBuilder {
 		bigNodesCheckBox.setSelected(true);
 		bigNodesCheckBox.setBounds(6, 597, 140, 23);
 		frame.getContentPane().add(bigNodesCheckBox);
+		
+		JPanel panel = new TreeDataInlay();
+		panel.setBounds(6, 725, 139, 96);
+		frame.getContentPane().add(panel);
 
 	}
 

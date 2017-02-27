@@ -17,10 +17,10 @@ public class TreeFactory {
 	private Random numberGenerator = new Random();
 
 	public TreeFactory(long seed, int maxDepth, int minDepth, int maxBranches, int minBranches, int maxNodes,
-			int minNodes,double branchingfactor, TreeSpecifier treeSpecifier) {
+			int minNodes, double branchingfactor, TreeSpecifier treeSpecifier) {
 		this.branchingfactor = branchingfactor;
 		this.minNodes = minNodes;
-		this.maxNodes=maxNodes;
+		this.maxNodes = maxNodes;
 		this.maxBranches = maxBranches;
 		this.maxDepth = maxDepth;
 		this.minBranches = minBranches;
@@ -30,7 +30,7 @@ public class TreeFactory {
 	}
 
 	public TreeFactory(long seed) {
-		this(seed, 10, 5, 5, 0,50000,100,0.4, new TreeSpecifier(TreeTypes.standardTree, 100));
+		this(seed, 10, 5, 5, 0, 50000, 100, 0.4, new TreeSpecifier(TreeTypes.standardTree, 100));
 	}
 
 	/**
@@ -90,8 +90,9 @@ public class TreeFactory {
 	 */
 	public void addTree(Node parent, int depth) {
 
-		if (maxNodes>Node.getIdCount() && depth - 1 > 0 && (maxDepth - depth < minDepth || numberGenerator.nextDouble() > branchingfactor)) {
-			for (int i = minBranches + numberGenerator.nextInt(maxBranches - minBranches+1); i > 0; i--) {
+		if (maxNodes > Node.getIdCount() && depth - 1 > 0
+				&& (maxDepth - depth < minDepth || numberGenerator.nextDouble() > branchingfactor)) {
+			for (int i = minBranches + numberGenerator.nextInt(maxBranches - minBranches + 1); i > 0; i--) {
 				switch (treeSpecifier.getTreeType(numberGenerator.nextDouble())) {
 				case standardTree:
 					addStandardTree(parent, depth);
@@ -112,12 +113,33 @@ public class TreeFactory {
 	public Node createTree() {
 		Node.setIdCount(0);
 		Node root = new Node(null);
-		while(Node.getIdCount()<minNodes){
+		while (Node.getIdCount() < minNodes) {
 			addTree(root);
 		}
 		System.out.println("Number of node = " + Node.getIdCount());
-		
+
 		return root;
+	}
+
+	
+	
+	/**
+	 * copy the given tree Structure. All nodes are created new. 
+	 * For algorithms that alter and work on trees directly
+	 * @param root
+	 * @return
+	 */
+	public static Node copyTree(Node root){
+			Node newTree = new Node(null);		
+		if(root.isLeaf()){
+			return newTree;
+		}else{
+			for(Node child : root.getChildren()){
+				newTree.addChild(copyTree(child));
+			}
+			return newTree;
+		}
+		
 	}
 
 }

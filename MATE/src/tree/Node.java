@@ -56,17 +56,17 @@ public class Node implements TreeNode {
 		this.children = children;
 	}
 
+	/**Traverses the tree until an unfinished leaf is found. If all leafs are finished the tree is finished as well.
+	 * @return
+	 */
 	public Boolean isFinished() {
 		if (!finished) {
 			for (Node child : children) {
-				if(!child.isFinished()){
-					return finished;
-				}
-				else{
-					finished = true; 
+				if (!child.isFinished()) {
 					return finished;
 				}
 			}
+			finished = true;
 		}
 		return finished;
 	}
@@ -137,4 +137,16 @@ public class Node implements TreeNode {
 		}
 	}
 
+	public void addChild(Node newChild) {
+
+		if (newChild != null) {
+			children.add(newChild);
+			newChild.setParent(this);
+		}
+	}
+
+	public void setFinished(boolean b) {
+		// TODO Auto-generated method stub
+		
+	}
 }
