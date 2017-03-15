@@ -10,14 +10,14 @@ public class SolutionManager {
 	private LeftWalker leftWalker;
 	
 	public SolutionManager(Node tree, int numberOfRobots) {
-		// TODO Auto-generated constructor stub
+		this.tree = tree;
+		this.numberOfRobots = numberOfRobots;
+		leftWalker = new LeftWalker(tree, numberOfRobots);
 	}
 
 	public Traversal getOptimum() {
-		// TODO Auto-generated method stub
-		LeftWalker optimumSolution = new LeftWalker(tree, numberOfRobots);
 		
-		return null;
+		return leftWalker.getOptimum();
 	}
 
 }

@@ -121,25 +121,24 @@ public class TreeFactory {
 		return root;
 	}
 
-	
-	
 	/**
-	 * copy the given tree Structure. All nodes are created new. 
-	 * For algorithms that alter and work on trees directly
+	 * copy the given tree Structure. All nodes are created new. For algorithms
+	 * that alter and work on trees directly
+	 * 
 	 * @param root
 	 * @return
 	 */
-	public static Node copyTree(Node root){
-			Node newTree = new Node(null);		
-		if(root.isLeaf()){
+	public static Node copyTree(Node root) {
+		Node newTree = new Node(null, root.getId());
+		if (root.isLeaf()) {
 			return newTree;
-		}else{
-			for(Node child : root.getChildren()){
+		} else {
+			for (Node child : root.getChildren()) {
 				newTree.addChild(copyTree(child));
 			}
 			return newTree;
 		}
-		
+
 	}
 
 }

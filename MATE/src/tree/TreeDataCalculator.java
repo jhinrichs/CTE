@@ -9,7 +9,10 @@ public class TreeDataCalculator {
 	public TreeDataCalculator(Node root){
 		tree = root;
 	}
-	public int getNodes() {
+	/**
+	 * @return count of all nodes in given Tree
+	 */
+	public int getNumberOfNodes() {
 		if(numberOfNodes==0){
 			numberOfNodes=calculateTreeData(tree);
 		}
@@ -29,7 +32,7 @@ public class TreeDataCalculator {
 		}else{
 		int nodes =1;
 		if(node.isLeaf()){
-			depth = Integer.max(depth, calculateDepth(node));
+			depth = Integer.max(depth, calculateDepth(node)-1);
 		}
 		for(Node child : node.getChildren()){
 			nodes += calculateTreeData(child);

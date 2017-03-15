@@ -1,12 +1,11 @@
 package treeExploration;
 
 
-import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 import drawTree.TreePainter;
 import gui.GuiBuilder;
-import optimalExploration.LeftWalker;
+import solutionData.Agent;
 import solutionData.SolutionManager;
 import solutionData.Traversal;
 import tree.Node;
@@ -45,16 +44,25 @@ public class ProgrammManager {
 				
 	}
 	
-	public void calculateOptimum(int numberOfRobots){
+	public static void calculateOptimum(int numberOfRobots){
 	
 		SolutionManager solutionManager = new SolutionManager(tree, numberOfRobots);
 		
 		Traversal bestPath = solutionManager.getOptimum();
 		
-		
-		
+		System.out.println(bestPath.getSteps()+" schritte nötig");
+		printTraversals(bestPath);
 	}
 	
+	private static void printTraversals(Traversal bestPath) {
+		for( Agent a : bestPath.getAgents()){
+			System.out.println("Agent " + a.getId() + " besucht die Knoten :");
+			for( Node n : a.getNodesToVisit()){
+				System.out.print(n.getId()+",");
+			}
+			System.out.println();
+		}
+	}
 	public static TreeDataCalculator getTreeDataImprovised(){
 		TreeDataCalculator calcie = new TreeDataCalculator(tree);
 		

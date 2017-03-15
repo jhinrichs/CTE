@@ -14,6 +14,7 @@ public class Node implements TreeNode {
 	private int id;
 	private UUID uid;
 	private Node parent;
+	private TreeDataCalculator treeData;
 
 	public static int getIdCount() {
 		return idCount;
@@ -35,7 +36,27 @@ public class Node implements TreeNode {
 		}
 
 	}
+	public Node(Node parent, int id) {
+		uid = java.util.UUID.randomUUID();
+		this.id = id;
+		this.parent = parent;
+		children = new ArrayList<Node>();
+		if (parent != null) {
+			this.parent.children.add(this);
+		}
 
+	}
+
+	/**Counts all nodes in this nodes Tree
+	 * @return
+	 */
+	public int getTreeNodeCount(){
+		if (treeData == null){
+			treeData= new TreeDataCalculator(this);
+		}
+		return treeData.getNumberOfNodes();
+	}
+	
 	public void addNode() {
 		new Node(this);
 	}
@@ -56,13 +77,13 @@ public class Node implements TreeNode {
 		this.children = children;
 	}
 
-	/**Traverses the tree until an unfinished leaf is found. If all leafs are finished the tree is finished as well.
+	/**Traverses the tree until an unfinished node is found. If all nodes are finished the tree is finished as well.
 	 * @return
 	 */
 	public Boolean isFinished() {
-		if (!finished) {
+		if (!finished && !isLeaf()) {
 			for (Node child : children) {
-				if (!child.isFinished()) {
+				if (!child.finished) {
 					return finished;
 				}
 			}
@@ -126,6 +147,11 @@ public class Node implements TreeNode {
 	public List<Node> getNodeList(List<Node> listOfNodes) {
 
 		if (isLeaf()) {
+			if (listOfNodes == null){
+				System.out.println("ListOfNoes = null and roo is "+ this.id);
+				
+				listOfNodes = new ArrayList<Node>();
+			}
 			listOfNodes.add(this);
 			return listOfNodes;
 		} else {
@@ -133,10 +159,13 @@ public class Node implements TreeNode {
 				listOfNodes = child.getNodeList(listOfNodes);
 			}
 
-			return getNodeList(listOfNodes);
+			return listOfNodes;
 		}
 	}
 
+	/**adds the give Node as a child and sets its Parent to this node 
+	 * @param newChild
+	 */
 	public void addChild(Node newChild) {
 
 		if (newChild != null) {
@@ -146,7 +175,6 @@ public class Node implements TreeNode {
 	}
 
 	public void setFinished(boolean b) {
-		// TODO Auto-generated method stub
-		
+		finished=b;
 	}
 }

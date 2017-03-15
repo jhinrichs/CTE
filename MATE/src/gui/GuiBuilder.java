@@ -292,7 +292,7 @@ public class GuiBuilder {
 
 		maxNodesField = new JTextField();
 		maxNodesField.setToolTipText("Enter an Integer value here");
-		maxNodesField.setText("500");
+		maxNodesField.setText("20");
 		maxNodesField.setColumns(10);
 		maxNodesField.setBounds(10, 177, 120, 20);
 		panel_1.add(maxNodesField);
@@ -325,7 +325,7 @@ public class GuiBuilder {
 
 		maxChildrenField = new JTextField();
 		maxChildrenField.setToolTipText("Enter an Integer value here");
-		maxChildrenField.setText("5");
+		maxChildrenField.setText("3");
 		maxChildrenField.setColumns(10);
 		maxChildrenField.setBounds(10, 50, 120, 20);
 		panel_2.add(maxChildrenField);
@@ -346,7 +346,7 @@ public class GuiBuilder {
 
 		leafFactorField = new JTextField();
 		leafFactorField.setToolTipText("Enter a double value here. Seperated with \".\" instead of \",\"");
-		leafFactorField.setText("0,6");
+		leafFactorField.setText("0,7");
 		leafFactorField.setColumns(10);
 		leafFactorField.setBounds(10, 140, 120, 20);
 		panel_2.add(leafFactorField);
