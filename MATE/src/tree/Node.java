@@ -36,6 +36,7 @@ public class Node implements TreeNode {
 		}
 
 	}
+
 	public Node(Node parent, int id) {
 		uid = java.util.UUID.randomUUID();
 		this.id = id;
@@ -47,16 +48,18 @@ public class Node implements TreeNode {
 
 	}
 
-	/**Counts all nodes in this nodes Tree
+	/**
+	 * Counts all nodes in this nodes Tree
+	 * 
 	 * @return
 	 */
-	public int getTreeNodeCount(){
-		if (treeData == null){
-			treeData= new TreeDataCalculator(this);
+	public int getTreeNodeCount() {
+		if (treeData == null) {
+			treeData = new TreeDataCalculator(this);
 		}
 		return treeData.getNumberOfNodes();
 	}
-	
+
 	public void addNode() {
 		new Node(this);
 	}
@@ -77,7 +80,10 @@ public class Node implements TreeNode {
 		this.children = children;
 	}
 
-	/**Traverses the tree until an unfinished node is found. If all nodes are finished the tree is finished as well.
+	/**
+	 * Traverses the tree until an unfinished node is found. If all nodes are
+	 * finished the tree is finished as well.
+	 * 
 	 * @return
 	 */
 	public Boolean isFinished() {
@@ -105,7 +111,7 @@ public class Node implements TreeNode {
 	}
 
 	@Override
-	public TreeNode getChildAt(int childIndex) {
+	public Node getChildAt(int childIndex) {
 		// TODO Auto-generated method stub
 		return children.get(childIndex);
 	}
@@ -147,9 +153,9 @@ public class Node implements TreeNode {
 	public List<Node> getNodeList(List<Node> listOfNodes) {
 
 		if (isLeaf()) {
-			if (listOfNodes == null){
-				System.out.println("ListOfNoes = null and roo is "+ this.id);
-				
+			if (listOfNodes == null) {
+				System.out.println("ListOfNoes = null and roo is " + this.id);
+
 				listOfNodes = new ArrayList<Node>();
 			}
 			listOfNodes.add(this);
@@ -163,7 +169,9 @@ public class Node implements TreeNode {
 		}
 	}
 
-	/**adds the give Node as a child and sets its Parent to this node 
+	/**
+	 * adds the give Node as a child and sets its Parent to this node
+	 * 
 	 * @param newChild
 	 */
 	public void addChild(Node newChild) {
@@ -175,6 +183,17 @@ public class Node implements TreeNode {
 	}
 
 	public void setFinished(boolean b) {
-		finished=b;
+		finished = b;
+	}
+
+	/**return 
+	 * @return
+	 */
+	public boolean isRoot() {
+		if (parent == null) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 }

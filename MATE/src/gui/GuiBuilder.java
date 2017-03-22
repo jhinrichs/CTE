@@ -128,7 +128,7 @@ public class GuiBuilder {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 1228, 871);
+		frame.setBounds(100, 100, 1234, 892);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		JPanel treeInlayPanel = new JPanel();
@@ -202,7 +202,7 @@ public class GuiBuilder {
 		updatePercentage(standardTreeSlider);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(156, 11, 1046, 810);
+		scrollPane.setBounds(156, 11, 1046, 832);
 		frame.getContentPane().add(scrollPane);
 		
 		scrollPane.setViewportView(treeInlayPanel);
@@ -385,7 +385,7 @@ public class GuiBuilder {
 		frame.getContentPane().add(bigNodesCheckBox);
 		
 		JPanel panel = new TreeDataInlay();
-		panel.setBounds(6, 725, 139, 96);
+		panel.setBounds(6, 725, 139, 118);
 		frame.getContentPane().add(panel);
 
 	}

@@ -41,7 +41,7 @@ public class Traversal {
 		int steps = 0;
 		for (Agent agent : agents) {
 			if (agent != null) {
-				steps = Integer.max(steps, agent.getSteps());
+				steps = Integer.max(steps, agent.getStepsCount());
 			}
 		}
 		return steps;

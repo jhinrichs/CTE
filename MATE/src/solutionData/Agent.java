@@ -67,7 +67,7 @@ public class Agent {
 		nodesToVisit.addAll(nodes);
 	}
 
-	public int getSteps() {
+	public int getStepsCount() {
 		if (nodesToVisit.size() > 1) {
 			return (nodesToVisit.size() - 1) * 2;
 		}

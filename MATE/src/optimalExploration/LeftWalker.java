@@ -13,7 +13,6 @@ public class LeftWalker {
 
 	private Node tree;
 	private int numberOfRobots = 0;
-	private List<Agent> agents = new ArrayList<Agent>();;
 
 	TreeDataCalculator treeData;
 

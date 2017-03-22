@@ -13,6 +13,10 @@ import tree.TreeDataCalculator;
 import tree.TreeFactory;
 import tree.TreeSpecifier;
 
+/**
+ * @author jonas.hinrichs
+ *
+ */
 public class ProgrammManager {
 	private static Node tree = new Node(null);
 	private static GuiBuilder mainWindow;
@@ -30,6 +34,10 @@ public class ProgrammManager {
 	}
 
 
+	/** gets a JPanel and paints the active tree within that window
+	 * @param panel
+	 * @param bigNodes
+	 */
 	public static void paintTree(JPanel panel, boolean bigNodes){
 		
 		TreePainter painter = new TreePainter();
