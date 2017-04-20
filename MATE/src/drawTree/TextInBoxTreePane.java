@@ -32,22 +32,23 @@ package drawTree;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Rectangle2D.Double;
 
 import javax.swing.JComponent;
-import javax.swing.tree.TreeNode;
 
-import org.abego.treelayout.*;
 import org.abego.treelayout.TreeForTreeLayout;
+import org.abego.treelayout.TreeLayout;
 
+import solutionData.Agent;
+import solutionData.Traversal;
 import tree.Node;
 
 public class TextInBoxTreePane extends JComponent {
 	private final TreeLayout<Node> treeLayout;
 	private boolean bigNodes = true;
+	private Traversal traversal;
 
 	private TreeForTreeLayout<Node> getTree() {
 		return treeLayout.getTree();
@@ -65,11 +66,20 @@ public class TextInBoxTreePane extends JComponent {
 	 * Specifies the tree to be displayed by passing in a {@link TreeLayout} for
 	 * that tree.
 	 * 
-	 * @param treeLayout the {@link TreeLayout} to be displayed
-	 * @param bigNodes2 
+	 * @param treeLayout
+	 *            the {@link TreeLayout} to be displayed
+	 * @param bigNodes2
 	 */
 	public TextInBoxTreePane(TreeLayout<Node> treeLayout, boolean bigNodes) {
-		this.bigNodes=bigNodes;		
+
+		this.bigNodes = bigNodes;
+		this.treeLayout = treeLayout;
+		Dimension size = treeLayout.getBounds().getBounds().getSize();
+		setPreferredSize(size);
+	}
+	public TextInBoxTreePane(TreeLayout<Node> treeLayout, boolean bigNodes, Traversal traversal) {
+		this.traversal = traversal;
+		this.bigNodes = bigNodes;
 		this.treeLayout = treeLayout;
 		Dimension size = treeLayout.getBounds().getBounds().getSize();
 		setPreferredSize(size);
@@ -78,10 +88,10 @@ public class TextInBoxTreePane extends JComponent {
 	// -------------------------------------------------------------------
 	// painting
 
-	private final static int ARC_SIZE = 10;
-	private final static Color BOX_COLOR = Color.orange;
-	private final static Color BORDER_COLOR = Color.darkGray;
-	private final static Color TEXT_COLOR = Color.black;
+	private  static int ARC_SIZE = 10;
+	private  static Color BOX_COLOR = Color.orange;
+	private  static Color BORDER_COLOR = Color.darkGray;
+	private  static Color TEXT_COLOR = Color.BLACK;
 
 	private void paintEdges(Graphics g, Node parent) {
 		if (!getTree().isLeaf(parent)) {
@@ -90,8 +100,7 @@ public class TextInBoxTreePane extends JComponent {
 			double y1 = b1.getCenterY();
 			for (Node child : getChildren(parent)) {
 				Rectangle2D.Double b2 = getBoundsOfNode(child);
-				g.drawLine((int) x1, (int) y1, (int) b2.getCenterX(),
-						(int) b2.getCenterY());
+				g.drawLine((int) x1, (int) y1, (int) b2.getCenterX(), (int) b2.getCenterY());
 
 				paintEdges(g, child);
 			}
@@ -100,32 +109,80 @@ public class TextInBoxTreePane extends JComponent {
 
 	private void paintBox(Graphics g, Node Node) {
 		// draw the box in the background
-		
+
+
 		g.setColor(BOX_COLOR);
 		Rectangle2D.Double box = getBoundsOfNode(Node);
-		g.fillRoundRect((int) box.x, (int) box.y, (int) box.width - 1,
-				(int) box.height - 1, ARC_SIZE, ARC_SIZE);
+		g.fillRoundRect((int) box.x, (int) box.y, (int) box.width - 1, (int) box.height - 1, ARC_SIZE, ARC_SIZE);
 		g.setColor(BORDER_COLOR);
-		g.drawRoundRect((int) box.x, (int) box.y, (int) box.width - 1,
-				(int) box.height - 1, ARC_SIZE, ARC_SIZE);
-		
-		if(bigNodes){
-		g.setFont(new Font("Serif", Font.ITALIC, 10));
-		g.drawString(Node.getId()+"", (int) box.x+2, (int) box.y+12);
+		g.drawRoundRect((int) box.x, (int) box.y, (int) box.width - 1, (int) box.height - 1, ARC_SIZE, ARC_SIZE);
+
+		if (bigNodes) {
+			g.setFont(new Font("Serif", Font.ITALIC, 10));
+			g.setColor(TEXT_COLOR);
+			g.drawString(Node.getId() + "", (int) box.x + 1, (int) box.y + 13);
 		}
 
 	}
 
 	@Override
 	public void paint(Graphics g) {
-		super.paint(g);
 
 		paintEdges(g, getTree().getRoot());
 
-		// paint the boxes
-		for (Node Node : treeLayout.getNodeBounds().keySet()) {
-			paintBox(g, Node);
+		int i=0;
+		if(traversal != null){
+			for (Agent a : traversal.getAgents()) {
+				
+				switch(i%9){
+				case 0:
+					BOX_COLOR = Color.ORANGE;
+					break;
+				case 1:
+					BOX_COLOR = Color.yellow;
+					break;
+				case 2:
+					BOX_COLOR = Color.red;
+					break;
+				case 3:
+					BOX_COLOR = Color.blue;
+					break;
+				case 4:
+					BOX_COLOR = Color.green;
+					break;
+				case 5:
+					BOX_COLOR = Color.gray;
+					break;
+				case 6:
+					BOX_COLOR = Color.darkGray;
+					break;
+				case 7:
+					BOX_COLOR = Color.white;
+					break;
+				case 8:
+					BOX_COLOR = Color.cyan;
+					break;
+				
+					
+				}
+				i++;
+				
+				System.out.println("paint paths");
+				// paint the boxes
+				for (Node node : treeLayout.getNodeBounds().keySet()) {
+					if ( a.getNodesToVisit().contains(node))
+					paintBox(g, node);
+				}
+			}
 		}
+		else{
+			BOX_COLOR = Color.ORANGE;
+			for (Node node : treeLayout.getNodeBounds().keySet()) {
+				
+				paintBox(g, node);
+			}
+		}
+		
 	}
 
 	public boolean isBigNodes() {

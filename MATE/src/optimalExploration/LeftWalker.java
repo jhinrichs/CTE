@@ -11,7 +11,7 @@ import tree.TreeFactory;
 
 public class LeftWalker {
 
-	private Node tree;
+	public Node tree;
 	private int numberOfRobots = 0;
 
 	TreeDataCalculator treeData;

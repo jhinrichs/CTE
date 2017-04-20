@@ -64,7 +64,7 @@ public class TreeDataInlay extends JPanel{
 				TreeDataCalculator calcy = ProgrammManager.getTreeDataImprovised();
 				TreeDepthText.setText("Tree Depth = " + calcy.getDepth());
 				NumberOfNodesText.setText("Number of Nodes = " + calcy.getNumberOfNodes());
-				ProgrammManager.calculateOptimum( Integer.parseInt(numberOfRobotsField.getText()));
+				ProgrammManager.calculateLeftWalker( Integer.parseInt(numberOfRobotsField.getText()));
 			}
 		});
 		add(btnNewButton);

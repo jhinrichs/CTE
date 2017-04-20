@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 
 import drawTree.TreePainter;
 import gui.GuiBuilder;
+import optimalExploration.LeftWalker;
 import solutionData.Agent;
 import solutionData.SolutionManager;
 import solutionData.Traversal;
@@ -20,6 +21,8 @@ import tree.TreeSpecifier;
 public class ProgrammManager {
 	private static Node tree = new Node(null);
 	private static GuiBuilder mainWindow;
+	private static LeftWalker leftWalker;
+	
 	
 
 	public static Node getRoot() {
@@ -43,6 +46,18 @@ public class ProgrammManager {
 		TreePainter painter = new TreePainter();
 		painter.drawTree(tree,panel, bigNodes);
 	}
+	
+	public static void paintAgentPaths(JPanel panel, boolean bigNodes, int agent){
+
+		TreePainter painter = new TreePainter();
+		painter.drawTree(leftWalker.getOptimum().getAgents()[agent].getTree(), panel, bigNodes);
+	}
+	
+	public static void paintAllAgents(JPanel panel, boolean bigNodes){
+		System.out.println("print paths");
+		TreePainter painter = new TreePainter();
+		painter.drawTree(leftWalker.tree, leftWalker.getOptimum(), panel, bigNodes);
+	}
 
 	public static void createTree(int seed, int maxDepth, int minDepth, int maxBranches, int minBranches, int maxNodes,
 			int minNodes, double leafFactor, TreeSpecifier treeSpecifier) {
@@ -52,14 +67,14 @@ public class ProgrammManager {
 				
 	}
 	
-	public static void calculateOptimum(int numberOfRobots){
+	public static void calculateLeftWalker(int numberOfRobots){
 	
 		SolutionManager solutionManager = new SolutionManager(tree, numberOfRobots);
 		
-		Traversal bestPath = solutionManager.getOptimum();
+		leftWalker = solutionManager.getLeftWalker();
 		
-		System.out.println(bestPath.getSteps()+" schritte nötig");
-		printTraversals(bestPath);
+		System.out.println(leftWalker.getOptimum().getSteps()+" schritte nötig");
+		printTraversals(leftWalker.getOptimum());
 	}
 	
 	private static void printTraversals(Traversal bestPath) {

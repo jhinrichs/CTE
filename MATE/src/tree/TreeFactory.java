@@ -140,5 +140,22 @@ public class TreeFactory {
 		}
 
 	}
+	
+	public static Node createTree(Node root, List<Node> nodes){
+		
+		Node newTree = new Node(null, root.getId());
+			if(root.isLeaf()){
+				return newTree;
+			}
+			else{
+				for (Node child : root.getChildren()){
+					if(nodes.contains(child)){
+						newTree.addChild(createTree(child,nodes));
+					}
+				}
+			}
+		
+		return newTree;
+	}
 
 }

@@ -7,17 +7,25 @@ import java.util.List;
 import javax.xml.stream.events.NotationDeclaration;
 
 import tree.Node;
+import tree.TreeFactory;
 
 public class Agent {
 
 	private Node root;
-
+	public int energy = 0;
+	private int id;
+	private static int idCounter = 0;
+	private ArrayList<Node> nodesToVisit;
+	
 	public Node getRoot() {
 		return root;
 	}
+	
+	public Node getTree(){
+		return TreeFactory.createTree(root, nodesToVisit);
+	}
 
-	public int energy = 0;
-	private int id;
+
 
 	public int getId() {
 		return id;
@@ -31,8 +39,7 @@ public class Agent {
 		}
 	}
 
-	private static int idCounter = 0;
-	private ArrayList<Node> nodesToVisit;
+
 
 	public Agent() {
 		id = idCounter;

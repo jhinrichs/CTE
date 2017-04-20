@@ -20,4 +20,9 @@ public class SolutionManager {
 		return leftWalker.getOptimum();
 	}
 
+	public LeftWalker getLeftWalker() {
+		// TODO Auto-generated method stub
+		return leftWalker;
+	}
+
 }

@@ -28,6 +28,8 @@ import tree.TreeFactory;
 import tree.TreeSpecifier;
 import tree.TreeTypes;
 import treeExploration.ProgrammManager;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 
 public class GuiBuilder {
 
@@ -128,7 +130,7 @@ public class GuiBuilder {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 1234, 892);
+		frame.setBounds(100, 100, 1380, 892);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		JPanel treeInlayPanel = new JPanel();
@@ -190,6 +192,8 @@ public class GuiBuilder {
 				"When enabled the tree will have a snakes with just one child per node", 6, 110);
 		treeComponents.add(new TreeComponent(TreeTypes.snakeTree, snakeTree));
 
+		JSpinner spinner = new JSpinner();
+		spinner.setModel(new SpinnerNumberModel(new Integer(0), null, null, new Integer(1)));
 		// for design purpose only
 		frame.getContentPane().add(snakeTree);
 
@@ -387,6 +391,48 @@ public class GuiBuilder {
 		JPanel panel = new TreeDataInlay();
 		panel.setBounds(6, 725, 139, 118);
 		frame.getContentPane().add(panel);
+		
+		JButton btnShowAgent = new JButton("Show Agent");
+		btnShowAgent.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				treeInlayPanel.removeAll();
+				treeInlayPanel.repaint();
+				ProgrammManager.paintAgentPaths(treeInlayPanel, bigNodesCheckBox.isSelected(),(Integer) spinner.getValue());
+				frame.setVisible(true);
+			}
+		});
+		btnShowAgent.setBounds(1212, 31, 106, 23);
+		frame.getContentPane().add(btnShowAgent);
+		
+
+		spinner.setBounds(1325, 32, 29, 20);
+		frame.getContentPane().add(spinner);
+		
+		JButton btnShowTree = new JButton("Show Tree");
+		btnShowTree.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+					treeInlayPanel.removeAll();
+					treeInlayPanel.repaint();
+					ProgrammManager.paintTree(treeInlayPanel, bigNodesCheckBox.isSelected());
+					frame.setVisible(true);
+				
+			}
+		});
+		btnShowTree.setBounds(1212, 65, 106, 23);
+		frame.getContentPane().add(btnShowTree);
+		
+		JButton btnNewButton = new JButton("Show all Paths");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				treeInlayPanel.removeAll();
+				treeInlayPanel.repaint();
+				ProgrammManager.paintAllAgents(treeInlayPanel, bigNodesCheckBox.isSelected());
+				frame.setVisible(true);
+			}
+		});
+		btnNewButton.setBounds(1212, 99, 106, 23);
+		frame.getContentPane().add(btnNewButton);
 
 	}
 
