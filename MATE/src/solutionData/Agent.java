@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.xml.stream.events.NotationDeclaration;
 
+import tree.INode;
 import tree.Node;
 import tree.TreeFactory;
 
@@ -17,7 +18,7 @@ public class Agent {
 	private static int idCounter = 0;
 	private ArrayList<Node> nodesToVisit;
 	
-	public Node getRoot() {
+	public INode getRoot() {
 		return root;
 	}
 	
@@ -61,7 +62,7 @@ public class Agent {
 		}
 	}
 
-	public void removeNode(Node nodeToRemove) {
+	public void removeNode(INode nodeToRemove) {
 		nodesToVisit.remove(nodeToRemove);
 	}
 

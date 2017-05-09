@@ -4,6 +4,7 @@ public class TreeDataCalculator {
 	private Node tree;
 	private int depth=0;
 	private int numberOfNodes=0;
+	private boolean isCalculated = false;
 	
 	
 	public TreeDataCalculator(Node root){
@@ -13,15 +14,16 @@ public class TreeDataCalculator {
 	 * @return count of all nodes in given Tree
 	 */
 	public int getNumberOfNodes() {
-		if(numberOfNodes==0){
-			numberOfNodes=calculateTreeData(tree);
+		if(!isCalculated){calculateTreeData(tree);
+			isCalculated =true;
 		}
 		return numberOfNodes;
 	}
 	
 	public int getDepth() {
-		if(depth==0){
+		if(!isCalculated){
 			calculateTreeData(tree);
+			isCalculated =true;
 		}
 		return depth;
 	}
@@ -37,8 +39,10 @@ public class TreeDataCalculator {
 		for(Node child : node.getChildren()){
 			nodes += calculateTreeData(child);
 		}
+		numberOfNodes = nodes;
 		return nodes;
 		}
+		
 	}
 
 	private int calculateDepth(Node node) {

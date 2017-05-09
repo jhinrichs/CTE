@@ -2,25 +2,26 @@ package mate;
 
 import java.util.List;
 
-import solutionData.RobPosNode;
+import mate.Brain.BrainModuleType;
+import tree.INode;
 import tree.Node;
 
 public class MateAgentManager {
 	
 	private List<MateAgent> mates;
 	
-	private RobPosNode robPosTree;
+	private RobPosTree robPosTree;
 	
-	private Node exploredTree;
+	private INode exploredTree;
 	
-	private Node originalTree;
+	private INode originalTree;
 	
 	
-	public MateAgentManager(Node root, int NumberOfRobots){
+	public MateAgentManager(Node root, int NumberOfRobots, BrainModuleType brainType){
 		originalTree = root;
 		
 		for (int i =0 ; i< NumberOfRobots ;i ++){
-			mates.add(new MateAgent(root, new DecisionModule()));
+			mates.add(new MateAgent(root, brainType));
 		}
 	}
 	

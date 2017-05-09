@@ -18,6 +18,8 @@ public class TreeDataInlay extends JPanel{
 
 
 
+	private JTextField numberOfRobotsField =new JTextField();
+
 	/**
 	 * Create the application.
 	 */
@@ -32,21 +34,20 @@ public class TreeDataInlay extends JPanel{
 		this.setSize(120, 150);
 		setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
+				JTextPane numberOfRobots = new JTextPane();
+				numberOfRobots.setToolTipText("the tree creation wont stop before the minimum number of Nodes is reached");
+				numberOfRobots.setText("Number of Agents");
+				numberOfRobots.setOpaque(false);
+				numberOfRobots.setBounds(10, 5, 5,  20);
+				add(numberOfRobots);
 		
 		
-		JTextField numberOfRobotsField = new JTextField();
+		
 		numberOfRobotsField.setToolTipText("Enter an Integer value here");
 		numberOfRobotsField.setText("5");
 		numberOfRobotsField.setColumns(10);
 		numberOfRobotsField.setBounds(10, 220, 120, 20);
 		add(numberOfRobotsField);
-
-		JTextPane numberOfRobots = new JTextPane();
-		numberOfRobots.setToolTipText("the tree creation wont stop before the minimum number of Nodes is reached");
-		numberOfRobots.setText("Number of Agents");
-		numberOfRobots.setOpaque(false);
-		numberOfRobots.setBounds(10, 5, 5,  20);
-		add(numberOfRobots);
 		
 		
 		
@@ -64,10 +65,14 @@ public class TreeDataInlay extends JPanel{
 				TreeDataCalculator calcy = ProgrammManager.getTreeDataImprovised();
 				TreeDepthText.setText("Tree Depth = " + calcy.getDepth());
 				NumberOfNodesText.setText("Number of Nodes = " + calcy.getNumberOfNodes());
-				ProgrammManager.calculateLeftWalker( Integer.parseInt(numberOfRobotsField.getText()));
+				ProgrammManager.calculateLeftWalker(getNumberOfRobots());
 			}
 		});
 		add(btnNewButton);
+		
+	}
+	public int getNumberOfRobots(){
+		return Integer.parseInt(numberOfRobotsField.getText());
 		
 	}
 }

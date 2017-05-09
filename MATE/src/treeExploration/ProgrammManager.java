@@ -9,6 +9,7 @@ import optimalExploration.LeftWalker;
 import solutionData.Agent;
 import solutionData.SolutionManager;
 import solutionData.Traversal;
+import tree.INode;
 import tree.Node;
 import tree.TreeDataCalculator;
 import tree.TreeFactory;
@@ -25,7 +26,7 @@ public class ProgrammManager {
 	
 	
 
-	public static Node getRoot() {
+	public static INode getRoot() {
 		return tree;
 	}
 	public static void setRoot(Node root) {
@@ -80,7 +81,7 @@ public class ProgrammManager {
 	private static void printTraversals(Traversal bestPath) {
 		for( Agent a : bestPath.getAgents()){
 			System.out.println("Agent " + a.getId() + " besucht die Knoten :");
-			for( Node n : a.getNodesToVisit()){
+			for( INode n : a.getNodesToVisit()){
 				System.out.print(n.getId()+",");
 			}
 			System.out.println();

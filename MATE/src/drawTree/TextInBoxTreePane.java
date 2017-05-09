@@ -43,6 +43,7 @@ import org.abego.treelayout.TreeLayout;
 
 import solutionData.Agent;
 import solutionData.Traversal;
+import tree.INode;
 import tree.Node;
 
 public class TextInBoxTreePane extends JComponent {
@@ -58,7 +59,7 @@ public class TextInBoxTreePane extends JComponent {
 		return getTree().getChildren(parent);
 	}
 
-	private Rectangle2D.Double getBoundsOfNode(Node node) {
+	private Rectangle2D.Double getBoundsOfNode(INode node) {
 		return (Double) treeLayout.getNodeBounds().get(node);
 	}
 
@@ -107,7 +108,7 @@ public class TextInBoxTreePane extends JComponent {
 		}
 	}
 
-	private void paintBox(Graphics g, Node Node) {
+	private void paintBox(Graphics g, INode Node) {
 		// draw the box in the background
 
 
@@ -167,17 +168,16 @@ public class TextInBoxTreePane extends JComponent {
 				}
 				i++;
 				
-				System.out.println("paint paths");
+//				System.out.println("paint paths");
 				// paint the boxes
-				for (Node node : treeLayout.getNodeBounds().keySet()) {
-					if ( a.getNodesToVisit().contains(node))
+				for (INode node : a.getNodesToVisit()) {
 					paintBox(g, node);
 				}
 			}
 		}
 		else{
 			BOX_COLOR = Color.ORANGE;
-			for (Node node : treeLayout.getNodeBounds().keySet()) {
+			for (INode node : treeLayout.getNodeBounds().keySet()) {
 				
 				paintBox(g, node);
 			}

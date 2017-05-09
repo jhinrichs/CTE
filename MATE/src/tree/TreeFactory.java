@@ -41,7 +41,7 @@ public class TreeFactory {
 	 * @param numberOfChildren
 	 * @param depth
 	 */
-	public void addFanTree(Node parent) {
+	public void addFanTree(INode parent) {
 		int numberOfChildren = 10;
 		System.out.println("Create FanTree with " + numberOfChildren + " Children");
 		for (int i = 0; i < numberOfChildren; i++) {

@@ -34,9 +34,10 @@ public class LeftWalker {
 
 	private boolean computeOpt() {
 		System.out.println("Start calculating optimal Solution");
+		System.out.println("Tree Depth = " + treeData.getDepth() +", Number of Nodes = " + treeData.getNumberOfNodes() +", number of robots = " +  numberOfRobots);
 		optimumSolution = new Traversal(tree, numberOfRobots);
 		int energy = Integer.max(treeData.getDepth(), (treeData.getNumberOfNodes() - 1) / numberOfRobots);
-		System.out.println("Maximale Energie = "+energy);
+		System.out.println("Maximale Energie = max(TreeDepth, (numberOfNodes -1)/number of robots) = "+energy);
 		for (int i = 0; i < numberOfRobots; i++) {
 
 			Agent a = new Agent(tree,2*energy);
@@ -49,6 +50,12 @@ public class LeftWalker {
 		return false;
 	}
 
+	
+	/**@deprecated
+	 * @param root
+	 * @param energy
+	 * @return
+	 */
 	private List<Node> leftWalker(Node root, int energy) {
 		List<Node> nodesToVisit = new ArrayList<Node>();
 		while (!root.isFinished() && energy / 2 > 0) {
@@ -75,11 +82,12 @@ public class LeftWalker {
 	
 	private void leftWalker( Node root, Agent a) {
 		a.addNode(root);
+		a.energy-=1;
 		while (!root.isFinished() && a.enoughEnergy()) {
 
 			for (Node child : root.getChildren()) {
 				if(!child.isFinished() && a.enoughEnergy()){
-					a.energy-=1;
+					
 					//if not finished continue to traverse the tree to its leaf
 					if (!child.isLeaf()) {					
 					leftWalker(child, a);
@@ -87,6 +95,7 @@ public class LeftWalker {
 					} // if child is a leaf add this child to visitlist. 
 					else{					
 					a.addNode(child);
+					a.energy-=1;
 					child.setFinished(true);
 					}				
 				}				

@@ -8,13 +8,16 @@ import java.util.UUID;
 
 import javax.swing.tree.TreeNode;
 
-public class Node implements TreeNode {
+import mate.RobPosTree;
+
+public class Node implements INode {
 
 	private static int idCount = 0;
 	private int id;
 	private UUID uid;
 	private Node parent;
 	private TreeDataCalculator treeData;
+
 
 	public static int getIdCount() {
 		return idCount;
@@ -48,11 +51,10 @@ public class Node implements TreeNode {
 
 	}
 
-	/**
-	 * Counts all nodes in this nodes Tree
-	 * 
-	 * @return
+	/* (non-Javadoc)
+	 * @see tree.INode#getTreeNodeCount()
 	 */
+	@Override
 	public int getTreeNodeCount() {
 		if (treeData == null) {
 			treeData = new TreeDataCalculator(this);
@@ -60,32 +62,50 @@ public class Node implements TreeNode {
 		return treeData.getNumberOfNodes();
 	}
 
+	/* (non-Javadoc)
+	 * @see tree.INode#addNode()
+	 */
+	@Override
 	public void addNode() {
 		new Node(this);
 	}
 
+	/* (non-Javadoc)
+	 * @see tree.INode#getParent()
+	 */
+	@Override
 	public Node getParent() {
 		return parent;
 	}
 
+	/* (non-Javadoc)
+	 * @see tree.INode#setParent(tree.Node)
+	 */
+	@Override
 	public void setParent(Node parent) {
 		this.parent = parent;
 	}
 
+	/* (non-Javadoc)
+	 * @see tree.INode#getChildren()
+	 */
+	@Override
 	public ArrayList<Node> getChildren() {
 		return children;
 	}
 
+	/* (non-Javadoc)
+	 * @see tree.INode#setChildren(java.util.ArrayList)
+	 */
+	@Override
 	public void setChildren(ArrayList<Node> children) {
 		this.children = children;
 	}
 
-	/**
-	 * Traverses the tree until an unfinished node is found. If all nodes are
-	 * finished the tree is finished as well.
-	 * 
-	 * @return
+	/* (non-Javadoc)
+	 * @see tree.INode#isFinished()
 	 */
+	@Override
 	public Boolean isFinished() {
 		if (!finished && !isLeaf()) {
 			for (Node child : children) {
@@ -98,36 +118,54 @@ public class Node implements TreeNode {
 		return finished;
 	}
 
+	/* (non-Javadoc)
+	 * @see tree.INode#children()
+	 */
 	@Override
 	public Enumeration<Node> children() {
 
 		return Collections.enumeration(children);
 	}
 
+	/* (non-Javadoc)
+	 * @see tree.INode#getAllowsChildren()
+	 */
 	@Override
 	public boolean getAllowsChildren() {
 		// TODO Auto-generated method stub
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see tree.INode#getChildAt(int)
+	 */
 	@Override
 	public Node getChildAt(int childIndex) {
 		// TODO Auto-generated method stub
 		return children.get(childIndex);
 	}
 
+	/* (non-Javadoc)
+	 * @see tree.INode#getChildCount()
+	 */
 	@Override
 	public int getChildCount() {
 		// TODO Auto-generated method stub
 		return children.size();
 	}
 
+	/* (non-Javadoc)
+	 * @see tree.INode#getIndex(javax.swing.tree.TreeNode)
+	 */
 	@Override
 	public int getIndex(TreeNode node) {
 
 		return children.indexOf(node);
 	}
 
+	/* (non-Javadoc)
+	 * @see tree.INode#isLeaf()
+	 */
 	@Override
 	public boolean isLeaf() {
 		// TODO Auto-generated method stub
@@ -139,17 +177,18 @@ public class Node implements TreeNode {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see tree.INode#getId()
+	 */
+	@Override
 	public int getId() {
 		return id;
 	}
 
-	/**
-	 * Returns a list of all nodes that are in the tree.
-	 * 
-	 * @param node
-	 * @param listOfNodes
-	 * @return
+	/* (non-Javadoc)
+	 * @see tree.INode#getNodeList(java.util.List)
 	 */
+	@Override
 	public List<Node> getNodeList(List<Node> listOfNodes) {
 
 		if (isLeaf()) {
@@ -161,7 +200,7 @@ public class Node implements TreeNode {
 			listOfNodes.add(this);
 			return listOfNodes;
 		} else {
-			for (Node child : getChildren()) {
+			for (INode child : getChildren()) {
 				listOfNodes = child.getNodeList(listOfNodes);
 			}
 
@@ -169,11 +208,10 @@ public class Node implements TreeNode {
 		}
 	}
 
-	/**
-	 * adds the give Node as a child and sets its Parent to this node
-	 * 
-	 * @param newChild
+	/* (non-Javadoc)
+	 * @see tree.INode#addChild(tree.Node)
 	 */
+	@Override
 	public void addChild(Node newChild) {
 
 		if (newChild != null) {
@@ -182,13 +220,18 @@ public class Node implements TreeNode {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see tree.INode#setFinished(boolean)
+	 */
+	@Override
 	public void setFinished(boolean b) {
 		finished = b;
 	}
 
-	/**return 
-	 * @return
+	/* (non-Javadoc)
+	 * @see tree.INode#isRoot()
 	 */
+	@Override
 	public boolean isRoot() {
 		if (parent == null) {
 			return false;
@@ -196,4 +239,5 @@ public class Node implements TreeNode {
 			return true;
 		}
 	}
+
 }

@@ -1,11 +1,12 @@
 package solutionData;
 
 import optimalExploration.LeftWalker;
+import tree.INode;
 import tree.Node;
 
 public class SolutionManager {
 
-	private Node tree;
+	private INode tree;
 	private int numberOfRobots;
 	private LeftWalker leftWalker;
 	

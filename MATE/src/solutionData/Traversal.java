@@ -3,6 +3,7 @@ package solutionData;
 import java.util.ArrayList;
 import java.util.List;
 
+import tree.INode;
 import tree.Node;
 
 public class Traversal {
@@ -16,7 +17,7 @@ public class Traversal {
 		return agents;
 	}
 
-	private Node root;
+	private INode root;
 
 	/**
 	 * A Traversal is a part of a solution for the given tree and the Number of
@@ -25,7 +26,7 @@ public class Traversal {
 	 * @param root
 	 * @param numberOfRobots
 	 */
-	public Traversal(Node tree, int numberOfRobots) {
+	public Traversal(INode tree, int numberOfRobots) {
 		id = idCounter;
 		idCounter++;
 		this.root = tree;

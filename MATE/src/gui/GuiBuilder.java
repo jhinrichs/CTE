@@ -66,7 +66,8 @@ public class GuiBuilder {
 	private double leafFactor;
 	private int maxNodes;
 	private int minNodes;
-
+	private TreeDataInlay panel;
+	
 	Random rand = new Random();
 	int seed = rand.nextInt();
 	private JTextField maxNodesField;
@@ -141,7 +142,10 @@ public class GuiBuilder {
 				try {
 					validateData();					
 					createTree();
-					paintTree();
+					ProgrammManager.calculateLeftWalker(panel.getNumberOfRobots());
+					//paintTree();
+					showAllPaths();
+					
 				} catch (Exception e2) {
 					JOptionPane.showMessageDialog(frame, "Cannot create Tree due to one ore more values are incorrect. Please correct " + e2.getMessage().substring(16));
 				}
@@ -158,6 +162,15 @@ public class GuiBuilder {
 				minNodes = Integer.parseInt(minNodesField.getText());
 				
 				leafFactor = Double.parseDouble(leafFactorField.getText().replace(",", "."));
+			}
+			
+			private void showAllPaths(){
+				treeInlayPanel.removeAll();
+				treeInlayPanel.repaint();
+				rand = new Random(Integer.parseInt(seedField.getText()));
+				seedField.setText("" + rand.nextInt());
+				ProgrammManager.paintAllAgents(treeInlayPanel, bigNodesCheckBox.isSelected());
+				frame.setVisible(true);
 			}
 
 			private void createTree() {
@@ -369,18 +382,10 @@ public class GuiBuilder {
 		minChildrenField.setText("0");
 		minChildrenField.setColumns(10);
 
-		JTextPane txtpnTreecode = new JTextPane();
-		txtpnTreecode.setToolTipText("Copy Paste this code to quickly regenerate Trees. ");
-		txtpnTreecode.setBounds(15, 670, 120, 20);
-		frame.getContentPane().add(txtpnTreecode);
-		txtpnTreecode.setText("TreeCode");
-		txtpnTreecode.setOpaque(false);
-
 		textField_2 = new JTextField();
-		textField_2.setBounds(15, 694, 120, 20);
+		textField_2.setBounds(15, 694, 131, 20);
 		frame.getContentPane().add(textField_2);
-		textField_2.setBackground(SystemColor.menu);
-		textField_2.setText("0815");
+		textField_2.setBackground(Color.WHITE);
 		textField_2.setColumns(10);
 		
 		bigNodesCheckBox = new JCheckBox("Big numbered Nodes");
@@ -388,7 +393,7 @@ public class GuiBuilder {
 		bigNodesCheckBox.setBounds(6, 597, 140, 23);
 		frame.getContentPane().add(bigNodesCheckBox);
 		
-		JPanel panel = new TreeDataInlay();
+		panel = new TreeDataInlay();
 		panel.setBounds(6, 725, 139, 118);
 		frame.getContentPane().add(panel);
 		
@@ -433,6 +438,10 @@ public class GuiBuilder {
 		});
 		btnNewButton.setBounds(1212, 99, 106, 23);
 		frame.getContentPane().add(btnNewButton);
+		
+		JButton btnNewButton_1 = new JButton("Use Tree Code");
+		btnNewButton_1.setBounds(26, 671, 106, 23);
+		frame.getContentPane().add(btnNewButton_1);
 
 	}
 

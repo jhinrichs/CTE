@@ -2,19 +2,20 @@ package mate;
 
 import java.util.List;
 
+import mate.Brain.BrainModuleType;
 import solutionData.Agent;
 import tree.Node;
 
 public class MateAgent extends Agent implements IMateAgent {
 
 	public Node activeNode;
-	public IDecisionModule decisionModule = new DecisionModule();
+	public Brain brainModule;
 
 	public List<Node> path;
 
-	public MateAgent(Node root, DecisionModule decisionModule){
+	public MateAgent(Node root, BrainModuleType brainType){
 		activeNode=root;
-		this.decisionModule = decisionModule;
+		this.brainModule = new Brain(this, brainType);
 	}
 	
 	public void addNode(Node n) {
@@ -67,7 +68,7 @@ public class MateAgent extends Agent implements IMateAgent {
 	}
 	
 	public void calculateMove(){
-		decisionModule.getDecision();
+		brainModule.getDecision();
 	}
 
 }
