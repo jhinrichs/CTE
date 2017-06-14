@@ -3,6 +3,7 @@ package mate;
 import java.util.List;
 
 import mate.Brain.BrainModuleType;
+import solutionData.RobPosTree;
 import tree.INode;
 import tree.Node;
 

@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 
 import drawTree.TreePainter;
 import gui.GuiBuilder;
+import optimalExploration.CollectiveExploration;
 import optimalExploration.LeftWalker;
 import solutionData.Agent;
 import solutionData.SolutionManager;
@@ -23,6 +24,8 @@ public class ProgrammManager {
 	private static Node tree = new Node(null);
 	private static GuiBuilder mainWindow;
 	private static LeftWalker leftWalker;
+	private static CollectiveExploration colEx;
+	
 	
 	
 
@@ -51,7 +54,7 @@ public class ProgrammManager {
 	public static void paintAgentPaths(JPanel panel, boolean bigNodes, int agent){
 
 		TreePainter painter = new TreePainter();
-		painter.drawTree(leftWalker.getOptimum().getAgents()[agent].getTree(), panel, bigNodes);
+		painter.drawTree(leftWalker.getOptimum().getAgents().get(agent).getTree(), panel, bigNodes);
 	}
 	
 	public static void paintAllAgents(JPanel panel, boolean bigNodes){
@@ -68,9 +71,9 @@ public class ProgrammManager {
 				
 	}
 	
-	public static void calculateLeftWalker(int numberOfRobots){
+	public static void calculateLeftWalker(){
 	
-		SolutionManager solutionManager = new SolutionManager(tree, numberOfRobots);
+		SolutionManager solutionManager = new SolutionManager(tree, mainWindow.panel.getNumberOfRobots());
 		
 		leftWalker = solutionManager.getLeftWalker();
 		
@@ -91,6 +94,12 @@ public class ProgrammManager {
 		TreeDataCalculator calcie = new TreeDataCalculator(tree);
 		
 		return calcie;
+		
+	}
+	public static void startCTE() {
+		SolutionManager solutionManager = new SolutionManager(tree, mainWindow.panel.getNumberOfRobots());
+		
+		colEx = solutionManager.getCTE();
 		
 	}
 	

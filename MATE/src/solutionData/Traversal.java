@@ -11,9 +11,9 @@ public class Traversal {
 	private int id;
 	private static int idCounter = 0;
 	private int numberOfRobots;
-	private Agent[] agents;
+	private List<Agent> agents;
 	
-	public Agent[] getAgents() {
+	public List<Agent> getAgents() {
 		return agents;
 	}
 
@@ -31,11 +31,11 @@ public class Traversal {
 		idCounter++;
 		this.root = tree;
 		this.numberOfRobots = numberOfRobots;
-		agents = new Agent[numberOfRobots];
+		agents = new ArrayList<Agent>();
 	}
 
 	public void addAgent(Agent a, int index) {
-		agents[index] = a;
+		agents.add(index, a);
 	}
 
 	public int getSteps() {
@@ -58,7 +58,7 @@ public class Traversal {
 
 		int i = 0;
 		while (!listOfNodes.isEmpty() && i < numberOfRobots) {
-			listOfNodes.removeAll(agents[i].getNodesToVisit());
+			listOfNodes.removeAll(agents.get(i).getNodesToVisit());
 			i++;
 		}
 

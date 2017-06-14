@@ -31,7 +31,7 @@ public class TreeDataInlay extends JPanel{
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		this.setSize(120, 150);
+		this.setSize(120, 153);
 		setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 				JTextPane numberOfRobots = new JTextPane();
@@ -65,7 +65,7 @@ public class TreeDataInlay extends JPanel{
 				TreeDataCalculator calcy = ProgrammManager.getTreeDataImprovised();
 				TreeDepthText.setText("Tree Depth = " + calcy.getDepth());
 				NumberOfNodesText.setText("Number of Nodes = " + calcy.getNumberOfNodes());
-				ProgrammManager.calculateLeftWalker(getNumberOfRobots());
+				ProgrammManager.calculateLeftWalker();
 			}
 		});
 		add(btnNewButton);

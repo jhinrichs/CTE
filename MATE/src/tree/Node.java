@@ -8,7 +8,8 @@ import java.util.UUID;
 
 import javax.swing.tree.TreeNode;
 
-import mate.RobPosTree;
+import optimalExploration.CollectiveExploration;
+import solutionData.RobPosTree;
 
 public class Node implements INode {
 
@@ -17,6 +18,7 @@ public class Node implements INode {
 	private UUID uid;
 	private Node parent;
 	private TreeDataCalculator treeData;
+	private RobPosTree robPos;
 
 
 	public static int getIdCount() {
@@ -50,6 +52,8 @@ public class Node implements INode {
 		}
 
 	}
+	
+	
 
 	/* (non-Javadoc)
 	 * @see tree.INode#getTreeNodeCount()
@@ -190,7 +194,7 @@ public class Node implements INode {
 	 */
 	@Override
 	public List<Node> getNodeList(List<Node> listOfNodes) {
-
+		
 		if (isLeaf()) {
 			if (listOfNodes == null) {
 				System.out.println("ListOfNoes = null and roo is " + this.id);
@@ -238,6 +242,14 @@ public class Node implements INode {
 		} else {
 			return true;
 		}
+	}
+
+	public RobPosTree getRobPos() {
+		return robPos;
+	}
+
+	public void setRobPos(RobPosTree robPos) {
+		this.robPos = robPos;
 	}
 
 }

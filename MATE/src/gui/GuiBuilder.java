@@ -30,6 +30,7 @@ import tree.TreeTypes;
 import treeExploration.ProgrammManager;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.JLayeredPane;
 
 public class GuiBuilder {
 
@@ -66,7 +67,7 @@ public class GuiBuilder {
 	private double leafFactor;
 	private int maxNodes;
 	private int minNodes;
-	private TreeDataInlay panel;
+	public TreeDataInlay panel;
 	
 	Random rand = new Random();
 	int seed = rand.nextInt();
@@ -142,7 +143,7 @@ public class GuiBuilder {
 				try {
 					validateData();					
 					createTree();
-					ProgrammManager.calculateLeftWalker(panel.getNumberOfRobots());
+					ProgrammManager.calculateLeftWalker();
 					//paintTree();
 					showAllPaths();
 					
@@ -442,6 +443,10 @@ public class GuiBuilder {
 		JButton btnNewButton_1 = new JButton("Use Tree Code");
 		btnNewButton_1.setBounds(26, 671, 106, 23);
 		frame.getContentPane().add(btnNewButton_1);
+		
+		CTEInlay panel_3 = new CTEInlay();
+		panel_3.setBounds(1212, 145, 131, 73);
+		frame.getContentPane().add(panel_3);
 
 	}
 
