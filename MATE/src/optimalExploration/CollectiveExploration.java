@@ -68,37 +68,37 @@ public class CollectiveExploration {
 
 	private List<MovingPlan> calculateMove(Node active, List<MovingPlan> plan) {
 		
-		// wenn knoten fertig und keine roboter mehr im Subtree	gehen alle roboter zum parent
-		if (active.isFinished() && active.getRobPos().numberOfAllAgentsInTree() == active.getRobPos().getAgentsAtNode().size() && active != root ) {
-			for (Agent a : active.getRobPos().getAgentsAtNode()) {
-				plan.add(new MovingPlan(active.getRobPos().getParent(), a));
-			}
-		} else 
-		//aufteilung auf unvollendete teilbäume
-		{
-			
-			//get unfinished children
-			List<Node> unfinishedNodes = new ArrayList<Node>();
-			for (Node child : active.getChildren()) {
-				if (!child.isFinished()) {
-					unfinishedNodes.add(child);
-				}
-			}
-			int min =0;
-			int minRobots = -1;
-			for (Node child : unfinishedNodes) {
-				//find first subtree with less robots
-				if (minRobots < 0){
-					
-				}
-			}
-
-			for (Agent a : active.getRobPos().getAgentsAtNode()) {
-			// unfinisched
-				// plan.add(new MovingPlan(unfinishedNodes.get(i%active.agents.size()), a));
-			}
-
-		}
+//		// wenn knoten fertig und keine roboter mehr im Subtree	gehen alle roboter zum parent
+//		if (active.isFinished() && active.getRobPos().numberOfAllAgentsInTree() == active.getRobPos().getAgentsAtNode().size() && active != root ) {
+//			for (Agent a : active.getRobPos().getAgentsAtNode()) {
+//				plan.add(new MovingPlan(active.getRobPos().getParent(), a));
+//			}
+//		} else 
+//		//aufteilung auf unvollendete teilbäume
+//		{
+//			
+//			//get unfinished children
+//			int unfinished children
+//			for (Node child : active.getChildren()) {
+//				if (!child.isFinished()) {
+//					
+//				}
+//			}
+//			int min =0;
+//			int minRobots = -1;
+//			for (Node child : unfinishedNodes) {
+//				//find first subtree with less robots
+//				if (minRobots < 0){
+//					
+//				}
+//			}
+//
+//			for (Agent a : active.getRobPos().getAgentsAtNode()) {
+//			// unfinisched
+//				// plan.add(new MovingPlan(unfinishedNodes.get(i%active.agents.size()), a));
+//			}
+//
+//		}
 return null;
 	}
 

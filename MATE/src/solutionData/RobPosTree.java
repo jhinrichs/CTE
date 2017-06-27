@@ -2,16 +2,14 @@ package solutionData;
 
 import java.util.List;
 
-import mate.MateAgent;
 import tree.Node;
 
 public class RobPosTree {
 
 	public Node originalNode;
-
 	private Node parent;
 	public List<Node> children;
-
+	private List<Agent> agentsAtNode;
 	private int distanceToParent;
 
 	public RobPosTree(Node root, Node parent, int distanceToParent) {
@@ -28,15 +26,13 @@ public class RobPosTree {
 		this.distanceToParent = distanceToParent;
 	}
 
-	public List<MateAgent> getAgentsAtNode() {
+	public List<Agent> getAgentsAtNode() {
 		return agentsAtNode;
 	}
 
-	public void setAgentsAtNode(List<MateAgent> agentsAtNode) {
+	public void setAgentsAtNode(List<Agent> agentsAtNode) {
 		this.agentsAtNode = agentsAtNode;
 	}
-
-	private List<MateAgent> agentsAtNode;
 
 	public int numberOfAllAgentsInTree() {
 		if (children.isEmpty()) {
