@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 
 import drawTree.TreePainter;
 import gui.GuiBuilder;
+import mate.MateAgentManager;
 import optimalExploration.CollectiveExploration;
 import optimalExploration.LeftWalker;
 import solutionData.Agent;
@@ -25,6 +26,7 @@ public class ProgrammManager {
 	private static GuiBuilder mainWindow;
 	private static LeftWalker leftWalker;
 	private static CollectiveExploration colEx;
+	private static MateAgentManager mate;
 	
 	
 	
@@ -101,6 +103,14 @@ public class ProgrammManager {
 		
 		colEx = solutionManager.getCTE();
 		
+	}
+	public static void startMate() {
+		int numberOfAgents = mainWindow.matePanel.getNumberOfAgents_textfield();
+		double movingThreshhold = mainWindow.matePanel.getMovingTreshhold_textfield();
+		double distanceInfluence = mainWindow.matePanel.getDistanceInfluence_textfield();
+		SolutionManager solutionManager = new SolutionManager(tree, numberOfAgents, movingThreshhold, distanceInfluence);
+		
+		mate = solutionManager.getMate();
 	}
 	
 }

@@ -1,5 +1,6 @@
 package mate;
 
+import tree.Node;
 
 public class Brain {
 	
@@ -14,13 +15,10 @@ public class Brain {
 		}
 		
 	}
-
-	public void moveAgent() {
-		myBrain.moveAgent();
-	}
 	
-	public void getDecision(){
-		myBrain.getDecision();
+	public Node getNextNode(){
+		return myBrain.getNextNode();
+		 
 	}
 	
 

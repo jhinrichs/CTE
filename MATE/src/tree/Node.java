@@ -20,12 +20,12 @@ public class Node implements INode {
 	private TreeDataCalculator treeData;
 	private RobPosTree robPos;
 
-
 	public static int getIdCount() {
 		return idCount;
 	}
 
 	private Boolean finished = false;
+	public boolean visited = false;
 	private ArrayList<Node> children;
 
 	public Node(Node parent) {
@@ -52,10 +52,10 @@ public class Node implements INode {
 		}
 
 	}
-	
-	
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see tree.INode#getTreeNodeCount()
 	 */
 	@Override
@@ -66,7 +66,9 @@ public class Node implements INode {
 		return treeData.getNumberOfNodes();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see tree.INode#addNode()
 	 */
 	@Override
@@ -74,7 +76,9 @@ public class Node implements INode {
 		new Node(this);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see tree.INode#getParent()
 	 */
 	@Override
@@ -82,7 +86,9 @@ public class Node implements INode {
 		return parent;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see tree.INode#setParent(tree.Node)
 	 */
 	@Override
@@ -90,7 +96,9 @@ public class Node implements INode {
 		this.parent = parent;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see tree.INode#getChildren()
 	 */
 	@Override
@@ -98,7 +106,9 @@ public class Node implements INode {
 		return children;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see tree.INode#setChildren(java.util.ArrayList)
 	 */
 	@Override
@@ -106,7 +116,9 @@ public class Node implements INode {
 		this.children = children;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see tree.INode#isFinished()
 	 */
 	@Override
@@ -114,7 +126,7 @@ public class Node implements INode {
 		if (!finished && !isLeaf()) {
 			for (Node child : children) {
 				if (!child.finished) {
-					return finished;
+					return false;
 				}
 			}
 			finished = true;
@@ -122,7 +134,9 @@ public class Node implements INode {
 		return finished;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see tree.INode#children()
 	 */
 	@Override
@@ -131,7 +145,9 @@ public class Node implements INode {
 		return Collections.enumeration(children);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see tree.INode#getAllowsChildren()
 	 */
 	@Override
@@ -140,7 +156,9 @@ public class Node implements INode {
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see tree.INode#getChildAt(int)
 	 */
 	@Override
@@ -149,7 +167,9 @@ public class Node implements INode {
 		return children.get(childIndex);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see tree.INode#getChildCount()
 	 */
 	@Override
@@ -158,7 +178,9 @@ public class Node implements INode {
 		return children.size();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see tree.INode#getIndex(javax.swing.tree.TreeNode)
 	 */
 	@Override
@@ -167,7 +189,9 @@ public class Node implements INode {
 		return children.indexOf(node);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see tree.INode#isLeaf()
 	 */
 	@Override
@@ -181,7 +205,9 @@ public class Node implements INode {
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see tree.INode#getId()
 	 */
 	@Override
@@ -189,12 +215,14 @@ public class Node implements INode {
 		return id;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see tree.INode#getNodeList(java.util.List)
 	 */
 	@Override
 	public List<Node> getNodeList(List<Node> listOfNodes) {
-		
+
 		if (isLeaf()) {
 			if (listOfNodes == null) {
 				System.out.println("ListOfNoes = null and roo is " + this.id);
@@ -212,7 +240,9 @@ public class Node implements INode {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see tree.INode#addChild(tree.Node)
 	 */
 	@Override
@@ -224,7 +254,9 @@ public class Node implements INode {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see tree.INode#setFinished(boolean)
 	 */
 	@Override
@@ -232,7 +264,9 @@ public class Node implements INode {
 		finished = b;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see tree.INode#isRoot()
 	 */
 	@Override
@@ -250,6 +284,34 @@ public class Node implements INode {
 
 	public void setRobPos(RobPosTree robPos) {
 		this.robPos = robPos;
+	}
+
+	
+	/**
+	 * @param n
+	 * @returns if the given Node n is contained in a Subtree of this Node
+	 */
+	public boolean isRootOf(Node n){
+		if(maxIdOfSubTree() > n.getId() && n.getId() > id){
+			return true;
+		}
+		else return false;
+	}
+	
+	/**
+	 * @return id of the next Node that is not within the Subtree of this Node
+	 */
+	public int maxIdOfSubTree() {
+		
+		int index = parent.getChildren().indexOf(this);
+		//if parent has another child after this one
+		if (parent.getChildCount() > index + 1) {
+			return parent.getChildAt(index).getId();
+		}
+		else {
+			return parent.maxIdOfSubTree();
+		}
+		
 	}
 
 }

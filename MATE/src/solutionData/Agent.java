@@ -43,16 +43,24 @@ public class Agent {
 
 
 	public Agent() {
+		setId();
+		nodesToVisit = new ArrayList<Node>();
+	}
+
+	private void setId() {
 		id = idCounter;
 		idCounter++;
-		nodesToVisit = new ArrayList<Node>();
+	}
+	
+	public Agent(Node root){
+		setId();
+		this.root = root;
 	}
 
 	public Agent(Node root, int energy) {
 		this.root = root;
 		this.energy = energy;
-		id = idCounter;
-		idCounter++;
+		setId();
 		nodesToVisit = new ArrayList<Node>();
 	}
 
@@ -80,6 +88,10 @@ public class Agent {
 			return (nodesToVisit.size() - 1) * 2;
 		}
 		return 0;
+	}
+
+	public Node getPosition() {
+		return nodesToVisit.get(nodesToVisit.size());		
 	}
 
 }

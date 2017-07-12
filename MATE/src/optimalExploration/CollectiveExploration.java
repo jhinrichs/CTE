@@ -15,7 +15,7 @@ public class CollectiveExploration {
 
 	public Node root;
 	private int numberOfRobots = 0;
-	public Node activeNodes;
+	private List<Agent> agents = new ArrayList<Agent>();
 
 	TreeDataCalculator treeData;
 
@@ -23,11 +23,11 @@ public class CollectiveExploration {
 
 	public CollectiveExploration(Node tree, int numberOfRobots) {
 		this.root = TreeFactory.copyTree(tree);
-		activeNodes= root;
-		activeNodes.setRobPos(new RobPosTree(root,null,0));		
 		this.numberOfRobots = numberOfRobots;
 		treeData = new TreeDataCalculator(this.root);
-
+		for (int i = 0; i < numberOfRobots; i++) {
+			agents.add(new Agent());
+		}
 	}
 
 	public Traversal getOptimum() {
@@ -41,10 +41,9 @@ public class CollectiveExploration {
 	private boolean computeOpt() {
 		System.out.println("Start calculating Collective Tree Exploration Solution");
 		solution = new Traversal(root, numberOfRobots);
-		
 
 		while (!root.isFinished()) {
-			
+
 			step();
 		}
 		return solution.isValidSolution();
@@ -54,65 +53,49 @@ public class CollectiveExploration {
 
 		// 1 calculate division for each populated node
 		List<MovingPlan> plan = new ArrayList<MovingPlan>();
-		calculateMove(activeNodes,plan);
+		calculateMove(plan);
 
 		// 2#
 		move();
 
 	}
 
-
 	private void move() {
 
 	}
 
-	private List<MovingPlan> calculateMove(Node active, List<MovingPlan> plan) {
+	private List<MovingPlan> calculateMove(List<MovingPlan> plan) {
+
+		// // wenn knoten fertig und keine roboter mehr im Subtree gehen alle
+		// roboter zum parent
+		List<Node> activeNodes = getNodesWithAgents();
 		
-//		// wenn knoten fertig und keine roboter mehr im Subtree	gehen alle roboter zum parent
-//		if (active.isFinished() && active.getRobPos().numberOfAllAgentsInTree() == active.getRobPos().getAgentsAtNode().size() && active != root ) {
-//			for (Agent a : active.getRobPos().getAgentsAtNode()) {
-//				plan.add(new MovingPlan(active.getRobPos().getParent(), a));
-//			}
-//		} else 
-//		//aufteilung auf unvollendete teilbäume
-//		{
-//			
-//			//get unfinished children
-//			int unfinished children
-//			for (Node child : active.getChildren()) {
-//				if (!child.isFinished()) {
-//					
-//				}
-//			}
-//			int min =0;
-//			int minRobots = -1;
-//			for (Node child : unfinishedNodes) {
-//				//find first subtree with less robots
-//				if (minRobots < 0){
-//					
-//				}
-//			}
-//
-//			for (Agent a : active.getRobPos().getAgentsAtNode()) {
-//			// unfinisched
-//				// plan.add(new MovingPlan(unfinishedNodes.get(i%active.agents.size()), a));
-//			}
-//
-//		}
-return null;
+		for(Node n : activeNodes){
+			
+		}
+		// aufteilung auf unvollendete teilbäume
+
+		// get unfinished children
+
+		return null;
+	}
+
+	private List<Node> getNodesWithAgents() {
+		List<Node> activeNodes = new ArrayList<Node>();
+		for (Agent a : agents) {
+			Node position = a.getPosition();
+			if(!activeNodes.contains(position)){
+				activeNodes.add(position);
+			}
+		}
+		
+		return activeNodes;
 	}
 
 }
 
-class ActiveNode {
-	public Node node;
-	public List<Agent> agentsAtNode;
-	public int numberOfAllAgentsInTree;
 
-	public ActiveNode(Node root, List<Agent> a) {
-		node = root;
-		agentsAtNode = a;
-		numberOfAllAgentsInTree = agentsAtNode.size();
-	}
 
-}
+
+
+

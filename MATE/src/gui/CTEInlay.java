@@ -14,8 +14,10 @@ import treeExploration.ProgrammManager;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.SystemColor;
 
 public class CTEInlay extends JPanel {
+	private JTextField textField;
 
 	/**
 	 * Create the panel.
@@ -29,14 +31,25 @@ public class CTEInlay extends JPanel {
 				ProgrammManager.startCTE();
 			}
 		});
-		btnStart.setBounds(38, 34, 57, 23);
+		btnStart.setBounds(10, 83, 121, 23);
 		add(btnStart);
 		
 		JTextPane txtpnExploration = new JTextPane();
 		txtpnExploration.setBackground(UIManager.getColor("Button.background"));
 		txtpnExploration.setText("Collective Exploration");
-		txtpnExploration.setBounds(10, 11, 121, 28);
+		txtpnExploration.setBounds(10, 11, 121, 23);
 		add(txtpnExploration);
+		
+		textField = new JTextField();
+		textField.setText("5");
+		textField.setBounds(20, 52, 99, 20);
+		add(textField);
+		textField.setColumns(10);
+		
+		JTextPane txtpnNumberOfAgents = new JTextPane();
+		txtpnNumberOfAgents.setText("Number of Agents");
+		txtpnNumberOfAgents.setBounds(10, 29, 109, 20);
+		add(txtpnNumberOfAgents);
 
 	}
 }

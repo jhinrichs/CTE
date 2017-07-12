@@ -1,9 +1,9 @@
 package mate;
 
+import tree.Node;
+
 public interface IBrainModule {
 
-	void getDecision();
-
-	void moveAgent();
+	Node getNextNode();
 
 }

@@ -68,6 +68,8 @@ public class GuiBuilder {
 	private int maxNodes;
 	private int minNodes;
 	public TreeDataInlay panel;
+	public MatePanel matePanel;
+	public CTEInlay ctePanel;
 	
 	Random rand = new Random();
 	int seed = rand.nextInt();
@@ -444,9 +446,13 @@ public class GuiBuilder {
 		btnNewButton_1.setBounds(26, 671, 106, 23);
 		frame.getContentPane().add(btnNewButton_1);
 		
-		CTEInlay panel_3 = new CTEInlay();
-		panel_3.setBounds(1212, 145, 131, 73);
-		frame.getContentPane().add(panel_3);
+		CTEInlay ctePanel = new CTEInlay();
+		ctePanel.setBounds(1212, 145, 142, 199);
+		frame.getContentPane().add(ctePanel);
+		
+		MatePanel matePanel = new MatePanel();
+		matePanel.setBounds(1212, 355, 142, 311);
+		frame.getContentPane().add(matePanel);
 
 	}
 

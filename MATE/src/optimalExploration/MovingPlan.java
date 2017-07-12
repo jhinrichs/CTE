@@ -1,16 +1,19 @@
 package optimalExploration;
 
-import solutionData.Agent;
+import mate.MateAgent;
 import tree.Node;
 
 public class MovingPlan {
 	public Node nodeToGo;
-	public Agent agent;
+	public MateAgent agent;
 
 	public MovingPlan() {
 	}
-	public MovingPlan(Node n, Agent a) {
+	public MovingPlan(Node n, MateAgent a) {
 		agent = a;
 		nodeToGo = n;
+	}
+	public void activate() {
+		agent.moveAgent(nodeToGo);
 	}
 }
