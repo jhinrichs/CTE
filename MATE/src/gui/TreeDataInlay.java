@@ -71,7 +71,7 @@ public class TreeDataInlay extends JPanel{
 		add(btnNewButton);
 		
 	}
-	public int getNumberOfRobots(){
+	public int getNumberOfAgents(){
 		return Integer.parseInt(numberOfRobotsField.getText());
 		
 	}

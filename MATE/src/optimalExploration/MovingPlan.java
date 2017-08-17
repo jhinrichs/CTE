@@ -15,7 +15,7 @@ public class MovingPlan {
 		nodeToGo = n;
 	}
 	public void execute() {
-		System.out.println("Moving Agent "+ agent.getId() + " to Node " + nodeToGo.getId() ) ;
+//		System.out.println("Moving Agent "+ agent.getId() + " to Node " + nodeToGo.getId() ) ;
 		agent.moveAgent(nodeToGo);
 	}
 }

@@ -64,8 +64,7 @@ public class SolutionManager {
 		if (mate == null) {
 			 mate = new MateAgentManager(tree, numberOfAgents, brainType);
 		}
-		mate.getOptimum();
-		return null;
+		return mate;
 	}
 
 }

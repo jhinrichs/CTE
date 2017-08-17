@@ -24,6 +24,7 @@ import javax.swing.border.MatteBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import gui.GuiBuilder.algos;
 import tree.TreeFactory;
 import tree.TreeSpecifier;
 import tree.TreeTypes;
@@ -79,12 +80,21 @@ public class GuiBuilder {
 	public CTEInlay ctePanel;
 	public JPanel treeInlayPanel;
 	public JSpinner stepSpinner;
+	public JSpinner stepSpinner_2;
+	public JComboBox<algos> comboBox;
 	
 	Random rand = new Random();
 	int seed = rand.nextInt();
 	private JTextField maxNodesField;
 
 	private JTextField minNodesField;
+	
+	public enum algos {
+		cte,
+		mate,
+		leftWalker;
+	}
+	
 
 	/**
 	 * Create the application.
@@ -155,9 +165,8 @@ public class GuiBuilder {
 				try {
 					validateData();
 					createTree();
-					ProgrammManager.calculateLeftWalker();
-					// paintTree();
-					showAllPaths();
+					startAlgo();
+					paintAllPaths();
 
 				} catch (Exception e2) {
 					JOptionPane.showMessageDialog(frame,
@@ -178,15 +187,6 @@ public class GuiBuilder {
 				leafFactor = Double.parseDouble(leafFactorField.getText().replace(",", "."));
 			}
 
-			private void showAllPaths() {
-				treeInlayPanel.removeAll();
-				treeInlayPanel.repaint();
-				rand = new Random(Integer.parseInt(seedField.getText()));
-				seedField.setText("" + rand.nextInt());
-				ProgrammManager.calculateLeftWalker();
-				ProgrammManager.paintAllAgents();
-				frame.setVisible(true);
-			}
 
 			private void createTree() {
 				TreeSpecifier treeSpecifier = new TreeSpecifier();
@@ -196,16 +196,10 @@ public class GuiBuilder {
 				}
 				ProgrammManager.createTree(seed, maxDepth, minDepth, maxBranches, minBranches, maxNodes, minNodes,
 						leafFactor, treeSpecifier);
-			}
-
-			private void paintTree() {
-				treeInlayPanel.removeAll();
-				treeInlayPanel.repaint();
 				rand = new Random(Integer.parseInt(seedField.getText()));
 				seedField.setText("" + rand.nextInt());
-				ProgrammManager.paintTree(treeInlayPanel, bigNodesCheckBox.isSelected());
-				frame.setVisible(true);
 			}
+
 		});
 		btnCreateTree.setBounds(26, 643, 106, 23);
 		frame.getContentPane().add(btnCreateTree);
@@ -425,10 +419,10 @@ public class GuiBuilder {
 				paintSingleAgentsPath((Integer) spinner.getValue());
 			}
 		});
-		btnShowAgent.setBounds(156, 854, 106, 23);
+		btnShowAgent.setBounds(467, 854, 106, 23);
 		frame.getContentPane().add(btnShowAgent);
 
-		spinner.setBounds(256, 855, 42, 20);
+		spinner.setBounds(568, 855, 42, 20);
 		frame.getContentPane().add(spinner);
 
 		JButton btnShowTree = new JButton("Show Tree");
@@ -442,7 +436,7 @@ public class GuiBuilder {
 
 			}
 		});
-		btnShowTree.setBounds(424, 854, 106, 23);
+		btnShowTree.setBounds(1096, 854, 106, 23);
 		frame.getContentPane().add(btnShowTree);
 
 		JButton btnNewButton = new JButton("Show all Paths");
@@ -454,7 +448,7 @@ public class GuiBuilder {
 				//frame.setVisible(true);
 			}
 		});
-		btnNewButton.setBounds(308, 854, 106, 23);
+		btnNewButton.setBounds(351, 854, 106, 23);
 		frame.getContentPane().add(btnNewButton);
 
 		JButton btnNewButton_1 = new JButton("Use Tree Code");
@@ -469,17 +463,22 @@ public class GuiBuilder {
 		matePanel.setBounds(1212, 505, 142, 338);
 		frame.getContentPane().add(matePanel);
 		
-		JButton btnNextstep = new JButton("next Step");
-		btnNextstep.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		JButton btnShowStepNumber = new JButton("Show Step");
+		btnShowStepNumber.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) { 
 				int value = (Integer)stepSpinner.getValue();
-				value ++;
-				stepSpinner.setValue(value);
 				paintStep(value);
 			}
 		});
-		btnNextstep.setBounds(1125, 854, 77, 23);
-		frame.getContentPane().add(btnNextstep);
+		btnShowStepNumber.setBounds(620, 854, 95, 23);
+		frame.getContentPane().add(btnShowStepNumber);
+		
+		comboBox = new JComboBox(algos.values());
+		comboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			startAlgo();
+			}
+		});
 		
 		stepSpinner = new JSpinner();
 		stepSpinner.addChangeListener(new ChangeListener() {
@@ -495,40 +494,89 @@ public class GuiBuilder {
 				paintStep(value);
 			}
 		});
-		stepSpinner.setBounds(963, 855, 42, 20);
+		stepSpinner.setBounds(710, 855, 42, 20);
 		frame.getContentPane().add(stepSpinner);
+		comboBox.setBounds(156, 854, 185, 23);
 		
-		JButton btnShowStepNumber = new JButton("Show Step number");
-		btnShowStepNumber.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) { 
-				int value = (Integer)stepSpinner.getValue();
-				paintStep(value);
+		frame.getContentPane().add(comboBox);
+		
+		JButton btnShowSteps = new JButton("Show Steps");
+		btnShowSteps.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				paintSteps((int)(stepSpinner_2.getValue()));
 			}
 		});
-		btnShowStepNumber.setBounds(835, 854, 131, 23);
-		frame.getContentPane().add(btnShowStepNumber);
+		btnShowSteps.setBounds(762, 854, 95, 23);
+		frame.getContentPane().add(btnShowSteps);
 		
-		JButton btnStepBack = new JButton("step back");
-		btnStepBack.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int value = (Integer)stepSpinner.getValue();
-				value --;
-				stepSpinner.setValue(value);
-				paintStep(value);
+		stepSpinner_2 = new JSpinner();
+		stepSpinner_2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				int value = (Integer)stepSpinner_2.getValue();
+				paintSteps(value);
 			}
 		});
-		btnStepBack.setBounds(1026, 854, 89, 23);
-		frame.getContentPane().add(btnStepBack);
+		stepSpinner_2.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				int value = (Integer)stepSpinner_2.getValue();
+				paintSteps(value);
+			}
+		});
+		stepSpinner_2.setBounds(852, 855, 42, 20);
+		frame.getContentPane().add(stepSpinner_2);
 		
 		
 		
 		
 	}
 	
+	
+	private void startAlgo() {
+		switch((algos)comboBox.getSelectedItem()) {
+		case cte:
+			startCTE();
+			break;
+		case leftWalker:
+			startLeftWalker();
+			break;
+		case mate:
+			startMate();
+			break;
+			
+		}
+		
+		paintAllPaths();
+	}
+	
+	
+	private void startMate() {
+		// TODO Auto-generated method stub
+		ProgrammManager.startMate();
+	}
+
+	private void startLeftWalker() {
+		// TODO Auto-generated method stub
+		ProgrammManager.calculateLeftWalker();
+	}
+
+	private void startCTE() {
+		// TODO Auto-generated method stub
+		ProgrammManager.calculateCTE();
+		
+	}
+
 	private void paintStep(int i) {
 		treeInlayPanel.removeAll();
 		treeInlayPanel.repaint();
 		ProgrammManager.paintStep(i);
+		frame.setVisible(true);
+	}
+	
+	private void paintSteps(int i) {
+		treeInlayPanel.removeAll();
+		treeInlayPanel.repaint();
+		ProgrammManager.paintSteps(i);
 		frame.setVisible(true);
 	}
 	
@@ -539,11 +587,14 @@ public class GuiBuilder {
 		frame.setVisible(true);
 	}
 	
-	public void paintCTE() {
+	private void paintAllPaths() {
 		treeInlayPanel.removeAll();
 		treeInlayPanel.repaint();
+		ProgrammManager.paintAllAgents();
 		frame.setVisible(true);
 	}
+	
+	
 
 	/**
 	 * calculates the percentage for all treeTypes and displayes it

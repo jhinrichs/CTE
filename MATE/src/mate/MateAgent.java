@@ -1,5 +1,6 @@
 package mate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import mate.Brain.BrainModuleType;
@@ -8,16 +9,17 @@ import solutionData.Agent;
 import solutionData.RobPosTree;
 import tree.Node;
 
-public class MateAgent extends Agent implements IMateAgent {
+public class MateAgent extends Agent {
 
 	private Node activeNode;
 
 	public Brain brainModule;
 
-	public List<Node> path;
+	public List<Node> path = new ArrayList<Node>();
 	
-	public Node getActiveNode() {
-		return activeNode;
+	public Node activeNode() {
+		return path.get(path.size()-1);
+		//return activeNode;
 	}
 
 	public void setActiveNode(Node activeNode) {
@@ -45,6 +47,7 @@ public class MateAgent extends Agent implements IMateAgent {
 	public MateAgent(Node root, BrainModuleType brainType) {
 		activeNode = root;
 		activeNode.setVisited(true);
+		path.add(root);
 		this.brainModule = new Brain(this, brainType);
 	}
 

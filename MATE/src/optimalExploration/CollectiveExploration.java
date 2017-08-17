@@ -20,7 +20,7 @@ public class CollectiveExploration {
 
 	public Node root;
 	private int numberOfRobots = 0;
-	private List<Agent> agents = new ArrayList<Agent>();
+	private List<IAgent> agents = new ArrayList<IAgent>();
 
 	TreeDataCalculator treeData;
 
@@ -50,7 +50,7 @@ public class CollectiveExploration {
 	private boolean computeOpt() {
 		System.out.println("Start calculating Collective Tree Exploration Solution");
 		int steps = 0;
-		while (!root.isFinished() || !allRobotsAtRoot() ) {
+		while (!root.isFinished() || !solution.allRobotsAtRoot() ) {
 			System.out.println("calculating step " + steps);
 			step();
 			steps++;
@@ -59,14 +59,7 @@ public class CollectiveExploration {
 		return solution.isValidSolution();
 	}
 	
-	private boolean allRobotsAtRoot() {
-		for(Agent a : agents ) {
-			if (a.getPosition()!= root){
-				return false;
-			}
-		}
-		return true;
-	}
+
 
 	private Traversal step() {
 
@@ -137,7 +130,7 @@ public class CollectiveExploration {
 
 	private List<Node> getNodesWithAgents() {
 		List<Node> activeNodes = new ArrayList<Node>();
-		for (Agent a : agents) {
+		for (IAgent a : agents) {
 			Node position = a.getPosition();
 			if (!activeNodes.contains(position)) {
 				activeNodes.add(position);

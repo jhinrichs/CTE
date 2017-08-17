@@ -5,21 +5,22 @@ import java.util.List;
 
 import mate.Brain.BrainModuleType;
 import optimalExploration.MovingPlan;
+import solutionData.Agent;
+import solutionData.IAgent;
 import solutionData.RobPosTree;
 import solutionData.Traversal;
 import tree.INode;
 import tree.Node;
 import tree.TreeDataCalculator;
+import treeExploration.ProgrammManager;
 
 public class MateAgentManager {
 
-	private List<MateAgent> mates = new ArrayList<>();
-
-	private RobPosTree robPosTree;
+	private List<IAgent> mates = new ArrayList<>();
 
 	private List<Node> exploredNodes = new ArrayList<>();
 
-	private Node originalTree;
+	private Node root;
 
 	private Traversal solution;
 
@@ -28,106 +29,88 @@ public class MateAgentManager {
 	private TreeDataCalculator calci;
 
 	public MateAgentManager(Node root, int numberOfRobots, BrainModuleType brainType) {
-		originalTree = root;
-		calci = new TreeDataCalculator(originalTree);
+		this.root = root;
+		calci = new TreeDataCalculator(root);
 		solution = new Traversal(root, numberOfRobots);
-		robPosTree = new RobPosTree(root, null, 0);
-		root.setRobPos(robPosTree);
+
 		for (int i = 0; i < numberOfRobots; i++) {
-			mates.add(new MateAgent(root, brainType));
+			MateAgent a = new MateAgent(root,brainType);
+			solution.addAgent(a, i);
+		}
+		mates = solution.getAgents();
+
+
+	}
+
+	private boolean computeOpt() {
+		System.out.println("Start calculating mate Solution");
+		int steps = 0;
+//		while (!root.isFinished() || !solution.allRobotsAtRoot()) {
+//			System.out.println("calculating step " + steps);
+//			step();
+//			steps++;
+//		}
+		
+		for (int i=0 ; i< 1000 ;i++) {
+			System.out.println("calculating step " + steps);
+			step();
+			steps++;
 		}
 
+		return solution.isValidSolution();
+	}
+
+	private Traversal step() {
+
+		// 1 calculate movement for each agent
+		List<MovingPlan> plan = new ArrayList<MovingPlan>();
+		calculateMove(plan);
+
+		// 2#
+		move(plan);
+		// ProgrammManager.paintStep(solution);
+
+		return solution;
+	}
+
+	private void move(List<MovingPlan> plan) {
+		for (MovingPlan p : plan) {
+			p.execute();
+		}
+
+	}
+
+	private void calculateMove(List<MovingPlan> plan) {
+		for (IAgent mate : mates) {
+			plan.add(((MateAgent) mate).calculateMove());
+		}
+	}
+
+	private boolean allRobotsAtRoot() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	public void nextStep() {
 		System.out.println("nextStep");
-		calculateRobPosTree();
+		// calculateRobPosTree();
 		List<MovingPlan> plan = new ArrayList<>();
 
 		// plan steps
-		for (MateAgent mate : mates) {
-			plan.add(mate.calculateMove());
+		for (IAgent mate : mates) {
+			plan.add(((MateAgent) mate).calculateMove());
 		}
 
 		// do steps
 		for (MovingPlan step : plan) {
-
-			// wenn Knoten in diesem Schritt erkundet wird, dann hinzufügen zu
-			// Liste der erkundeten Knoten.
-			if (!step.nodeToGo.isVisited()) {
-				step.execute();
-				if (step.nodeToGo.isVisited()) {
-					exploredNodes.add(step.nodeToGo);
-				}
-			} else {
-				step.execute();
-			}
-
+			step.execute();
 		}
-	}
-
-	private void calculateRobPosTree() {
-
-		// get all nodes necessary to build proper RobPosTree
-		ArrayList<Node> robPosNodes = new ArrayList<Node>();
-		ArrayList<Node> nodesOnPath = new ArrayList<>();
-		for (MateAgent mate : mates) {
-			Node n = mate.getActiveNode();
-			robPosNodes.add(n);
-			nodesOnPath.add(n);
-			while (n.getParent() != null && !nodesOnPath.contains(n.getParent())) {
-				n = n.getParent();
-				nodesOnPath.add(n);
-			}
-			if (!robPosNodes.contains(n)) {
-				robPosNodes.add(n);
-			}
-		}
-
-		// delete old robPosTree
-		for (Node n : robPosNodes) {
-			n.setRobPos(null);
-			RobPosTree.activeRobs.clear();
-		}
-
-		// calculate and fill new values
-		// f add agents to node
-		for (MateAgent mate : mates) {
-			mate.getActiveNode().getRobPos().addAgentToNode(mate);
-		}
-
-		// add tree structure and distance
-		for (Node n : robPosNodes) {
-
-			Node b = n.getParent();
-			int distance = 1;
-			if (b == null) {
-				n.getRobPos().setParent(b);
-				n.getRobPos().setDistanceToParent(distance);
-			} 
-			else {
-				while (!robPosNodes.contains(b)) {
-					distance++;
-					b = b.getParent();
-				}
-				n.getRobPos().setParent(b);
-				n.getRobPos().setDistanceToParent(distance);
-				b.getRobPos().robPosChildren.add(n);
-			}
-
-		}
-
-		robPosTree.updateAllActiveRobs(searchDepth);
 
 	}
 
-	public void getOptimum() {
-		int totalNumberOfNodes = calci.getNumberOfNodes();
-		while (totalNumberOfNodes > exploredNodes.size()) {
-			nextStep();
-			System.out.println("bisher wurden " + exploredNodes.size() + " Knoten entdeckt.");
-		}
-
+	public Traversal getOptimum() {
+		computeOpt();
+		return solution;
 	}
 
 }

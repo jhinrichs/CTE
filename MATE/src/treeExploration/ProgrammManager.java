@@ -11,6 +11,7 @@ import mate.Brain.BrainModuleType;
 import optimalExploration.CollectiveExploration;
 import optimalExploration.LeftWalker;
 import solutionData.Agent;
+import solutionData.IAgent;
 import solutionData.SolutionManager;
 import solutionData.Traversal;
 import tree.INode;
@@ -115,7 +116,7 @@ public class ProgrammManager {
 		mainWindow.frame.setVisible(true);		
 	}
 	
-	public static void paintStepsUpToNumber(int i) {
+	public static void paintSteps(int i) {
 		
 		System.out.println("print step up to number " +i+ " for all agents");
 		TreePainter painter = new TreePainter();
@@ -148,7 +149,7 @@ public class ProgrammManager {
 	
 	public static void calculateLeftWalker(){
 	
-		SolutionManager solutionManager = new SolutionManager(tree, mainWindow.panel.getNumberOfRobots());
+		SolutionManager solutionManager = new SolutionManager(tree, mainWindow.panel.getNumberOfAgents());
 		
 		leftWalker = solutionManager.getLeftWalker();
 		recentTraversal = leftWalker.getOptimum();
@@ -159,7 +160,7 @@ public class ProgrammManager {
 	private static void printTraversals(Traversal bestPath) {
 		int maxNodes=0;
 		
-		for( Agent a : bestPath.getAgents()){
+		for( IAgent a : bestPath.getAgents()){
 			if(a.getNodesToVisit().size()>maxNodes) {
 				maxNodes = a.getNodesToVisit().size();
 			}
@@ -183,7 +184,7 @@ public class ProgrammManager {
 		
 	}
 	public static void calculateCTE() {
-		SolutionManager solutionManager = new SolutionManager(tree, mainWindow.panel.getNumberOfRobots());
+		SolutionManager solutionManager = new SolutionManager(tree, mainWindow.panel.getNumberOfAgents());
 		
 		colEx = solutionManager.getCTE();
 		
@@ -194,13 +195,18 @@ public class ProgrammManager {
 	
 	
 	public static void startMate() {
-		int numberOfAgents = mainWindow.matePanel.getNumberOfAgents_textfield();
+		int numberOfAgents = mainWindow.panel.getNumberOfAgents();
 		double movingThreshhold = mainWindow.matePanel.getMovingTreshhold_textfield();
 		double distanceInfluence = mainWindow.matePanel.getDistanceInfluence_textfield();
 		BrainModuleType brainType = mainWindow.matePanel.getBrainType();
 		SolutionManager solutionManager = new SolutionManager(tree, numberOfAgents, movingThreshhold, distanceInfluence, brainType);
 		
-		mate = solutionManager.getMate();
+		
+		mate = solutionManager.getMate(); 
+		recentTraversal = mate.getOptimum();
+		
+		paintAllAgents();
+		printTraversals(recentTraversal);
 	}
 
 

@@ -42,6 +42,7 @@ import org.abego.treelayout.TreeForTreeLayout;
 import org.abego.treelayout.TreeLayout;
 
 import solutionData.Agent;
+import solutionData.IAgent;
 import solutionData.Traversal;
 import tree.INode;
 import tree.Node;
@@ -133,7 +134,7 @@ public class TextInBoxTreePane extends JComponent {
 
 		int i = 0;
 		if (traversal != null) {
-			for (Agent a : traversal.getAgents()) {
+			for (IAgent a : traversal.getAgents()) {
 
 				switch (i % 9) {
 				case 0:
@@ -172,9 +173,18 @@ public class TextInBoxTreePane extends JComponent {
 				for (INode node : a.getNodesToVisit()) {
 					if (node.isRoot()) {
 						Color tempColor = BOX_COLOR;
-						BOX_COLOR = Color.white;
+						Color tempBorder = BORDER_COLOR;
+						Color tempText = TEXT_COLOR;
+						
+						BOX_COLOR = Color.black;
+						BORDER_COLOR = Color.darkGray;
+						TEXT_COLOR = Color.LIGHT_GRAY;
+
 						paintBox(g, node);
+
+						TEXT_COLOR = tempText;
 						BOX_COLOR = tempColor;
+						BORDER_COLOR = tempBorder;
 					} else {
 						paintBox(g, node);
 					}
