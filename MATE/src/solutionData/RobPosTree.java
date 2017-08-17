@@ -8,6 +8,7 @@ import tree.Node;
 public class RobPosTree {
 
 	private Node origin;
+
 	public Node getOrigin() {
 		return origin;
 	}
@@ -16,10 +17,10 @@ public class RobPosTree {
 		this.origin = origin;
 	}
 
-	private Node parentRobPos;
+	private Node parentRobPos = null;
 	public List<Node> robPosChildren = new ArrayList<Node>();
-	private List<Agent> agentsAtNode = new ArrayList<Agent>();
-	private int distanceToParent;
+	private List<IAgent> agentsAtNode = new ArrayList<IAgent>();
+	private int distanceToParent = 0;
 
 	public static List<RobPosTree> activeRobs = new ArrayList<>();
 
@@ -31,12 +32,13 @@ public class RobPosTree {
 		this.distanceToParent = distanceToParent;
 	}
 
-	public RobPosTree() {
-
+	public RobPosTree(Node origin) {
+		this.origin = origin;
 	}
 
 	public boolean isRobPosNode() {
-		if (agentsAtNode.isEmpty() && robPosChildren.size() < 1) {
+		
+		if (agentsAtNode.size() < 1 && robPosChildren.size() < 1 && !origin.isRoot()) {
 			return false;
 		} else {
 			return true;
@@ -51,19 +53,19 @@ public class RobPosTree {
 		this.distanceToParent = distanceToParent;
 	}
 
-	public List<Agent> getAgentsAtNode() {
+	public List<IAgent> getAgentsAtNode() {
 		return agentsAtNode;
 	}
 
-	public void addAgentToNode(Agent a) {
+	public void addAgentToNode(IAgent a) {
 		agentsAtNode.add(a);
 	}
 
-	public void removeAgentFromNode(Agent a) {
+	public void removeAgentFromNode(IAgent a) {
 		agentsAtNode.remove(a);
 	}
 
-	public void setAgentsAtNode(List<Agent> agentsAtNode) {
+	public void setAgentsAtNode(List<IAgent> agentsAtNode) {
 		this.agentsAtNode = agentsAtNode;
 	}
 
@@ -74,6 +76,9 @@ public class RobPosTree {
 			int numberOfRobots = 0;
 			for (Node child : robPosChildren) {
 				numberOfRobots += child.getRobPos().numberOfAllAgentsInTree();
+			}
+			if(numberOfRobots >0 ) {
+				System.out.println("Number of robots in Subree " + origin.getId() + " = " + numberOfRobots);
 			}
 			return numberOfRobots;
 		}
@@ -98,19 +103,19 @@ public class RobPosTree {
 		List<Node> exploredNodes = origin.getChildren();
 		for (int i = 0; i < searchDepth; i++) {
 			int unvisitedNodes = 0;
-			List<Node>  nodesToExplore = new ArrayList<>();
+			List<Node> nodesToExplore = new ArrayList<>();
 
 			for (Node child : exploredNodes) {
 				// falls endpunkt --> zählen
 				// falls nicht weitersuchen
-				if (child.visited && child.getRobPos()!=null && !child.isFinished()) {
+				if (child.isVisited() && child.getRobPos() != null && !child.isFinished()) {
 					nodesToExplore.add(child);
-				} else if(!child.visited){
+				} else if (!child.isVisited()) {
 					unvisitedNodes++;
 				}
 			}
 			exploredNodes = nodesToExplore;
-			nodesInDistances[i]=unvisitedNodes;
+			nodesInDistances[i] = unvisitedNodes;
 		}
 
 	}
@@ -125,15 +130,91 @@ public class RobPosTree {
 
 	}
 
-	private void calculateNodesInDistance(int searchdepth) {
-		if (searchdepth <= 0) {
-
-		}
-
-	}
-
 	public void delete() {
 		activeRobs.remove(this);
+	}
+
+	public void moveAgentTo(IAgent a, Node newNode) {
+
+		// check if agent at node
+		if (agentsAtNode.contains(a)) {
+
+			// if forward move:
+			if (origin.getChildren().contains(newNode)) {
+
+				moveForward(a, newNode);
+			}
+			// backward move to parent
+			else if (origin.getParent().equals(newNode)) {
+				agentsAtNode.remove(a);
+				newNode.getRobPos().addAgentToNode(a);
+				// if old position loses robPos status --> update all former children to new parent
+				if (!isRobPosNode()) {
+					parentRobPos.getRobPos().robPosChildren.remove(origin);
+					for (Node n : robPosChildren) {
+						n.getRobPos().update();
+					}
+				}
+				// if old position is still robPos
+				else {
+					parentRobPos.getRobPos().robPosChildren.remove(origin);
+					this.update();
+					newNode.getRobPos().update();
+				}
+			}
+		}
+	}
+
+	private void moveForward(IAgent a, Node newNode) {
+		agentsAtNode.remove(a);
+
+		if (!robPosChildren.contains(newNode)) {
+			robPosChildren.add(newNode);
+		}
+
+		newNode.getRobPos().addAgentToNode(a);
+
+		// get index of newNode
+		int index = origin.getIndex(newNode);
+
+		int minId = newNode.getId();
+
+		// if child is last indexed all robpos children nodes with bigger id are
+		// subtree of that node
+		if (index +1 < origin.getChildCount()) {
+			int maxId = origin.getChildAt(index).getId() - 1;
+			// todo check if robposchildren with id beetween newnode.id and
+			// origin.getChildAt(index+1) --> update that node
+			for (Node n : robPosChildren) {
+				if (n.getId() >= minId && n.getId() <= maxId) {
+					robPosChildren.remove(n);
+					n.getRobPos().update();
+				}
+			}
+		} else {
+			Node childToRemove = null;
+			for (Node n : robPosChildren) {
+				if (n.getId() >= minId) {
+					childToRemove=n;
+					n.getRobPos().update();
+				}
+			}
+			robPosChildren.remove(childToRemove);
+		}
+
+		newNode.getRobPos().update();
+	}
+
+	private void update() {
+		Node parent = origin.getParent();
+		while(parent!=null && !parent.getRobPos().isRobPosNode()) {
+			parent= parent.getParent();
+		}
+		parentRobPos = parent;
+		
+		if(parent != null && !parentRobPos.getRobPos().robPosChildren.contains(origin)){
+		parentRobPos.getRobPos().robPosChildren.add(origin);
+		}
 	}
 
 }

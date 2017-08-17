@@ -17,7 +17,11 @@ public class Traversal {
 		return agents;
 	}
 
-	private INode root;
+	private Node root;
+
+	public Node getRoot() {
+		return root;
+	}
 
 	/**
 	 * A Traversal is a part of a solution for the given tree and the Number of
@@ -26,7 +30,7 @@ public class Traversal {
 	 * @param root
 	 * @param numberOfRobots
 	 */
-	public Traversal(INode tree, int numberOfRobots) {
+	public Traversal(Node tree, int numberOfRobots) {
 		id = idCounter;
 		idCounter++;
 		this.root = tree;
@@ -37,6 +41,10 @@ public class Traversal {
 	public void addAgent(Agent a, int index) {
 		agents.add(index, a);
 	}
+	public void addAgent(Agent a) {
+		agents.add(a);
+	}
+	
 
 	public int getSteps() {
 		int steps = 0;
@@ -54,7 +62,7 @@ public class Traversal {
 	public boolean isValidSolution() {
 
 		List<Node> listOfNodes = new ArrayList<Node>();
-		listOfNodes = root.getNodeList(listOfNodes);
+		listOfNodes = root.getLeafList(listOfNodes);
 
 		int i = 0;
 		while (!listOfNodes.isEmpty() && i < numberOfRobots) {
@@ -68,6 +76,25 @@ public class Traversal {
 			return false;
 		}
 
+	}
+
+	public Traversal getStep(int i) {
+		Traversal temp = new Traversal(root, numberOfRobots);
+		for(Agent a : agents) {
+			Agent b = new Agent(root);
+			b.addNode(a.getNodesToVisit().get(i));
+			temp.addAgent(b);
+		}
+		return temp;
+	}
+	public Traversal getStepsUpToNumber(int i) {
+		Traversal temp = new Traversal(root, numberOfRobots);
+		for(Agent a : agents) {
+			Agent b = new Agent(root);
+			b.addNodes(a.getNodesToVisit().subList(0, i));
+			temp.addAgent(b);
+		}
+		return temp;
 	}
 
 }

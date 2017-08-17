@@ -31,26 +31,32 @@ import treeExploration.ProgrammManager;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.JLayeredPane;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.JList;
+import javax.swing.JComboBox;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.MouseAdapter;
 
 public class GuiBuilder {
 
 	/**
 	 * Launch the application.
 	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					GuiBuilder window = new GuiBuilder();
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
-	
+	// public static void main(String[] args) {
+	// EventQueue.invokeLater(new Runnable() {
+	// public void run() {
+	// try {
+	// GuiBuilder window = new GuiBuilder();
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	// }
+	// });
+	// }
 
-	private JFrame frame;
+	public JFrame frame;
 	private ArrayList<TreeComponent> treeComponents = new ArrayList<>();
 	private JTextField seedField;
 	private JTextField maxDepthField;
@@ -59,7 +65,8 @@ public class GuiBuilder {
 	private JTextField leafFactorField;
 	private JTextField minChildrenField;
 	private JTextField minDepthField;
-	private JCheckBox bigNodesCheckBox;
+	public JButton btnCreateTree;
+	public JCheckBox bigNodesCheckBox;
 	private int maxDepth;
 	private int minDepth;
 	private int maxBranches;
@@ -70,6 +77,8 @@ public class GuiBuilder {
 	public TreeDataInlay panel;
 	public MatePanel matePanel;
 	public CTEInlay ctePanel;
+	public JPanel treeInlayPanel;
+	public JSpinner stepSpinner;
 	
 	Random rand = new Random();
 	int seed = rand.nextInt();
@@ -134,45 +143,48 @@ public class GuiBuilder {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 1380, 892);
+		frame.setBounds(100, 100, 1484, 963);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-		JPanel treeInlayPanel = new JPanel();
-		JButton btnCreateTree = new JButton("create tree");
+		treeInlayPanel = new JPanel();
+		btnCreateTree = new JButton("create tree");
+
 		btnCreateTree.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				try {
-					validateData();					
+					validateData();
 					createTree();
 					ProgrammManager.calculateLeftWalker();
-					//paintTree();
+					// paintTree();
 					showAllPaths();
-					
+
 				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(frame, "Cannot create Tree due to one ore more values are incorrect. Please correct " + e2.getMessage().substring(16));
+					JOptionPane.showMessageDialog(frame,
+							"Cannot create Tree due to one ore more values are incorrect. Please correct "
+									+ e2.getMessage().substring(16));
 				}
-					
-				
+
 			}
 
 			private void validateData() {
 				maxDepth = Integer.parseInt(maxDepthField.getText());
-				minDepth= Integer.parseInt(minDepthField.getText());
+				minDepth = Integer.parseInt(minDepthField.getText());
 				maxBranches = Integer.parseInt(maxChildrenField.getText());
 				minBranches = Integer.parseInt(minChildrenField.getText());
 				maxNodes = Integer.parseInt(maxNodesField.getText());
 				minNodes = Integer.parseInt(minNodesField.getText());
-				
+
 				leafFactor = Double.parseDouble(leafFactorField.getText().replace(",", "."));
 			}
-			
-			private void showAllPaths(){
+
+			private void showAllPaths() {
 				treeInlayPanel.removeAll();
 				treeInlayPanel.repaint();
 				rand = new Random(Integer.parseInt(seedField.getText()));
 				seedField.setText("" + rand.nextInt());
-				ProgrammManager.paintAllAgents(treeInlayPanel, bigNodesCheckBox.isSelected());
+				ProgrammManager.calculateLeftWalker();
+				ProgrammManager.paintAllAgents();
 				frame.setVisible(true);
 			}
 
@@ -182,7 +194,8 @@ public class GuiBuilder {
 					JSlider slider = (JSlider) p.panel.getComponent(2);
 					treeSpecifier.addTreeType(p.type, slider.getValue());
 				}
-				ProgrammManager.createTree(seed,maxDepth,minDepth,maxBranches,minBranches,maxNodes,minNodes,leafFactor, treeSpecifier);
+				ProgrammManager.createTree(seed, maxDepth, minDepth, maxBranches, minBranches, maxNodes, minNodes,
+						leafFactor, treeSpecifier);
 			}
 
 			private void paintTree() {
@@ -209,6 +222,12 @@ public class GuiBuilder {
 		treeComponents.add(new TreeComponent(TreeTypes.snakeTree, snakeTree));
 
 		JSpinner spinner = new JSpinner();
+		spinner.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				paintSingleAgentsPath((Integer) spinner.getValue());
+				
+			}
+		});
 		spinner.setModel(new SpinnerNumberModel(new Integer(0), null, null, new Integer(1)));
 		// for design purpose only
 		frame.getContentPane().add(snakeTree);
@@ -224,7 +243,7 @@ public class GuiBuilder {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(156, 11, 1046, 832);
 		frame.getContentPane().add(scrollPane);
-		
+
 		scrollPane.setViewportView(treeInlayPanel);
 
 		JPanel panel_1 = new JPanel();
@@ -390,70 +409,140 @@ public class GuiBuilder {
 		frame.getContentPane().add(textField_2);
 		textField_2.setBackground(Color.WHITE);
 		textField_2.setColumns(10);
-		
+
 		bigNodesCheckBox = new JCheckBox("Big numbered Nodes");
 		bigNodesCheckBox.setSelected(true);
 		bigNodesCheckBox.setBounds(6, 597, 140, 23);
 		frame.getContentPane().add(bigNodesCheckBox);
-		
+
 		panel = new TreeDataInlay();
 		panel.setBounds(6, 725, 139, 118);
 		frame.getContentPane().add(panel);
-		
+
 		JButton btnShowAgent = new JButton("Show Agent");
 		btnShowAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				treeInlayPanel.removeAll();
-				treeInlayPanel.repaint();
-				ProgrammManager.paintAgentPaths(treeInlayPanel, bigNodesCheckBox.isSelected(),(Integer) spinner.getValue());
-				frame.setVisible(true);
+				paintSingleAgentsPath((Integer) spinner.getValue());
 			}
 		});
-		btnShowAgent.setBounds(1212, 31, 106, 23);
+		btnShowAgent.setBounds(156, 854, 106, 23);
 		frame.getContentPane().add(btnShowAgent);
-		
 
-		spinner.setBounds(1325, 32, 29, 20);
+		spinner.setBounds(256, 855, 42, 20);
 		frame.getContentPane().add(spinner);
-		
+
 		JButton btnShowTree = new JButton("Show Tree");
 		btnShowTree.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
-					treeInlayPanel.removeAll();
-					treeInlayPanel.repaint();
-					ProgrammManager.paintTree(treeInlayPanel, bigNodesCheckBox.isSelected());
-					frame.setVisible(true);
-				
+
+				treeInlayPanel.removeAll();
+				treeInlayPanel.repaint();
+				ProgrammManager.paintTree(treeInlayPanel, bigNodesCheckBox.isSelected());
+				frame.setVisible(true);
+
 			}
 		});
-		btnShowTree.setBounds(1212, 65, 106, 23);
+		btnShowTree.setBounds(424, 854, 106, 23);
 		frame.getContentPane().add(btnShowTree);
-		
+
 		JButton btnNewButton = new JButton("Show all Paths");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				treeInlayPanel.removeAll();
 				treeInlayPanel.repaint();
-				ProgrammManager.paintAllAgents(treeInlayPanel, bigNodesCheckBox.isSelected());
-				frame.setVisible(true);
+				ProgrammManager.paintAllAgents();
+				//frame.setVisible(true);
 			}
 		});
-		btnNewButton.setBounds(1212, 99, 106, 23);
+		btnNewButton.setBounds(308, 854, 106, 23);
 		frame.getContentPane().add(btnNewButton);
-		
+
 		JButton btnNewButton_1 = new JButton("Use Tree Code");
 		btnNewButton_1.setBounds(26, 671, 106, 23);
 		frame.getContentPane().add(btnNewButton_1);
-		
-		CTEInlay ctePanel = new CTEInlay();
-		ctePanel.setBounds(1212, 145, 142, 199);
-		frame.getContentPane().add(ctePanel);
-		
-		MatePanel matePanel = new MatePanel();
-		matePanel.setBounds(1212, 355, 142, 311);
-		frame.getContentPane().add(matePanel);
 
+		ctePanel = new CTEInlay();
+		ctePanel.setBounds(1212, 376, 142, 118);
+		frame.getContentPane().add(ctePanel);
+
+		matePanel = new MatePanel();
+		matePanel.setBounds(1212, 505, 142, 338);
+		frame.getContentPane().add(matePanel);
+		
+		JButton btnNextstep = new JButton("next Step");
+		btnNextstep.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int value = (Integer)stepSpinner.getValue();
+				value ++;
+				stepSpinner.setValue(value);
+				paintStep(value);
+			}
+		});
+		btnNextstep.setBounds(1125, 854, 77, 23);
+		frame.getContentPane().add(btnNextstep);
+		
+		stepSpinner = new JSpinner();
+		stepSpinner.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				int value = (Integer)stepSpinner.getValue();
+				paintStep(value);
+			}
+		});
+		stepSpinner.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				int value = (Integer)stepSpinner.getValue();
+				paintStep(value);
+			}
+		});
+		stepSpinner.setBounds(963, 855, 42, 20);
+		frame.getContentPane().add(stepSpinner);
+		
+		JButton btnShowStepNumber = new JButton("Show Step number");
+		btnShowStepNumber.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) { 
+				int value = (Integer)stepSpinner.getValue();
+				paintStep(value);
+			}
+		});
+		btnShowStepNumber.setBounds(835, 854, 131, 23);
+		frame.getContentPane().add(btnShowStepNumber);
+		
+		JButton btnStepBack = new JButton("step back");
+		btnStepBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int value = (Integer)stepSpinner.getValue();
+				value --;
+				stepSpinner.setValue(value);
+				paintStep(value);
+			}
+		});
+		btnStepBack.setBounds(1026, 854, 89, 23);
+		frame.getContentPane().add(btnStepBack);
+		
+		
+		
+		
+	}
+	
+	private void paintStep(int i) {
+		treeInlayPanel.removeAll();
+		treeInlayPanel.repaint();
+		ProgrammManager.paintStep(i);
+		frame.setVisible(true);
+	}
+	
+	private void paintSingleAgentsPath(int i) {
+		treeInlayPanel.removeAll();
+		treeInlayPanel.repaint();
+		ProgrammManager.paintAgentPaths(i);
+		frame.setVisible(true);
+	}
+	
+	public void paintCTE() {
+		treeInlayPanel.removeAll();
+		treeInlayPanel.repaint();
+		frame.setVisible(true);
 	}
 
 	/**

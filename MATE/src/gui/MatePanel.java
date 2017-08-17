@@ -15,6 +15,12 @@ import treeExploration.ProgrammManager;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.SystemColor;
+import javax.swing.JList;
+import javax.swing.ListSelectionModel;
+import javax.swing.AbstractListModel;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+import mate.Brain.BrainModuleType;
 
 public class MatePanel extends JPanel {
 	/**
@@ -27,7 +33,7 @@ public class MatePanel extends JPanel {
 	}
 
 	public int getNumberOfAgents_textfield() {
-		return Integer.parseInt(numberOfAgents_textfield.getText());
+		return 5;//Integer.parseInt(numberOfAgents_textfield.getText());
 	}
 
 	public int getMovingTreshhold_textfield() {
@@ -41,6 +47,15 @@ public class MatePanel extends JPanel {
 	private JTextField numberOfAgents_textfield;
 	private JTextField movingTreshhold_textfield;
 	private JTextField distanceInfluence_textfield;
+	private JComboBox<BrainModuleType> brainType;
+
+	public BrainModuleType getBrainType() {
+		return (BrainModuleType) brainType.getSelectedItem();
+	}
+
+	public void setBrainType(JComboBox<BrainModuleType> brainType) {
+		this.brainType = brainType;
+	}
 
 	/**
 	 * Create the panel.
@@ -54,7 +69,7 @@ public class MatePanel extends JPanel {
 				ProgrammManager.startMate();
 			}
 		});
-		btnStart.setBounds(10, 266, 121, 23);
+		btnStart.setBounds(10, 293, 121, 23);
 		add(btnStart);
 		
 		JTextPane txtpnExploration = new JTextPane();
@@ -106,10 +121,15 @@ public class MatePanel extends JPanel {
 		add(txtpnDistanceInfluence);
 		
 		distanceInfluence_textfield = new JTextField();
-		distanceInfluence_textfield.setText("0.8");
+		distanceInfluence_textfield.setText("1");
 		distanceInfluence_textfield.setColumns(10);
 		distanceInfluence_textfield.setBounds(10, 178, 121, 20);
 		add(distanceInfluence_textfield);
+		
+		brainType = new JComboBox();
+		brainType.setModel(new DefaultComboBoxModel(BrainModuleType.values()));
+		brainType.setBounds(10, 266, 121, 20);
+		add(brainType);
 
 	}
 }

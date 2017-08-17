@@ -10,26 +10,28 @@ import tree.INode;
 import tree.Node;
 import tree.TreeFactory;
 
-public class Agent {
+public class Agent implements IAgent {
 
 	private Node root;
 	public int energy = 0;
 	private int id;
 	private static int idCounter = 0;
-	private ArrayList<Node> nodesToVisit;
-	
+	private ArrayList<Node> path = new ArrayList<Node>();
+
 	public INode getRoot() {
 		return root;
 	}
-	
-	public Node getTree(){
-		return TreeFactory.createTree(root, nodesToVisit);
+
+	public Node getTree() {
+		return TreeFactory.createTree(root, path);
 	}
-
-
 
 	public int getId() {
 		return id;
+	}
+	
+	public Node activeNode() {
+		return path.get(path.size()-1);
 	}
 
 	public boolean enoughEnergy() {
@@ -40,58 +42,71 @@ public class Agent {
 		}
 	}
 
-
-
 	public Agent() {
 		setId();
-		nodesToVisit = new ArrayList<Node>();
+		path = new ArrayList<Node>();
 	}
 
 	private void setId() {
 		id = idCounter;
 		idCounter++;
 	}
-	
-	public Agent(Node root){
+
+	public Agent(Node root) {
 		setId();
 		this.root = root;
+		path.add(root);
+		root.setVisited(true);
+		root.getRobPos().addAgentToNode(this);
 	}
 
 	public Agent(Node root, int energy) {
 		this.root = root;
 		this.energy = energy;
 		setId();
-		nodesToVisit = new ArrayList<Node>();
+		path = new ArrayList<Node>();
 	}
 
 	public void addNode(Node nodeToVisit) {
-		if (!nodesToVisit.contains(nodeToVisit)) {
-			nodesToVisit.add(nodeToVisit);
+		if (!path.contains(nodeToVisit)) {
+			path.add(nodeToVisit);
 		}
 	}
 
 	public void removeNode(INode nodeToRemove) {
-		nodesToVisit.remove(nodeToRemove);
+		path.remove(nodeToRemove);
 	}
 
 	public ArrayList<Node> getNodesToVisit() {
 
-		return nodesToVisit;
+		return path;
 	}
 
 	public void addNodes(List<Node> nodes) {
-		nodesToVisit.addAll(nodes);
+		path.addAll(nodes);
 	}
 
 	public int getStepsCount() {
-		if (nodesToVisit.size() > 1) {
-			return (nodesToVisit.size() - 1) * 2;
+		if (path.size() > 1) {
+			return (path.size() - 1) * 2;
 		}
 		return 0;
 	}
 
 	public Node getPosition() {
-		return nodesToVisit.get(nodesToVisit.size());		
+		if (path.size() == 0) {
+			return null;
+		} else {
+			
+			return path.get(path.size()-1);
+		}
+	}
+
+	public void moveAgent(Node newNode){
+		activeNode().getRobPos().moveAgentTo(this, newNode);
+		path.add(newNode);
+		newNode.setVisited(true);
+		
 	}
 
 }

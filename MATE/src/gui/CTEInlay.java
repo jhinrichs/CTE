@@ -28,10 +28,11 @@ public class CTEInlay extends JPanel {
 		JButton btnStart = new JButton("Start");
 		btnStart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ProgrammManager.startCTE();
+
+				ProgrammManager.calculateCTE();
 			}
 		});
-		btnStart.setBounds(10, 83, 121, 23);
+		btnStart.setBounds(10, 83, 56, 23);
 		add(btnStart);
 		
 		JTextPane txtpnExploration = new JTextPane();
@@ -50,6 +51,10 @@ public class CTEInlay extends JPanel {
 		txtpnNumberOfAgents.setText("Number of Agents");
 		txtpnNumberOfAgents.setBounds(10, 29, 109, 20);
 		add(txtpnNumberOfAgents);
+		
+		JButton btnStep = new JButton("Step");
+		btnStep.setBounds(76, 83, 56, 23);
+		add(btnStep);
 
 	}
 }

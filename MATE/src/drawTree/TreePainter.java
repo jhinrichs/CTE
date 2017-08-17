@@ -59,7 +59,7 @@ public class TreePainter {
 
 	}
 
-	public void drawTree(Node root, Traversal leftWalker, JPanel panel, boolean bigNodes) {
+	public void drawTree(Node root, Traversal traversal, JPanel panel, boolean bigNodes) {
 
 		TreeForTreeLayout treeForLayout = new TreeForTreeLayout(root);
 		
@@ -84,7 +84,7 @@ public class TreePainter {
 		TreeLayout<Node> treeLayout = new TreeLayout<Node>(treeForLayout, nodeExtentProvider, configuration);
 		
 		// Create a panel that draws the nodes and edges and show the panel
-		TextInBoxTreePane pane = new TextInBoxTreePane(treeLayout,bigNodes, leftWalker);
+		TextInBoxTreePane pane = new TextInBoxTreePane(treeLayout,bigNodes, traversal);
 		panel.add(pane);
 		
 	}

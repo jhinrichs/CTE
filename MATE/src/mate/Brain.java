@@ -9,7 +9,7 @@ public class Brain {
 	public Brain(MateAgent a, BrainModuleType brainType){
 		
 		switch (brainType){
-		case SIMPLE:
+		case Simple:
 			myBrain = new SimpleBrain(a);
 			
 		}
@@ -23,7 +23,11 @@ public class Brain {
 	
 
 	public enum BrainModuleType{
-		SIMPLE
+		Simple,
+		Komplex,
+		Normal,
+		Intelligent,
+		AntMode
 	}
 
 	

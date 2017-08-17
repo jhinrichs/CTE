@@ -1,6 +1,7 @@
 package solutionData;
 
 import mate.MateAgentManager;
+import mate.Brain.BrainModuleType;
 import optimalExploration.CollectiveExploration;
 import optimalExploration.LeftWalker;
 import tree.INode;
@@ -13,15 +14,21 @@ public class SolutionManager {
 	private LeftWalker leftWalker;
 	private CollectiveExploration collectiveExploration;
 	private MateAgentManager mate;
+	private double movingThreshhold;
+	private double distanceInfluence;
+	private BrainModuleType brainType;
 
 	public SolutionManager(Node tree, int numberOfRobots) {
 		this.tree = tree;
 		this.numberOfAgents = numberOfRobots;
 	}
 
-	public SolutionManager(Node tree, int numberOfAgents, double movingThreshhold, double distanceInfluence) {
+	public SolutionManager(Node tree, int numberOfAgents, double movingThreshhold, double distanceInfluence, BrainModuleType brainType) {
 		this.tree = tree;
 		this.numberOfAgents = numberOfAgents;
+		this.movingThreshhold = movingThreshhold;
+		this.distanceInfluence = distanceInfluence;
+		this.brainType = brainType;
 	}
 
 	public Traversal getOptimum() {
@@ -55,8 +62,9 @@ public class SolutionManager {
 
 	public MateAgentManager getMate() {
 		if (mate == null) {
-			// mate = new MateAgentManager(tree, numberOfRobots, brainType)
+			 mate = new MateAgentManager(tree, numberOfAgents, brainType);
 		}
+		mate.getOptimum();
 		return null;
 	}
 

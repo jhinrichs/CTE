@@ -26,21 +26,34 @@ public class SimpleBrain implements IBrainModule {
 
 	@Override
 	public Node getNextNode() {
-		getDecisionValue();
+		Node activeNode = agent.getActiveNode();
+		Node nextNode = null;
+		double value =0;
+		for(Node n: activeNode.getChildren()) {
+			double decisionValue= getDecisionValue(n);
+			if(decisionValue>value) {
+				value=decisionValue;
+				nextNode= n;
+			}
+		}
 		
-		return null;
+		
+		return nextNode;
 		
 		
 	}
 	
-	private void getDecisionValue() {
-		getDownwardDecisionValue(agent.getActiveNode());
+	private double getDecisionValue(Node n) {
+		double decisionValue =Math.random();
+		
+		return decisionValue;
 		
 		
 	}
 
 
 	private void getDownwardDecisionValue(Node n){
+		System.out.println("Calculating downward value");
 		for(RobPosTree robPos : RobPosTree.activeRobs){
 			
 			// if n is in subtree of robPos

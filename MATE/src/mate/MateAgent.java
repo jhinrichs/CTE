@@ -44,7 +44,7 @@ public class MateAgent extends Agent implements IMateAgent {
 
 	public MateAgent(Node root, BrainModuleType brainType) {
 		activeNode = root;
-		activeNode.visited=true;
+		activeNode.setVisited(true);
 		this.brainModule = new Brain(this, brainType);
 	}
 
@@ -101,7 +101,7 @@ public class MateAgent extends Agent implements IMateAgent {
 	}
 
 	public void moveAgent(Node newNode){
-		activeNode.visited=true;
+		activeNode.setVisited(true);
 		activeNode = newNode;
 		path.add(newNode);
 	}

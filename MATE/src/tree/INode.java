@@ -54,7 +54,7 @@ public interface INode extends TreeNode{
 	 * @param listOfNodes
 	 * @return
 	 */
-	List<Node> getNodeList(List<Node> listOfNodes);
+	List<Node> getLeafList(List<Node> listOfNodes);
 
 	/**
 	 * adds the give Node as a child and sets its Parent to this node

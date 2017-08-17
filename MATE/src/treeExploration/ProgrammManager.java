@@ -6,6 +6,8 @@ import javax.swing.JPanel;
 import drawTree.TreePainter;
 import gui.GuiBuilder;
 import mate.MateAgentManager;
+import mate.Brain;
+import mate.Brain.BrainModuleType;
 import optimalExploration.CollectiveExploration;
 import optimalExploration.LeftWalker;
 import solutionData.Agent;
@@ -28,6 +30,7 @@ public class ProgrammManager {
 	private static CollectiveExploration colEx;
 	private static MateAgentManager mate;
 	
+	private static Traversal recentTraversal;
 	
 	
 
@@ -40,6 +43,7 @@ public class ProgrammManager {
 	public static void main(String[] args) {
 		
 		mainWindow = new GuiBuilder();
+		mainWindow.btnCreateTree.doClick();
 	}
 
 
@@ -48,22 +52,91 @@ public class ProgrammManager {
 	 * @param bigNodes
 	 */
 	public static void paintTree(JPanel panel, boolean bigNodes){
-		
+
 		TreePainter painter = new TreePainter();
 		painter.drawTree(tree,panel, bigNodes);
 	}
 	
-	public static void paintAgentPaths(JPanel panel, boolean bigNodes, int agent){
-
+	public static void paintCTE() {
+		calculateCTE();
+		
+		System.out.println("print collective paths");
 		TreePainter painter = new TreePainter();
-		painter.drawTree(leftWalker.getOptimum().getAgents().get(agent).getTree(), panel, bigNodes);
+
+		mainWindow.treeInlayPanel.repaint();
+		mainWindow.treeInlayPanel.removeAll();
+		painter.drawTree(colEx.root, colEx.getOptimum(), mainWindow.treeInlayPanel, mainWindow.bigNodesCheckBox.isSelected());
+		mainWindow.frame.setVisible(true);
+		
+
 	}
 	
-	public static void paintAllAgents(JPanel panel, boolean bigNodes){
-		System.out.println("print paths");
+	
+	public static void paintOnlyAgentPaths(int agent){
+
 		TreePainter painter = new TreePainter();
-		painter.drawTree(leftWalker.tree, leftWalker.getOptimum(), panel, bigNodes);
+		painter.drawTree(recentTraversal.getAgents().get(agent).getTree(),mainWindow.treeInlayPanel, mainWindow.bigNodesCheckBox.isSelected());
 	}
+	
+	public static void paintAgentPaths(int agent){
+
+		TreePainter painter = new TreePainter();
+		
+		Traversal tempPaint = createTempPaint(agent);
+		
+		painter.drawTree(recentTraversal.getRoot(), tempPaint ,mainWindow.treeInlayPanel, mainWindow.bigNodesCheckBox.isSelected());
+	}
+	private static Traversal createTempPaint(int agent) {
+		Traversal tempPaint = new Traversal(recentTraversal.getRoot(), 2);
+		Agent a = new Agent(recentTraversal.getRoot());
+		a.addNodes(recentTraversal.getRoot().getAllNodes());
+		tempPaint.addAgent(a, 0);
+		tempPaint.addAgent(recentTraversal.getAgents().get(agent), 1);
+		return tempPaint;
+	}
+	
+	
+	public static void paintAllAgents(){
+		System.out.println("print paths for all agents");
+		TreePainter painter = new TreePainter();
+		mainWindow.treeInlayPanel.removeAll();
+		//treeInlayPanel.repaint();
+		painter.drawTree(recentTraversal.getRoot(), recentTraversal, mainWindow.treeInlayPanel, mainWindow.bigNodesCheckBox.isSelected());
+		mainWindow.frame.setVisible(true);
+	}
+	
+	public static void paintStep(int i) {
+		
+		System.out.println("print step number " +i+ " for all agents");
+		TreePainter painter = new TreePainter();
+		mainWindow.treeInlayPanel.removeAll();
+		//treeInlayPanel.repaint();
+		painter.drawTree(recentTraversal.getRoot(), recentTraversal.getStep(i), mainWindow.treeInlayPanel, mainWindow.bigNodesCheckBox.isSelected());
+		mainWindow.frame.setVisible(true);		
+	}
+	
+	public static void paintStepsUpToNumber(int i) {
+		
+		System.out.println("print step up to number " +i+ " for all agents");
+		TreePainter painter = new TreePainter();
+		mainWindow.treeInlayPanel.removeAll();
+		//treeInlayPanel.repaint();
+		painter.drawTree(recentTraversal.getRoot(), recentTraversal.getStepsUpToNumber(i), mainWindow.treeInlayPanel, mainWindow.bigNodesCheckBox.isSelected());
+		mainWindow.frame.setVisible(true);		
+	}
+	
+	public static void paintStep(Traversal solution) {
+		
+		TreePainter painter = new TreePainter();
+		mainWindow.treeInlayPanel.removeAll();
+		mainWindow.treeInlayPanel.repaint();
+		painter.drawTree(solution.getRoot(), solution, mainWindow.treeInlayPanel, mainWindow.bigNodesCheckBox.isSelected());
+		mainWindow.frame.setVisible(true);		
+	}
+	
+	
+	
+	
 
 	public static void createTree(int seed, int maxDepth, int minDepth, int maxBranches, int minBranches, int maxNodes,
 			int minNodes, double leafFactor, TreeSpecifier treeSpecifier) {
@@ -78,19 +151,30 @@ public class ProgrammManager {
 		SolutionManager solutionManager = new SolutionManager(tree, mainWindow.panel.getNumberOfRobots());
 		
 		leftWalker = solutionManager.getLeftWalker();
-		
-		System.out.println(leftWalker.getOptimum().getSteps()+" schritte nötig");
-		printTraversals(leftWalker.getOptimum());
+		recentTraversal = leftWalker.getOptimum();
+		System.out.println(recentTraversal.getSteps()+" schritte nötig");
+		printTraversals(recentTraversal);
 	}
 	
 	private static void printTraversals(Traversal bestPath) {
+		int maxNodes=0;
+		
 		for( Agent a : bestPath.getAgents()){
+			if(a.getNodesToVisit().size()>maxNodes) {
+				maxNodes = a.getNodesToVisit().size();
+			}
+			
 			System.out.println("Agent " + a.getId() + " besucht die Knoten :");
+			
 			for( INode n : a.getNodesToVisit()){
 				System.out.print(n.getId()+",");
+				
 			}
+
 			System.out.println();
 		}
+		System.out.println();
+		System.out.println("Maximale Anzahl besuchter Knoten = " + maxNodes);
 	}
 	public static TreeDataCalculator getTreeDataImprovised(){
 		TreeDataCalculator calcie = new TreeDataCalculator(tree);
@@ -98,19 +182,27 @@ public class ProgrammManager {
 		return calcie;
 		
 	}
-	public static void startCTE() {
+	public static void calculateCTE() {
 		SolutionManager solutionManager = new SolutionManager(tree, mainWindow.panel.getNumberOfRobots());
 		
 		colEx = solutionManager.getCTE();
 		
+		recentTraversal = colEx.getOptimum(); 
+		paintAllAgents();
+		printTraversals(colEx.getOptimum());
 	}
+	
+	
 	public static void startMate() {
 		int numberOfAgents = mainWindow.matePanel.getNumberOfAgents_textfield();
 		double movingThreshhold = mainWindow.matePanel.getMovingTreshhold_textfield();
 		double distanceInfluence = mainWindow.matePanel.getDistanceInfluence_textfield();
-		SolutionManager solutionManager = new SolutionManager(tree, numberOfAgents, movingThreshhold, distanceInfluence);
+		BrainModuleType brainType = mainWindow.matePanel.getBrainType();
+		SolutionManager solutionManager = new SolutionManager(tree, numberOfAgents, movingThreshhold, distanceInfluence, brainType);
 		
 		mate = solutionManager.getMate();
 	}
+
+
 	
 }

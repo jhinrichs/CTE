@@ -78,6 +78,7 @@ public class TextInBoxTreePane extends JComponent {
 		Dimension size = treeLayout.getBounds().getBounds().getSize();
 		setPreferredSize(size);
 	}
+
 	public TextInBoxTreePane(TreeLayout<Node> treeLayout, boolean bigNodes, Traversal traversal) {
 		this.traversal = traversal;
 		this.bigNodes = bigNodes;
@@ -89,10 +90,10 @@ public class TextInBoxTreePane extends JComponent {
 	// -------------------------------------------------------------------
 	// painting
 
-	private  static int ARC_SIZE = 10;
-	private  static Color BOX_COLOR = Color.orange;
-	private  static Color BORDER_COLOR = Color.darkGray;
-	private  static Color TEXT_COLOR = Color.BLACK;
+	private static int ARC_SIZE = 10;
+	private static Color BOX_COLOR = Color.orange;
+	private static Color BORDER_COLOR = Color.darkGray;
+	private static Color TEXT_COLOR = Color.BLACK;
 
 	private void paintEdges(Graphics g, Node parent) {
 		if (!getTree().isLeaf(parent)) {
@@ -110,7 +111,6 @@ public class TextInBoxTreePane extends JComponent {
 
 	private void paintBox(Graphics g, INode Node) {
 		// draw the box in the background
-
 
 		g.setColor(BOX_COLOR);
 		Rectangle2D.Double box = getBoundsOfNode(Node);
@@ -131,28 +131,28 @@ public class TextInBoxTreePane extends JComponent {
 
 		paintEdges(g, getTree().getRoot());
 
-		int i=0;
-		if(traversal != null){
+		int i = 0;
+		if (traversal != null) {
 			for (Agent a : traversal.getAgents()) {
-				
-				switch(i%9){
+
+				switch (i % 9) {
 				case 0:
 					BOX_COLOR = Color.ORANGE;
 					break;
 				case 1:
-					BOX_COLOR = Color.yellow;
-					break;
-				case 2:
 					BOX_COLOR = Color.red;
 					break;
+				case 2:
+					BOX_COLOR = Color.yellow;
+					break;
 				case 3:
-					BOX_COLOR = Color.blue;
+					BOX_COLOR = Color.gray;
 					break;
 				case 4:
 					BOX_COLOR = Color.green;
 					break;
 				case 5:
-					BOX_COLOR = Color.gray;
+					BOX_COLOR = Color.blue;
 					break;
 				case 6:
 					BOX_COLOR = Color.darkGray;
@@ -163,26 +163,31 @@ public class TextInBoxTreePane extends JComponent {
 				case 8:
 					BOX_COLOR = Color.cyan;
 					break;
-				
-					
+
 				}
 				i++;
-				
-//				System.out.println("paint paths");
+
+				// System.out.println("paint paths");
 				// paint the boxes
 				for (INode node : a.getNodesToVisit()) {
-					paintBox(g, node);
+					if (node.isRoot()) {
+						Color tempColor = BOX_COLOR;
+						BOX_COLOR = Color.white;
+						paintBox(g, node);
+						BOX_COLOR = tempColor;
+					} else {
+						paintBox(g, node);
+					}
 				}
 			}
-		}
-		else{
+		} else {
 			BOX_COLOR = Color.ORANGE;
 			for (INode node : treeLayout.getNodeBounds().keySet()) {
-				
+
 				paintBox(g, node);
 			}
 		}
-		
+
 	}
 
 	public boolean isBigNodes() {

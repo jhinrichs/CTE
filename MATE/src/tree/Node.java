@@ -9,6 +9,7 @@ import java.util.UUID;
 import javax.swing.tree.TreeNode;
 
 import optimalExploration.CollectiveExploration;
+import solutionData.IAgent;
 import solutionData.RobPosTree;
 
 public class Node implements INode {
@@ -19,13 +20,14 @@ public class Node implements INode {
 	private Node parent;
 	private TreeDataCalculator treeData;
 	private RobPosTree robPos;
+	
 
 	public static int getIdCount() {
 		return idCount;
 	}
 
 	private Boolean finished = false;
-	public boolean visited = false;
+	private boolean visited = false;
 	private ArrayList<Node> children;
 
 	public Node(Node parent) {
@@ -53,6 +55,21 @@ public class Node implements INode {
 
 	}
 
+	/**
+	 * sets the visited flag from a node and updates its finished state and all changing finished states for parents and parents ......
+	 * @param b
+	 */
+	public void setVisited(boolean b) {
+		visited = b;
+		if (isLeaf() && visited) {
+			finished=true;
+			Node nextNode = parent;
+		while(nextNode!= null && !nextNode.isFinished()) {
+			nextNode = nextNode.getParent();
+			}
+		}
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -64,6 +81,26 @@ public class Node implements INode {
 			treeData = new TreeDataCalculator(this);
 		}
 		return treeData.getNumberOfNodes();
+	}
+	
+	public List<Node> getAllNodes(){
+		
+		List<Node> nodes = new ArrayList<Node>();
+		for(Node child : children) {
+			child.getNodesInternal(nodes);
+		}
+		nodes.add(this);
+		System.out.println("number of Nodes in tree = " + nodes.size());
+		
+		return nodes;
+	}
+	
+	private List<Node> getNodesInternal(List<Node> nodes){
+		for(Node child : children) {
+			child.getNodesInternal(nodes);
+		}
+		nodes.add(this);
+		return nodes;
 	}
 
 	/*
@@ -123,6 +160,10 @@ public class Node implements INode {
 	 */
 	@Override
 	public Boolean isFinished() {
+		if(isLeaf() && isVisited()) {
+			finished = true;
+			return true;
+		}
 		if (!finished && !isLeaf()) {
 			for (Node child : children) {
 				if (!child.finished) {
@@ -221,7 +262,7 @@ public class Node implements INode {
 	 * @see tree.INode#getNodeList(java.util.List)
 	 */
 	@Override
-	public List<Node> getNodeList(List<Node> listOfNodes) {
+	public List<Node> getLeafList(List<Node> listOfNodes) {
 
 		if (isLeaf()) {
 			if (listOfNodes == null) {
@@ -233,7 +274,7 @@ public class Node implements INode {
 			return listOfNodes;
 		} else {
 			for (INode child : getChildren()) {
-				listOfNodes = child.getNodeList(listOfNodes);
+				listOfNodes = child.getLeafList(listOfNodes);
 			}
 
 			return listOfNodes;
@@ -272,13 +313,16 @@ public class Node implements INode {
 	@Override
 	public boolean isRoot() {
 		if (parent == null) {
-			return false;
-		} else {
 			return true;
+		} else {
+			return false;
 		}
 	}
 
 	public RobPosTree getRobPos() {
+		if(robPos == null) {
+			robPos = new RobPosTree(this);
+		}
 		return robPos;
 	}
 
@@ -312,6 +356,10 @@ public class Node implements INode {
 			return parent.maxIdOfSubTree();
 		}
 		
+	}
+
+	public boolean isVisited() {
+		return visited;
 	}
 
 }
