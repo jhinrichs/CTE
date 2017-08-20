@@ -9,6 +9,10 @@ import solutionData.Agent;
 import solutionData.RobPosTree;
 import tree.Node;
 
+/**@deprecated
+ * @author jonas.hinrichs
+ *
+ */
 public class MateAgent extends Agent {
 
 	private Node activeNode;
@@ -126,7 +130,7 @@ public class MateAgent extends Agent {
 			if (previousPosition.getChildren().contains(activeNode)) {				
 				
 				
-				oldRob.removeAgentFromNode(this);
+				//oldRob.removeAgentFromNode(this);
 				//falls vorheriger Knoten vom typ robpos
 				if(oldRob.isRobPosNode()){
 					oldRob.robPosChildren.add(newPosition);

@@ -1,23 +1,73 @@
 package solutionData;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import javax.xml.stream.events.NotationDeclaration;
-
+import mate.AgentManager;
+import mate.Brain;
+import mate.Brain.BrainModuleType;
+import optimalExploration.MovingPlan;
 import tree.INode;
 import tree.Node;
 import tree.TreeFactory;
 
 public class Agent implements IAgent {
 
-	private Node root;
+	public Node root;
 	public int energy = 0;
 	private int id;
 	private static int idCounter = 0;
 	private ArrayList<Node> path = new ArrayList<Node>();
+	public Traversal traversal;
+	
+	public Brain brainModule;
+	
+	
+	public Agent(Node root, BrainModuleType brainType) {
+		this.root= root;
+		root.setVisited(true);
+		path.add(root);
+		this.brainModule = new Brain(this, brainType);
+	}
+	public Agent() {
+		setId();
+		path = new ArrayList<Node>();
+	}
 
+	private void setId() {
+		id = idCounter;
+		idCounter++;
+	}
+
+	public Agent(Node root) {
+		setId();
+		this.root = root;
+		path.add(root);
+		root.setVisited(true);
+		root.getRobPos().addAgentToNode(this);
+	}
+
+	public Agent(Node root, int energy) {
+		this();
+		this.energy = energy;
+		
+	}
+
+	public Agent(Node root, BrainModuleType brainType, Traversal traversal) {
+		this.root= root;
+		root.setVisited(true);
+		path.add(root);
+		this.brainModule = new Brain(this, brainType);
+		this.traversal = traversal;
+	}
+	
+	public Brain getBrainModule() {
+		return brainModule;
+	}
+	public void setBrainModule(Brain brainModule) {
+		this.brainModule = brainModule;
+	}
+	
 	public INode getRoot() {
 		return root;
 	}
@@ -42,30 +92,7 @@ public class Agent implements IAgent {
 		}
 	}
 
-	public Agent() {
-		setId();
-		path = new ArrayList<Node>();
-	}
-
-	private void setId() {
-		id = idCounter;
-		idCounter++;
-	}
-
-	public Agent(Node root) {
-		setId();
-		this.root = root;
-		path.add(root);
-		root.setVisited(true);
-		root.getRobPos().addAgentToNode(this);
-	}
-
-	public Agent(Node root, int energy) {
-		this.root = root;
-		this.energy = energy;
-		setId();
-		path = new ArrayList<Node>();
-	}
+	
 
 	public void addNode(Node nodeToVisit) {
 		if (!path.contains(nodeToVisit)) {
@@ -78,7 +105,6 @@ public class Agent implements IAgent {
 	}
 
 	public ArrayList<Node> getNodesToVisit() {
-
 		return path;
 	}
 
@@ -100,6 +126,12 @@ public class Agent implements IAgent {
 			
 			return path.get(path.size()-1);
 		}
+	}
+	
+	public MovingPlan calculateMove() {
+		Node nextNode = brainModule.getNextNode();
+		MovingPlan nextStep = new MovingPlan(nextNode ,this);
+		return nextStep;
 	}
 
 	public void moveAgent(Node newNode){

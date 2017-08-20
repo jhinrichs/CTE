@@ -5,7 +5,7 @@ import javax.swing.JPanel;
 
 import drawTree.TreePainter;
 import gui.GuiBuilder;
-import mate.MateAgentManager;
+import mate.AgentManager;
 import mate.Brain;
 import mate.Brain.BrainModuleType;
 import optimalExploration.CollectiveExploration;
@@ -29,7 +29,7 @@ public class ProgrammManager {
 	private static GuiBuilder mainWindow;
 	private static LeftWalker leftWalker;
 	private static CollectiveExploration colEx;
-	private static MateAgentManager mate;
+	private static AgentManager mate;
 	
 	private static Traversal recentTraversal;
 	
@@ -199,7 +199,7 @@ public class ProgrammManager {
 		double movingThreshhold = mainWindow.matePanel.getMovingTreshhold_textfield();
 		double distanceInfluence = mainWindow.matePanel.getDistanceInfluence_textfield();
 		BrainModuleType brainType = mainWindow.matePanel.getBrainType();
-		SolutionManager solutionManager = new SolutionManager(tree, numberOfAgents, movingThreshhold, distanceInfluence, brainType);
+		SolutionManager solutionManager = new SolutionManager(TreeFactory.copyTree(tree), numberOfAgents, movingThreshhold, distanceInfluence, brainType);
 		
 		
 		mate = solutionManager.getMate(); 

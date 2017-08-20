@@ -43,6 +43,7 @@ public class LeftWalker {
 		for (int i = 0; i < numberOfRobots; i++) {
 
 			Agent a = new Agent(tree,2* energy);
+			
 			leftWalker(tree, a);
 			cleanAgentPath(a);
 			optimumSolution.addAgent(a, i);

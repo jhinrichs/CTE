@@ -1,6 +1,6 @@
 package solutionData;
 
-import mate.MateAgentManager;
+import mate.AgentManager;
 import mate.Brain.BrainModuleType;
 import optimalExploration.CollectiveExploration;
 import optimalExploration.LeftWalker;
@@ -13,7 +13,7 @@ public class SolutionManager {
 	private int numberOfAgents;
 	private LeftWalker leftWalker;
 	private CollectiveExploration collectiveExploration;
-	private MateAgentManager mate;
+	private AgentManager mate;
 	private double movingThreshhold;
 	private double distanceInfluence;
 	private BrainModuleType brainType;
@@ -60,9 +60,9 @@ public class SolutionManager {
 		return collectiveExploration;
 	}
 
-	public MateAgentManager getMate() {
+	public AgentManager getMate() {
 		if (mate == null) {
-			 mate = new MateAgentManager(tree, numberOfAgents, brainType);
+			 mate = new AgentManager(tree, numberOfAgents, brainType);
 		}
 		return mate;
 	}

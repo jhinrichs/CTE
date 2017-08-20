@@ -32,10 +32,6 @@ public class CollectiveExploration {
 		this.numberOfRobots = numberOfRobots;
 		treeData = new TreeDataCalculator(this.root);
 		solution = new Traversal(root, numberOfRobots);
-		for (int i = 0; i < numberOfRobots; i++) {
-			Agent a = new Agent(root);
-			solution.addAgent(a, i);
-		}
 		agents = solution.getAgents();
 	}
 
@@ -106,11 +102,11 @@ public class CollectiveExploration {
 
 					// getChildWithLeastNodes
 					Node least = unfinishedSubtrees.get(0);
-					int agentsInLeast = least.getRobPos().numberOfAllAgentsInTree();
+					int agentsInLeast = least.getRobPos().getAllAgentsInTree();
 					for (Node subtree : unfinishedSubtrees) {
-						if (subtree.getRobPos().numberOfAllAgentsInTree() < agentsInLeast) {
+						if (subtree.getRobPos().getAllAgentsInTree() < agentsInLeast) {
 							least = subtree;
-							agentsInLeast = least.getRobPos().numberOfAllAgentsInTree();
+							agentsInLeast = least.getRobPos().getAllAgentsInTree();
 						}
 					}
 

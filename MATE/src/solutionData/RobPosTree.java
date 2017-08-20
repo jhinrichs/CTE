@@ -22,10 +22,6 @@ public class RobPosTree {
 	private List<IAgent> agentsAtNode = new ArrayList<IAgent>();
 	private int distanceToParent = 0;
 
-	public static List<RobPosTree> activeRobs = new ArrayList<>();
-
-	private int[] nodesInDistances = null;
-
 	public RobPosTree(Node origin, Node parent, int distanceToParent) {
 		this.origin = origin;
 		this.setParent(parent);
@@ -69,13 +65,16 @@ public class RobPosTree {
 		this.agentsAtNode = agentsAtNode;
 	}
 
-	public int numberOfAllAgentsInTree() {
+	/**returns the number of all agents that are located on any node going down from this node.
+	 * @return
+	 */
+	public int getAllAgentsInTree() {
 		if (robPosChildren.isEmpty()) {
 			return agentsAtNode.size();
 		} else {
 			int numberOfRobots = 0;
 			for (Node child : robPosChildren) {
-				numberOfRobots += child.getRobPos().numberOfAllAgentsInTree();
+				numberOfRobots += child.getRobPos().getAllAgentsInTree();
 			}
 			if(numberOfRobots >0 ) {
 				System.out.println("Number of robots in Subree " + origin.getId() + " = " + numberOfRobots);
@@ -92,47 +91,7 @@ public class RobPosTree {
 		this.parentRobPos = parent;
 	}
 
-	public void updateAllActiveRobs(int searchDepth) {
-		for (RobPosTree rob : activeRobs) {
-			rob.updateUnexploredNodesInDistances(searchDepth);
-		}
-	}
 
-	private void updateUnexploredNodesInDistances(int searchDepth) {
-
-		List<Node> exploredNodes = origin.getChildren();
-		for (int i = 0; i < searchDepth; i++) {
-			int unvisitedNodes = 0;
-			List<Node> nodesToExplore = new ArrayList<>();
-
-			for (Node child : exploredNodes) {
-				// falls endpunkt --> zählen
-				// falls nicht weitersuchen
-				if (child.isVisited() && child.getRobPos() != null && !child.isFinished()) {
-					nodesToExplore.add(child);
-				} else if (!child.isVisited()) {
-					unvisitedNodes++;
-				}
-			}
-			exploredNodes = nodesToExplore;
-			nodesInDistances[i] = unvisitedNodes;
-		}
-
-	}
-
-	public int[] getNodesInDistance(int searchDepth) {
-		if (nodesInDistances == null || nodesInDistances.length < searchDepth) {
-			nodesInDistances = new int[searchDepth];
-			updateAllActiveRobs(searchDepth);
-		}
-
-		return nodesInDistances;
-
-	}
-
-	public void delete() {
-		activeRobs.remove(this);
-	}
 
 	public void moveAgentTo(IAgent a, Node newNode) {
 
@@ -146,22 +105,26 @@ public class RobPosTree {
 			}
 			// backward move to parent
 			else if (origin.getParent().equals(newNode)) {
-				agentsAtNode.remove(a);
-				newNode.getRobPos().addAgentToNode(a);
-				// if old position loses robPos status --> update all former children to new parent
-				if (!isRobPosNode()) {
-					parentRobPos.getRobPos().robPosChildren.remove(origin);
-					for (Node n : robPosChildren) {
-						n.getRobPos().update();
-					}
-				}
-				// if old position is still robPos
-				else {
-					parentRobPos.getRobPos().robPosChildren.remove(origin);
-					this.update();
-					newNode.getRobPos().update();
-				}
+				moveBackward(a, newNode);
 			}
+		}
+	}
+
+	private void moveBackward(IAgent a, Node newNode) {
+		agentsAtNode.remove(a);
+		newNode.getRobPos().addAgentToNode(a);
+		// if old position loses robPos status --> update all former children to new parent
+		if (!isRobPosNode()) {
+			parentRobPos.getRobPos().robPosChildren.remove(origin);
+			for (Node n : robPosChildren) {
+				n.getRobPos().update();
+			}
+		}
+		// if old position is still robPos
+		else {
+			parentRobPos.getRobPos().robPosChildren.remove(origin);
+			this.update();
+			newNode.getRobPos().update();
 		}
 	}
 

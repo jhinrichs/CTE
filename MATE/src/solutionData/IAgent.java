@@ -18,5 +18,6 @@ public interface IAgent {
 	void addNode(Node node);
 	void addNodes(List<Node> subList);
 	Node getTree();
+	MovingPlan calculateMove();
 	
 }

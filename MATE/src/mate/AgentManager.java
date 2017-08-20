@@ -5,18 +5,16 @@ import java.util.List;
 
 import mate.Brain.BrainModuleType;
 import optimalExploration.MovingPlan;
+import optimalExploration.MovingPlanList;
 import solutionData.Agent;
 import solutionData.IAgent;
-import solutionData.RobPosTree;
 import solutionData.Traversal;
-import tree.INode;
 import tree.Node;
 import tree.TreeDataCalculator;
-import treeExploration.ProgrammManager;
 
-public class MateAgentManager {
+public class AgentManager {
 
-	private List<IAgent> mates = new ArrayList<>();
+	private List<IAgent> agents = new ArrayList<>();
 
 	private List<Node> exploredNodes = new ArrayList<>();
 
@@ -26,36 +24,39 @@ public class MateAgentManager {
 
 	public int searchDepth = 100;
 
-	private TreeDataCalculator calci;
+	public static TreeDataCalculator calci;
+	
+	
 
-	public MateAgentManager(Node root, int numberOfRobots, BrainModuleType brainType) {
+	public AgentManager(Node root, int numberOfRobots, BrainModuleType brainType) {
 		this.root = root;
 		calci = new TreeDataCalculator(root);
-		solution = new Traversal(root, numberOfRobots);
+		solution = new Traversal(root);
 
 		for (int i = 0; i < numberOfRobots; i++) {
-			MateAgent a = new MateAgent(root,brainType);
+			Agent a = new Agent(root,brainType, solution);
 			solution.addAgent(a, i);
 		}
-		mates = solution.getAgents();
+		agents = solution.getAgents();
 
 
 	}
+	
 
 	private boolean computeOpt() {
 		System.out.println("Start calculating mate Solution");
 		int steps = 0;
-//		while (!root.isFinished() || !solution.allRobotsAtRoot()) {
-//			System.out.println("calculating step " + steps);
-//			step();
-//			steps++;
-//		}
-		
-		for (int i=0 ; i< 1000 ;i++) {
+		while (!root.isFinished() || !solution.allRobotsAtRoot()) {
 			System.out.println("calculating step " + steps);
 			step();
 			steps++;
 		}
+		
+//		for (int i=0 ; i< 1000 ;i++) {
+//			System.out.println("calculating step " + steps);
+//			step();
+//			steps++;
+//		}
 
 		return solution.isValidSolution();
 	}
@@ -63,33 +64,17 @@ public class MateAgentManager {
 	private Traversal step() {
 
 		// 1 calculate movement for each agent
-		List<MovingPlan> plan = new ArrayList<MovingPlan>();
-		calculateMove(plan);
+		MovingPlanList plan = new MovingPlanList();
+		
+		plan.calculateMoves(agents);
 
 		// 2#
-		move(plan);
+		plan.execute();
 		// ProgrammManager.paintStep(solution);
 
 		return solution;
 	}
 
-	private void move(List<MovingPlan> plan) {
-		for (MovingPlan p : plan) {
-			p.execute();
-		}
-
-	}
-
-	private void calculateMove(List<MovingPlan> plan) {
-		for (IAgent mate : mates) {
-			plan.add(((MateAgent) mate).calculateMove());
-		}
-	}
-
-	private boolean allRobotsAtRoot() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 	public void nextStep() {
 		System.out.println("nextStep");
@@ -97,8 +82,8 @@ public class MateAgentManager {
 		List<MovingPlan> plan = new ArrayList<>();
 
 		// plan steps
-		for (IAgent mate : mates) {
-			plan.add(((MateAgent) mate).calculateMove());
+		for (IAgent mate : agents) {
+			plan.add(mate.calculateMove());
 		}
 
 		// do steps
