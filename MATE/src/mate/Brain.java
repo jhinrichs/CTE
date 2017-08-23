@@ -12,7 +12,9 @@ public class Brain {
 		switch (brainType){
 		case Simple:
 			myBrain = new SimpleBrain(a);
-			
+			break;
+		case CTE:
+			myBrain = new CTEBrain(a);
 		}
 		
 	}
@@ -28,7 +30,8 @@ public class Brain {
 		Komplex,
 		Normal,
 		Intelligent,
-		AntMode
+		AntMode, 
+		CTE
 	}
 
 	

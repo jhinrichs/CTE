@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import optimalExploration.MovingPlan;
+import optimalExploration.MovingPlanList;
 import tree.Node;
 
 public class Traversal {
@@ -11,7 +12,7 @@ public class Traversal {
 	private int id;
 	private static int idCounter = 0;
 	private List<IAgent> agents;
-	public List<MovingPlan> plan;
+	private MovingPlanList plan = new MovingPlanList();
 
 	public List<IAgent> getAgents() {
 		return agents;
@@ -40,8 +41,8 @@ public class Traversal {
 			addAgent(a, i);
 		}
 	}
-	
-	public Traversal( Node tree) {
+
+	public Traversal(Node tree) {
 		id = idCounter;
 		idCounter++;
 		this.root = tree;
@@ -56,7 +57,13 @@ public class Traversal {
 		agents.add(a);
 	}
 
-	public int getSteps() {
+	/**
+	 * returns the number of steps necessary for the agents to complete the
+	 * exploration of the tree
+	 * 
+	 * @return
+	 */
+	public int getNumberOfSteps() {
 		int steps = 0;
 		for (IAgent agent : agents) {
 			if (agent != null) {
@@ -119,11 +126,19 @@ public class Traversal {
 		for (IAgent a : agents) {
 			if (!a.getNodesToVisit().isEmpty()) {
 				IAgent b = new Agent(root);
-				b.addNodes(a.getNodesToVisit().subList(0, i));
+				if (a.getNodesToVisit().size() < i) {
+					b.addNodes(a.getNodesToVisit());
+				} else {
+					b.addNodes(a.getNodesToVisit().subList(0, i));
+				}
 				temp.addAgent(b);
 			}
 		}
 		return temp;
+	}
+	
+	public MovingPlanList getPlan() {
+		return plan;
 	}
 
 }

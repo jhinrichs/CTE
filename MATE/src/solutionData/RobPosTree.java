@@ -77,7 +77,7 @@ public class RobPosTree {
 				numberOfRobots += child.getRobPos().getAllAgentsInTree();
 			}
 			if(numberOfRobots >0 ) {
-				System.out.println("Number of robots in Subree " + origin.getId() + " = " + numberOfRobots);
+				System.out.println("Number of robots in Subtree " + origin.getId() + " = " + numberOfRobots);
 			}
 			return numberOfRobots;
 		}

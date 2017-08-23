@@ -64,7 +64,7 @@ public class AgentManager {
 	private Traversal step() {
 
 		// 1 calculate movement for each agent
-		MovingPlanList plan = new MovingPlanList();
+		MovingPlanList plan = solution.getPlan();
 		
 		plan.calculateMoves(agents);
 

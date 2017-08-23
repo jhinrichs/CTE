@@ -35,7 +35,7 @@ public class SolutionManager {
 
 		Traversal best = getLeftWalker().getOptimum();
 
-		if (getCTE().getOptimum().getSteps() < best.getSteps()) {
+		if (getCTE().getOptimum().getNumberOfSteps() < best.getNumberOfSteps()) {
 			best = getCTE().getOptimum();
 		}
 

@@ -41,6 +41,8 @@ import javax.swing.JComponent;
 import org.abego.treelayout.TreeForTreeLayout;
 import org.abego.treelayout.TreeLayout;
 
+import com.sun.javafx.scene.layout.region.BorderImageSliceConverter;
+
 import solutionData.Agent;
 import solutionData.IAgent;
 import solutionData.Traversal;
@@ -136,41 +138,12 @@ public class TextInBoxTreePane extends JComponent {
 		if (traversal != null) {
 			for (IAgent a : traversal.getAgents()) {
 
-				switch (i % 9) {
-				case 0:
-					BOX_COLOR = Color.ORANGE;
-					break;
-				case 1:
-					BOX_COLOR = Color.red;
-					break;
-				case 2:
-					BOX_COLOR = Color.yellow;
-					break;
-				case 3:
-					BOX_COLOR = Color.gray;
-					break;
-				case 4:
-					BOX_COLOR = Color.green;
-					break;
-				case 5:
-					BOX_COLOR = Color.blue;
-					break;
-				case 6:
-					BOX_COLOR = Color.darkGray;
-					break;
-				case 7:
-					BOX_COLOR = Color.white;
-					break;
-				case 8:
-					BOX_COLOR = Color.cyan;
-					break;
-
-				}
+				BOX_COLOR = getColor(i);
 				i++;
 
-				// System.out.println("paint paths");
 				// paint the boxes
-				for (INode node : a.getNodesToVisit()) {
+				for (Node node : a.getNodesToVisit()) {
+					
 					if (node.isRoot()) {
 						Color tempColor = BOX_COLOR;
 						Color tempBorder = BORDER_COLOR;
@@ -185,7 +158,8 @@ public class TextInBoxTreePane extends JComponent {
 						TEXT_COLOR = tempText;
 						BOX_COLOR = tempColor;
 						BORDER_COLOR = tempBorder;
-					} else {
+					}
+					else {
 						paintBox(g, node);
 					}
 				}
@@ -198,6 +172,38 @@ public class TextInBoxTreePane extends JComponent {
 			}
 		}
 
+	}
+
+	private Color getColor(int i) {
+		switch (i % 9) {
+		case 0:
+			return Color.ORANGE;
+		case 1:
+			return Color.red;
+		case 2:
+			return Color.yellow;
+			
+		case 3:
+			return Color.gray;
+			
+		case 4:
+			return Color.green;
+			
+		case 5:
+			return Color.blue;
+			
+		case 6:
+			return Color.darkGray;
+			
+		case 7:
+			return Color.white;
+			
+		case 8:
+			return Color.cyan;
+			
+
+		}
+		return Color.black;
 	}
 
 	public boolean isBigNodes() {

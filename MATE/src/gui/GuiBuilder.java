@@ -91,6 +91,7 @@ public class GuiBuilder {
 	
 	public enum algos {
 		cte,
+		cteBrain,
 		mate,
 		leftWalker;
 	}
@@ -527,6 +528,23 @@ public class GuiBuilder {
 		frame.getContentPane().add(stepSpinner_2);
 		
 		
+
+		JCheckBox chckbxPlay = new JCheckBox("Play");
+		
+		
+			
+			
+		
+		chckbxPlay.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+					Thread animator = new Animator(chckbxPlay);
+					animator.start();	
+			}
+		});
+		chckbxPlay.setBounds(963, 854, 97, 23);
+		frame.getContentPane().add(chckbxPlay);
+		
+				
 		
 		
 	}
@@ -543,6 +561,8 @@ public class GuiBuilder {
 		case mate:
 			startMate();
 			break;
+		case cteBrain:
+			startCTEBrain();
 			
 		}
 		
@@ -550,6 +570,11 @@ public class GuiBuilder {
 	}
 	
 	
+	private void startCTEBrain() {
+		// TODO Auto-generated method stub
+		ProgrammManager.startCTEBrain();
+	}
+
 	private void startMate() {
 		// TODO Auto-generated method stub
 		ProgrammManager.startMate();

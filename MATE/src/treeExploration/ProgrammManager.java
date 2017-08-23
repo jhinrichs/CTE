@@ -31,7 +31,7 @@ public class ProgrammManager {
 	private static CollectiveExploration colEx;
 	private static AgentManager mate;
 	
-	private static Traversal recentTraversal;
+	public static Traversal recentTraversal;
 	
 	
 
@@ -58,6 +58,9 @@ public class ProgrammManager {
 		painter.drawTree(tree,panel, bigNodes);
 	}
 	
+	/**@deprecated
+	 * 
+	 */
 	public static void paintCTE() {
 		calculateCTE();
 		
@@ -106,24 +109,22 @@ public class ProgrammManager {
 		mainWindow.frame.setVisible(true);
 	}
 	
-	public static void paintStep(int i) {
-		
+	/**paint only positions of agent at given step
+	 * @param i
+	 */
+	public static void paintStep(int i) {	
 		System.out.println("print step number " +i+ " for all agents");
-		TreePainter painter = new TreePainter();
-		mainWindow.treeInlayPanel.removeAll();
-		//treeInlayPanel.repaint();
-		painter.drawTree(recentTraversal.getRoot(), recentTraversal.getStep(i), mainWindow.treeInlayPanel, mainWindow.bigNodesCheckBox.isSelected());
-		mainWindow.frame.setVisible(true);		
+		paintStep(recentTraversal.getStep(i));
 	}
 	
+	/**paints all steps up to given step
+	 * @param i
+	 */
 	public static void paintSteps(int i) {
 		
-		System.out.println("print step up to number " +i+ " for all agents");
-		TreePainter painter = new TreePainter();
-		mainWindow.treeInlayPanel.removeAll();
-		//treeInlayPanel.repaint();
-		painter.drawTree(recentTraversal.getRoot(), recentTraversal.getStepsUpToNumber(i), mainWindow.treeInlayPanel, mainWindow.bigNodesCheckBox.isSelected());
-		mainWindow.frame.setVisible(true);		
+		System.out.println("print step up to number " +i+ " for all agents");	
+		paintStep(recentTraversal.getStepsUpToNumber(i));
+
 	}
 	
 	public static void paintStep(Traversal solution) {
@@ -134,8 +135,6 @@ public class ProgrammManager {
 		painter.drawTree(solution.getRoot(), solution, mainWindow.treeInlayPanel, mainWindow.bigNodesCheckBox.isSelected());
 		mainWindow.frame.setVisible(true);		
 	}
-	
-	
 	
 	
 
@@ -153,7 +152,7 @@ public class ProgrammManager {
 		
 		leftWalker = solutionManager.getLeftWalker();
 		recentTraversal = leftWalker.getOptimum();
-		System.out.println(recentTraversal.getSteps()+" schritte nötig");
+		System.out.println(recentTraversal.getNumberOfSteps()+" schritte nötig");
 		printTraversals(recentTraversal);
 	}
 	
@@ -208,6 +207,11 @@ public class ProgrammManager {
 		paintAllAgents();
 		printTraversals(recentTraversal);
 	}
+	public static void startCTEBrain() {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 
 	

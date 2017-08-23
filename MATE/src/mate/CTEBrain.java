@@ -1,10 +1,6 @@
 package mate;
 
-import java.util.ArrayList;
-
-import optimalExploration.MovingPlan;
 import solutionData.Agent;
-import solutionData.IAgent;
 import tree.Node;
 
 public class CTEBrain implements IBrainModule {
@@ -21,30 +17,28 @@ public class CTEBrain implements IBrainModule {
 
 		if (nextNode.isLeaf() || nextNode.isFinished() && !nextNode.isRoot()) {
 
+			System.out.println("Knoten " + nextNode.getId() +" ist fertig --> gehe zu parent");
 			return nextNode.getParent();
 
 		} else {
-			nextNode = agent.activeNode().getChildAt(0);
-			int minAgents = nextNode.getRobPos().getAllAgentsInTree();
+			
+			//tricky --> maximum number of all agents in whole tree plus 1 ensures there is a child with less agents in tree
+			int minAgents = nextNode.getRobPos().getAllAgentsInTree()+1;
 
 			for (Node child : nextNode.getChildren()) {
 				if (!child.isFinished()) {
 					int tempAgentsNumber = child.getRobPos().getAllAgentsInTree();
-					//agent.traversal.plan 		--> Abfrage nach bereits vwerplanten knoten einfügen 
+					tempAgentsNumber  += agent.traversal.getPlan().getAgentPlannedFromTo(agent.getPosition(),child);
+					System.out.println(agent.traversal.getPlan().getAgentPlannedFromTo(agent.getPosition(),child) + " Agents in Knoten " + child.getId());
 					if (minAgents > tempAgentsNumber) {
 						minAgents = tempAgentsNumber;
 						nextNode = child;
 					}
 				}
 			}
-
+			System.out.println("nächster Knoten für Agent " + agent.getId() +" ist "+ nextNode.getId());
 			return nextNode;
 		}
 	}
 
-	private int getAgentsInTree(Node n) {
-
-		n.getRobPos().getAllAgentsInTree();
-		return 0;
-	}
 }

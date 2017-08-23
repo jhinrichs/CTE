@@ -3,7 +3,6 @@ package solutionData;
 import java.util.ArrayList;
 import java.util.List;
 
-import mate.AgentManager;
 import mate.Brain;
 import mate.Brain.BrainModuleType;
 import optimalExploration.MovingPlan;
@@ -17,17 +16,16 @@ public class Agent implements IAgent {
 	public int energy = 0;
 	private int id;
 	private static int idCounter = 0;
-	private ArrayList<Node> path = new ArrayList<Node>();
+	private ArrayList<Node> path;
 	public Traversal traversal;
 	
 	public Brain brainModule;
 	
 	
 	public Agent(Node root, BrainModuleType brainType) {
-		this.root= root;
-		root.setVisited(true);
-		path.add(root);
+		this(root);
 		this.brainModule = new Brain(this, brainType);
+		
 	}
 	public Agent() {
 		setId();
@@ -40,7 +38,7 @@ public class Agent implements IAgent {
 	}
 
 	public Agent(Node root) {
-		setId();
+		this();
 		this.root = root;
 		path.add(root);
 		root.setVisited(true);
@@ -48,16 +46,13 @@ public class Agent implements IAgent {
 	}
 
 	public Agent(Node root, int energy) {
-		this();
+		this(root);
 		this.energy = energy;
 		
 	}
 
 	public Agent(Node root, BrainModuleType brainType, Traversal traversal) {
-		this.root= root;
-		root.setVisited(true);
-		path.add(root);
-		this.brainModule = new Brain(this, brainType);
+		this(root, brainType);
 		this.traversal = traversal;
 	}
 	
