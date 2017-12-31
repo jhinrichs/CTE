@@ -1,6 +1,5 @@
 package optimalExploration;
 
-import mate.MateAgent;
 import solutionData.IAgent;
 import tree.Node;
 
