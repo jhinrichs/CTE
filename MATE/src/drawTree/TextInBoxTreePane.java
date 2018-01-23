@@ -41,7 +41,7 @@ import javax.swing.JComponent;
 import org.abego.treelayout.TreeForTreeLayout;
 import org.abego.treelayout.TreeLayout;
 
-import com.sun.javafx.scene.layout.region.BorderImageSliceConverter;
+//import com.sun.javafx.scene.layout.region.BorderImageSliceConverter;
 
 import solutionData.Agent;
 import solutionData.IAgent;
