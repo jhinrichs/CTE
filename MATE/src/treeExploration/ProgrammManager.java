@@ -6,7 +6,6 @@ import javax.swing.JPanel;
 import drawTree.TreePainter;
 import gui.GuiBuilder;
 import mate.AgentManager;
-import mate.Brain;
 import mate.Brain.BrainModuleType;
 import optimalExploration.CollectiveExploration;
 import optimalExploration.LeftWalker;
@@ -18,7 +17,6 @@ import tree.INode;
 import tree.Node;
 import tree.TreeDataCalculator;
 import tree.TreeFactory;
-import tree.TreeSpecifier;
 
 /**
  * @author jonas.hinrichs
@@ -27,9 +25,9 @@ import tree.TreeSpecifier;
 public class ProgrammManager {
 	private static Node tree = new Node(null);
 	private static GuiBuilder mainWindow;
-	private static LeftWalker leftWalker;
+
 	private static CollectiveExploration colEx;
-	private static AgentManager mate;
+
 	
 	public static Traversal recentTraversal;
 	
@@ -139,22 +137,14 @@ public class ProgrammManager {
 	
 
 	public static void createTree(int seed, int maxDepth, int minDepth, int maxBranches, int minBranches, int maxNodes,
-			int minNodes, double leafFactor, TreeSpecifier treeSpecifier) {
+			int minNodes, double leafFactor) {
 
-		TreeFactory treeCreator = new TreeFactory(seed,maxDepth,minDepth,maxBranches,minBranches,maxNodes,minNodes,leafFactor, treeSpecifier);
+		TreeFactory treeCreator = new TreeFactory(seed,maxDepth,minDepth,maxBranches,minBranches,maxNodes,minNodes,leafFactor);
 		tree = treeCreator.createTree();
 				
 	}
 	
-	public static void calculateLeftWalker(){
-	
-		SolutionManager solutionManager = new SolutionManager(tree, mainWindow.panel.getNumberOfAgents());
-		
-		leftWalker = solutionManager.getLeftWalker();
-		recentTraversal = leftWalker.getOptimum();
-		System.out.println(recentTraversal.getNumberOfSteps()+" schritte nötig");
-		printTraversals(recentTraversal);
-	}
+
 	
 	private static void printTraversals(Traversal bestPath) {
 		int maxNodes=0;
@@ -183,7 +173,7 @@ public class ProgrammManager {
 		
 	}
 	public static void calculateCTE() {
-		SolutionManager solutionManager = new SolutionManager(tree, mainWindow.panel.getNumberOfAgents());
+		SolutionManager solutionManager = new SolutionManager(tree, mainWindow.getNumberOfAgents());
 		
 		colEx = solutionManager.getCTE();
 		
@@ -191,26 +181,7 @@ public class ProgrammManager {
 		paintAllAgents();
 		printTraversals(colEx.getOptimum());
 	}
-	
-	
-	public static void startMate() {
-		int numberOfAgents = mainWindow.panel.getNumberOfAgents();
-		double movingThreshhold = mainWindow.matePanel.getMovingTreshhold_textfield();
-		double distanceInfluence = mainWindow.matePanel.getDistanceInfluence_textfield();
-		BrainModuleType brainType = mainWindow.matePanel.getBrainType();
-		SolutionManager solutionManager = new SolutionManager(TreeFactory.copyTree(tree), numberOfAgents, movingThreshhold, distanceInfluence, brainType);
-		
-		
-		mate = solutionManager.getMate(); 
-		recentTraversal = mate.getOptimum();
-		
-		paintAllAgents();
-		printTraversals(recentTraversal);
-	}
-	public static void startCTEBrain() {
-		// TODO Auto-generated method stub
-		
-	}
+
 
 
 

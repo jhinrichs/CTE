@@ -3,7 +3,6 @@ package solutionData;
 import java.util.ArrayList;
 import java.util.List;
 
-import optimalExploration.MovingPlan;
 import optimalExploration.MovingPlanList;
 import tree.Node;
 
