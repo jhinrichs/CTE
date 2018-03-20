@@ -108,16 +108,7 @@ public class GuiBuilder {
 
 			}
 
-			private void validateData() {
-				maxDepth = Integer.parseInt(maxDepthField.getText());
-				minDepth = Integer.parseInt(minDepthField.getText());
-				maxBranches = Integer.parseInt(maxChildrenField.getText());
-				minBranches = Integer.parseInt(minChildrenField.getText());
-				maxNodes = Integer.parseInt(maxNodesField.getText());
-				minNodes = Integer.parseInt(minNodesField.getText());
-
-				leafFactor = Double.parseDouble(leafFactorField.getText().replace(",", "."));
-			}
+			
 
 			private void createTree() {				
 				ProgrammManager.createTree(seed, maxDepth, minDepth, maxBranches, minBranches, maxNodes, minNodes,
@@ -127,7 +118,7 @@ public class GuiBuilder {
 			}
 
 		});
-		btnCreateTree.setBounds(6, 589, 140, 23);
+		btnCreateTree.setBounds(6, 797, 140, 23);
 		frame.getContentPane().add(btnCreateTree);
 
 		JScrollPane scrollPane = new JScrollPane();
@@ -181,14 +172,14 @@ public class GuiBuilder {
 		leafFactorField.setColumns(10);
 
 		textField_2 = new JTextField();
-		textField_2.setBounds(6, 651, 140, 20);
+		textField_2.setBounds(6, 859, 140, 20);
 		frame.getContentPane().add(textField_2);
 		textField_2.setBackground(Color.WHITE);
 		textField_2.setColumns(10);
 
 		bigNodesCheckBox = new JCheckBox("Big numbered Nodes");
 		bigNodesCheckBox.setSelected(true);
-		bigNodesCheckBox.setBounds(6, 551, 140, 23);
+		bigNodesCheckBox.setBounds(6, 759, 140, 23);
 		frame.getContentPane().add(bigNodesCheckBox);
 
 		JButton btnShowAgent = new JButton("Show Agent");
@@ -213,7 +204,7 @@ public class GuiBuilder {
 		frame.getContentPane().add(btnNewButton);
 
 		JButton btnNewButton_1 = new JButton("Use Tree Code");
-		btnNewButton_1.setBounds(6, 617, 140, 23);
+		btnNewButton_1.setBounds(6, 825, 140, 23);
 		frame.getContentPane().add(btnNewButton_1);
 
 		JButton btnShowStepNumber = new JButton("Show Step");
@@ -302,6 +293,17 @@ public class GuiBuilder {
 		JSpinner spinner = new JSpinner();
 		spinner.setBounds(869, 891, 42, 20);
 		frame.getContentPane().add(spinner);
+		
+		JButton runSimulationButton = new JButton("run Simulation");
+		runSimulationButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				validateData();
+				startCTE();
+				
+			}
+		});
+		runSimulationButton.setBounds(6, 555, 140, 23);
+		frame.getContentPane().add(runSimulationButton);
 
 	}
 
@@ -457,13 +459,11 @@ public class GuiBuilder {
 
 	private void startAlgo() {
 		startCTE();
-		paintAllPaths();
 	}
 
 	private void startCTE() {
 		// TODO Auto-generated method stub
 		ProgrammManager.calculateCTE();
-
 	}
 
 	private void paintStep(int i) {
@@ -496,5 +496,16 @@ public class GuiBuilder {
 
 	public int getNumberOfAgents() {
 		return Integer.parseInt(numberOfAgentsField.getText());
+	}
+	
+	private void validateData() {
+		maxDepth = Integer.parseInt(maxDepthField.getText());
+		minDepth = Integer.parseInt(minDepthField.getText());
+		maxBranches = Integer.parseInt(maxChildrenField.getText());
+		minBranches = Integer.parseInt(minChildrenField.getText());
+		maxNodes = Integer.parseInt(maxNodesField.getText());
+		minNodes = Integer.parseInt(minNodesField.getText());
+
+		leafFactor = Double.parseDouble(leafFactorField.getText().replace(",", "."));
 	}
 }
