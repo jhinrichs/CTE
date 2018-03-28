@@ -13,6 +13,14 @@ public class Traversal {
 	private List<IAgent> agents;
 	private MovingPlanList plan = new MovingPlanList();
 
+	public Integer getNumberOfNodes() {
+		if(root!= null) {
+		return root.getTreeNodeCount();}
+		else {
+			return 0;
+		}
+	}
+	
 	public List<IAgent> getAgents() {
 		return agents;
 	}
@@ -138,6 +146,11 @@ public class Traversal {
 	
 	public MovingPlanList getPlan() {
 		return plan;
+	}
+
+	public String getTreeCode() {
+
+		return root.getTreeCode();
 	}
 
 }

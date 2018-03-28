@@ -20,7 +20,7 @@ public class Node implements INode {
 	private Node parent;
 	private TreeDataCalculator treeData;
 	private RobPosTree robPos;
-	
+	private String treeCode;
 
 	public static int getIdCount() {
 		return idCount;
@@ -360,6 +360,15 @@ public class Node implements INode {
 
 	public boolean isVisited() {
 		return visited;
+	}
+
+	public String getTreeCode() {
+		
+		return treeCode;
+	}
+
+	public void setTreeCode(String createedTreeCode) {
+		treeCode = createedTreeCode;		
 	}
 
 }

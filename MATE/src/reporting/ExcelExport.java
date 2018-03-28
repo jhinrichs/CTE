@@ -16,42 +16,48 @@ public class ExcelExport {
 	XSSFWorkbook workbook = new XSSFWorkbook();
 	XSSFSheet sheet = workbook.createSheet("First Sheet");
 
-	XSSFRow row = sheet.createRow(0);
-	XSSFCell cell = row.createCell(0);
-
+	
+	
 	int actualRow = 0;
 	int actualColumn = 0;
 
-	public ExcelExport(String[][] table) {
 
-		writeTreeData(table, 0);
-	}
+	public ExcelExport(int maxRows, int maxColumns) {
 
-	public ExcelExport() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public void write(int rowNumber,int columnNumber,  String value) {
-		sheet.createRow(rowNumber).createCell(columnNumber).setCellValue(value);
-	}
+//		sheet.createRow(12).createCell(12).setCellValue("101");
+		XSSFRow myRow = null;
+		try {
+			 myRow = sheet.getRow(rowNumber);
 
-	public void writeTreeData(String[][] table, int rowNumber) {
+		} catch (Exception e) {
 
-		actualRow = rowNumber;
-
-		for (String[] data : table) {
-			row = sheet.createRow(actualRow);
-
-			row.createCell(0).setCellValue(data[0]);
-			row.createCell(1).setCellValue(data[1]);
+			
 		}
-
+		if(myRow == null) {
+			 myRow = sheet.createRow(rowNumber);
+		}
+		XSSFCell myCell = myRow.createCell(columnNumber);
+		myCell.setCellValue(value);
+		
+		
 	}
 
-	public void save() throws FileNotFoundException, IOException {
+	public void save() {
 
-		workbook.write(new FileOutputStream("D:\\Bachelor Arbeit\\Output\\testfile.xlsx"));
-
+		try {
+			workbook.write(new FileOutputStream("D:\\Bachelor Arbeit\\Output\\testfile.xlsx"));
+			workbook.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 }

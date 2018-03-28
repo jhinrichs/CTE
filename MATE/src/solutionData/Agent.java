@@ -107,11 +107,12 @@ public class Agent implements IAgent {
 		path.addAll(nodes);
 	}
 
+	
+	/* 
+	 */
 	public int getStepsCount() {
-		if (path.size() > 1) {
-			return (path.size() - 1) * 2;
-		}
-		return 0;
+		
+		return getNodesToVisit().size();
 	}
 
 	public Node getPosition() {

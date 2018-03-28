@@ -339,7 +339,7 @@ public class GuiBuilder {
 				} catch (Exception e2) {
 					seed = 0;
 				}
-				System.out.println("Seed updated");
+				//System.out.println("Seed updated");
 			}
 
 			@Override
@@ -455,7 +455,7 @@ public class GuiBuilder {
 
 		MultiAgentsRunsField = new JTextField();
 		MultiAgentsRunsField.setToolTipText("");
-		MultiAgentsRunsField.setText("100");
+		MultiAgentsRunsField.setText("1;2;5;10;20;50");
 		MultiAgentsRunsField.setColumns(10);
 		MultiAgentsRunsField.setBounds(10, 500, 120, 20);
 		treeSpecifier.add(MultiAgentsRunsField);
@@ -493,7 +493,7 @@ public class GuiBuilder {
 		frame.setVisible(true);
 	}
 
-	private void paintAllPaths() {
+	public void paintAllPaths() {
 		treeInlayPanel.removeAll();
 		treeInlayPanel.repaint();
 		ProgrammManager.paintAllAgents();
@@ -519,7 +519,7 @@ public class GuiBuilder {
 	}
 
 	private int[] convertNumberOfAgents() {
-		String tempString[] = numberOfAgentsField.getText().split(";");
+		String tempString[] = MultiAgentsRunsField.getText().split(";");
 		int[] numberOfAgents = new int[tempString.length];
 		for (int i = 0; i < tempString.length; i++) {
 			numberOfAgents[i] = Integer.parseInt(tempString[i]);

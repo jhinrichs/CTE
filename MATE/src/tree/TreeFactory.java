@@ -37,17 +37,16 @@ public class TreeFactory {
 	}
 
 	public Node createTree() {
-		
+
 		seed = numberGenerator.nextInt();
 		numberGenerator = new Random(seed);
-		
+
 		Node.setIdCount(0);
 		Node root = new Node(null);
-
+		root.setTreeCode(createTreeCode());
 		// List to save all leafs
 		List<Node> leafs = new ArrayList<Node>();
 
-		
 		while (Node.getIdCount() < minNodes) {
 			leafs.add(getLeaf(root));
 			// add nodes current leaf until number of calculated nodes is reached
@@ -65,7 +64,7 @@ public class TreeFactory {
 			}
 		}
 
-		System.out.println("Number of node = " + Node.getIdCount());
+		// System.out.println("Number of node = " + Node.getIdCount());
 
 		return root;
 	}
@@ -128,6 +127,19 @@ public class TreeFactory {
 		}
 
 		return newTree;
+	}
+
+	public String createTreeCode(){
+		String treeCode = "#" + 
+		seed +";"+             
+		maxDepth +";"+          
+		minDepth +";"+
+		maxBranches +";"+       
+		minBranches +";"+  
+		branchingfactor +";"+ 
+		maxNodes +";"+ 
+		minNodes;          
+		return treeCode;
 	}
 
 }

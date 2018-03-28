@@ -102,7 +102,7 @@ public class ProgrammManager {
 	}
 
 	public static void paintAllAgents() {
-		System.out.println("print paths for all agents");
+		//System.out.println("print paths for all agents");
 		TreePainter painter = new TreePainter();
 		mainWindow.treeInlayPanel.removeAll();
 		// treeInlayPanel.repaint();
@@ -194,21 +194,32 @@ public class ProgrammManager {
 		recentTraversal = colEx.getOptimum();
 		paintAllAgents();
 		printTraversals(colEx.getOptimum());
+		 System.out.println("number of Nodes in tree = "+ tree.getTreeNodeCount());
+		 System.out.println("number of Steps needed = "+ recentTraversal.getNumberOfSteps());
 	}
 
 	public static void runSimulation(TreeFactory treeFactory, int[] numberOfAgents, int numberOfRuns) {
 		ExportDesigner exporter = new ExportDesigner(treeFactory, numberOfAgents, numberOfRuns);
-		
+		exporter.addRun(1,treeFactory.seed);
 		for (int i = 0; i < numberOfRuns; i++) {
 			tree = treeFactory.createTree(); 			// eventuell muss seed neu gesetzt werden Wenn alle Bäume gleichen Seed haben
-			exporter.addRun(i+1,treeFactory.seed);
+			mainWindow.paintAllPaths();
+			
+			
 			for (int agentNumber = 0; agentNumber < numberOfAgents.length; agentNumber++) {
 
 				 SolutionManager solutionManager = new SolutionManager(tree,numberOfAgents[agentNumber]);
 				 Traversal solution = solutionManager.getCTE().getOptimum();
-				 System.out.println("number of node = "+ tree.getTreeNodeCount());
+				 System.out.println("number of Nodes in tree = "+ tree.getTreeNodeCount());
+				 System.out.println("number of Steps needed = "+ solution.getNumberOfSteps());
+				 exporter.allSolutions.add(solution);
+				 recentTraversal = solution;
+				 
 			}
 		}
+		exporter.addSolutionByNumberOfNodes();
+		
+		exporter.save();
 	}
 
 }

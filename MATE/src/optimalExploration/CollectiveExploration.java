@@ -47,7 +47,7 @@ public class CollectiveExploration {
 		System.out.println("Start calculating Collective Tree Exploration Solution");
 		int steps = 0;
 		while (!root.isFinished() || !solution.allRobotsAtRoot() ) {
-			System.out.println("calculating step " + steps);
+			//System.out.println("calculating step " + steps);
 			step();
 			steps++;
 		}
