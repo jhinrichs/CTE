@@ -22,6 +22,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import tree.TreeFactory;
 import treeExploration.ProgrammManager;
 
 public class GuiBuilder {
@@ -58,6 +59,8 @@ public class GuiBuilder {
 	private double leafFactor;
 	private int maxNodes;
 	private int minNodes;
+	private int[] numberOfAgents;
+	private int numberOfRuns;
 	public JPanel treeInlayPanel;
 	public JSpinner spinner;
 	public JSpinner stepSpinner;
@@ -69,8 +72,8 @@ public class GuiBuilder {
 
 	private JTextField minNodesField;
 	private JTextField numberOfAgentsField;
-	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField NumberOfRunsTextfield;
+	private JTextField MultiAgentsRunsField;
 
 	/**
 	 * Create the application.
@@ -108,9 +111,7 @@ public class GuiBuilder {
 
 			}
 
-			
-
-			private void createTree() {				
+			private void createTree() {
 				ProgrammManager.createTree(seed, maxDepth, minDepth, maxBranches, minBranches, maxNodes, minNodes,
 						leafFactor);
 				rand = new Random(Integer.parseInt(seedField.getText()));
@@ -270,20 +271,20 @@ public class GuiBuilder {
 		});
 		chckbxPlay.setBounds(1201, 890, 45, 23);
 		frame.getContentPane().add(chckbxPlay);
-		
-				JButton btnShowTree = new JButton("Show Tree");
-				btnShowTree.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
 
-						treeInlayPanel.removeAll();
-						treeInlayPanel.repaint();
-						ProgrammManager.paintTree(treeInlayPanel, bigNodesCheckBox.isSelected());
-						frame.setVisible(true);
+		JButton btnShowTree = new JButton("Show Tree");
+		btnShowTree.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
 
-					}
-				});
-				btnShowTree.setBounds(1247, 890, 106, 23);
-				frame.getContentPane().add(btnShowTree);
+				treeInlayPanel.removeAll();
+				treeInlayPanel.repaint();
+				ProgrammManager.paintTree(treeInlayPanel, bigNodesCheckBox.isSelected());
+				frame.setVisible(true);
+
+			}
+		});
+		btnShowTree.setBounds(1247, 890, 106, 23);
+		frame.getContentPane().add(btnShowTree);
 
 		JButton exportButton = new JButton("export");
 
@@ -293,13 +294,16 @@ public class GuiBuilder {
 		JSpinner spinner = new JSpinner();
 		spinner.setBounds(869, 891, 42, 20);
 		frame.getContentPane().add(spinner);
-		
+
 		JButton runSimulationButton = new JButton("run Simulation");
 		runSimulationButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				validateData();
-				startCTE();
-				
+				TreeFactory fac = new TreeFactory(seed, maxDepth, minDepth, maxBranches, minBranches, maxNodes,
+						minNodes, leafFactor);
+				ProgrammManager.runSimulation(fac, numberOfAgents, numberOfRuns);
+				rand = new Random(Integer.parseInt(seedField.getText()));
+				seedField.setText("" + rand.nextInt());
 			}
 		});
 		runSimulationButton.setBounds(6, 555, 140, 23);
@@ -411,48 +415,50 @@ public class GuiBuilder {
 		minNodes.setOpaque(false);
 		minNodes.setBounds(10, 201, 120, 20);
 		treeSpecifier.add(minNodes);
-		
+
 		numberOfAgentsField = new JTextField();
 		numberOfAgentsField.setToolTipText("");
 		numberOfAgentsField.setText("5");
 		numberOfAgentsField.setColumns(10);
 		numberOfAgentsField.setBounds(10, 405, 120, 20);
 		treeSpecifier.add(numberOfAgentsField);
-		
+
 		JTextPane txtpnNumberOfAgents = new JTextPane();
-		txtpnNumberOfAgents.setToolTipText("gives a probability that the node is a leaf. And the tree ends. Even with minimum children but a leaffactor, the node can be a leaf. ");
+		txtpnNumberOfAgents.setToolTipText(
+				"gives a probability that the node is a leaf. And the tree ends. Even with minimum children but a leaffactor, the node can be a leaf. ");
 		txtpnNumberOfAgents.setText("Number of Agents");
 		txtpnNumberOfAgents.setOpaque(false);
 		txtpnNumberOfAgents.setBounds(10, 386, 120, 20);
 		treeSpecifier.add(txtpnNumberOfAgents);
-		
-		textField = new JTextField();
-		textField.setToolTipText("");
-		textField.setText("100");
-		textField.setColumns(10);
-		textField.setBounds(10, 450, 120, 20);
-		treeSpecifier.add(textField);
-		
+
+		NumberOfRunsTextfield = new JTextField();
+		NumberOfRunsTextfield.setToolTipText("");
+		NumberOfRunsTextfield.setText("100");
+		NumberOfRunsTextfield.setColumns(10);
+		NumberOfRunsTextfield.setBounds(10, 450, 120, 20);
+		treeSpecifier.add(NumberOfRunsTextfield);
+
 		JTextPane txtpnNumberOfRuns = new JTextPane();
-		txtpnNumberOfRuns.setToolTipText("gives the number of runs that are done for specified tree and  agent settings.");
-		txtpnNumberOfRuns.setText("Number of trees");
+		txtpnNumberOfRuns
+				.setToolTipText("gives the number of runs that are done for specified tree and  agent settings.");
+		txtpnNumberOfRuns.setText("Number of Runs");
 		txtpnNumberOfRuns.setOpaque(false);
 		txtpnNumberOfRuns.setBounds(10, 431, 120, 20);
 		treeSpecifier.add(txtpnNumberOfRuns);
-		
+
 		JTextPane txtpnMultipleAgentsRuns = new JTextPane();
 		txtpnMultipleAgentsRuns.setToolTipText("multiple integer Values that calculate for each run on each tree");
 		txtpnMultipleAgentsRuns.setText("multiple Agents Runs");
 		txtpnMultipleAgentsRuns.setOpaque(false);
 		txtpnMultipleAgentsRuns.setBounds(10, 481, 120, 20);
 		treeSpecifier.add(txtpnMultipleAgentsRuns);
-		
-		textField_1 = new JTextField();
-		textField_1.setToolTipText("");
-		textField_1.setText("100");
-		textField_1.setColumns(10);
-		textField_1.setBounds(10, 500, 120, 20);
-		treeSpecifier.add(textField_1);
+
+		MultiAgentsRunsField = new JTextField();
+		MultiAgentsRunsField.setToolTipText("");
+		MultiAgentsRunsField.setText("100");
+		MultiAgentsRunsField.setColumns(10);
+		MultiAgentsRunsField.setBounds(10, 500, 120, 20);
+		treeSpecifier.add(MultiAgentsRunsField);
 
 		return treeSpecifier;
 	}
@@ -497,7 +503,7 @@ public class GuiBuilder {
 	public int getNumberOfAgents() {
 		return Integer.parseInt(numberOfAgentsField.getText());
 	}
-	
+
 	private void validateData() {
 		maxDepth = Integer.parseInt(maxDepthField.getText());
 		minDepth = Integer.parseInt(minDepthField.getText());
@@ -507,5 +513,17 @@ public class GuiBuilder {
 		minNodes = Integer.parseInt(minNodesField.getText());
 
 		leafFactor = Double.parseDouble(leafFactorField.getText().replace(",", "."));
+
+		numberOfRuns = Integer.parseInt(NumberOfRunsTextfield.getText());
+		numberOfAgents = convertNumberOfAgents();
+	}
+
+	private int[] convertNumberOfAgents() {
+		String tempString[] = numberOfAgentsField.getText().split(";");
+		int[] numberOfAgents = new int[tempString.length];
+		for (int i = 0; i < tempString.length; i++) {
+			numberOfAgents[i] = Integer.parseInt(tempString[i]);
+		}
+		return numberOfAgents;
 	}
 }

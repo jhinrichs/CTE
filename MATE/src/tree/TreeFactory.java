@@ -6,18 +6,21 @@ import java.util.Random;
 
 public class TreeFactory {
 
-	private int maxDepth;
-	private int minDepth;
-	private int maxBranches;
-	private int minBranches;
-	private double branchingfactor;
-	private int maxNodes;
-	private int minNodes;
+	public long seed;
+	public int maxDepth;
+	public int minDepth;
+	public int maxBranches;
+	public int minBranches;
+	public double branchingfactor;
+	public int maxNodes;
+	public int minNodes;
 
 	private Random numberGenerator = new Random();
+	public String function;
 
 	public TreeFactory(long seed, int maxDepth, int minDepth, int maxBranches, int minBranches, int maxNodes,
 			int minNodes, double branchingfactor) {
+		this.seed = seed;
 		this.branchingfactor = branchingfactor;
 		this.minNodes = minNodes;
 		this.maxNodes = maxNodes;
@@ -34,12 +37,17 @@ public class TreeFactory {
 	}
 
 	public Node createTree() {
+		
+		seed = numberGenerator.nextInt();
+		numberGenerator = new Random(seed);
+		
 		Node.setIdCount(0);
 		Node root = new Node(null);
 
 		// List to save all leafs
 		List<Node> leafs = new ArrayList<Node>();
 
+		
 		while (Node.getIdCount() < minNodes) {
 			leafs.add(getLeaf(root));
 			// add nodes current leaf until number of calculated nodes is reached
