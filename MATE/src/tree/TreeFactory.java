@@ -7,6 +7,7 @@ import java.util.Random;
 public class TreeFactory {
 
 	public long seed;
+	public long lastSeed;
 	public int maxDepth;
 	public int minDepth;
 	public int maxBranches;
@@ -21,6 +22,7 @@ public class TreeFactory {
 	public TreeFactory(long seed, int maxDepth, int minDepth, int maxBranches, int minBranches, int maxNodes,
 			int minNodes, double branchingfactor) {
 		this.seed = seed;
+		this.lastSeed = seed;
 		this.branchingfactor = branchingfactor;
 		this.minNodes = minNodes;
 		this.maxNodes = maxNodes;
@@ -36,10 +38,13 @@ public class TreeFactory {
 		this(seed, 10, 5, 5, 0, 50000, 100, 0.4);
 	}
 
-	public Node createTree() {
+	public TreeFactory getNewFactory() {
+		return  new TreeFactory(numberGenerator.nextLong(), maxDepth, minDepth, maxBranches, minBranches, maxNodes, minNodes, branchingfactor);
+	}
 
-		seed = numberGenerator.nextInt();
-		numberGenerator = new Random(seed);
+	public Node createTree() {
+		lastSeed = numberGenerator.nextLong();
+		numberGenerator = new Random(lastSeed);
 
 		Node.setIdCount(0);
 		Node root = new Node(null);
@@ -47,14 +52,16 @@ public class TreeFactory {
 		// List to save all leafs
 		List<Node> leafs = new ArrayList<Node>();
 
-		while (Node.getIdCount() < minNodes) {
+		int numberOfNodes = getNumberOfNodes();
+		
+		while (Node.getIdCount() < numberOfNodes) {
 			leafs.add(getLeaf(root));
 			// add nodes current leaf until number of calculated nodes is reached
-			while (Node.getIdCount() < maxNodes && !leafs.isEmpty()) {
+			while (Node.getIdCount() < numberOfNodes && !leafs.isEmpty()) {
 				Node parent = leafs.get(0);
 				int numberOfChildren = getNumberofChildren();
 
-				while (numberOfChildren > 0 && Node.getIdCount() < maxNodes) {
+				while (numberOfChildren > 0 && Node.getIdCount() < numberOfNodes) {
 					Node newNode = new Node(parent);
 					leafs.add(newNode);
 					numberOfChildren--;
@@ -67,6 +74,11 @@ public class TreeFactory {
 		// System.out.println("Number of node = " + Node.getIdCount());
 
 		return root;
+	}
+
+//	returns a value beetween the min and max nodes value
+	private int getNumberOfNodes() {
+		return numberGenerator.nextInt(maxNodes-minNodes)+minNodes;		 
 	}
 
 	private Node getLeaf(Node n) {
@@ -102,6 +114,7 @@ public class TreeFactory {
 	 */
 	public static Node copyTree(Node root) {
 		Node newTree = new Node(null, root.getId());
+		newTree.setTreeCode(root.getTreeCode());
 		if (root.isLeaf()) {
 			return newTree;
 		} else {
@@ -131,7 +144,7 @@ public class TreeFactory {
 
 	public String createTreeCode(){
 		String treeCode = "#" + 
-		seed +";"+             
+		lastSeed +";"+             
 		maxDepth +";"+          
 		minDepth +";"+
 		maxBranches +";"+       

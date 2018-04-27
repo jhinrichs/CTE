@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import javax.sql.rowset.RowSetWarning;
 
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -27,7 +28,22 @@ public class ExcelExport {
 	}
 
 	public void write(int rowNumber,int columnNumber,  String value) {
-//		sheet.createRow(12).createCell(12).setCellValue("101");
+		XSSFCell myCell = getOrCreateCell(rowNumber, columnNumber);
+		myCell.setCellValue(value);
+	}
+	public void write(int rowNumber,int columnNumber,  int value) {
+		XSSFCell myCell = getOrCreateCell(rowNumber, columnNumber);
+		myCell.setCellType(CellType.NUMERIC);
+		myCell.setCellValue(value);
+	}
+
+	/**
+	 * gets a cell. If it doesnt exist yet it will create it
+	 * @param rowNumber
+	 * @param columnNumber
+	 * @return
+	 */
+	private XSSFCell getOrCreateCell(int rowNumber, int columnNumber) {
 		XSSFRow myRow = null;
 		try {
 			 myRow = sheet.getRow(rowNumber);
@@ -40,9 +56,7 @@ public class ExcelExport {
 			 myRow = sheet.createRow(rowNumber);
 		}
 		XSSFCell myCell = myRow.createCell(columnNumber);
-		myCell.setCellValue(value);
-		
-		
+		return myCell;
 	}
 
 	public void save() {
@@ -59,5 +73,7 @@ public class ExcelExport {
 		}
 		
 	}
+
+
 
 }
