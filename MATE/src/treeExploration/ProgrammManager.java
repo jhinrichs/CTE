@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import drawTree.TreePainter;
 import gui.GuiBuilder;
 import optimalExploration.CollectiveExploration;
+import optimalExploration.LeftWalker;
 import reporting.ExportData;
 import reporting.NKExport;
 import solutionData.Agent;
@@ -17,6 +18,7 @@ import tree.INode;
 import tree.Node;
 import tree.TreeDataCalculator;
 import tree.TreeFactory;
+import tree.Verteilungsfunktionen;
 
 /**
  * @author jonas.hinrichs
@@ -27,6 +29,7 @@ public class ProgrammManager {
 	private static GuiBuilder mainWindow;
 
 	private static CollectiveExploration colEx;
+	private static LeftWalker leftie;
 	private static TreeFactory treeFactory;
 
 	public static Traversal recentTraversal;
@@ -144,18 +147,18 @@ public class ProgrammManager {
 	}
 
 	public static void createTree(int seed, int maxDepth, int minDepth, int maxBranches, int minBranches, int maxNodes,
-			int minNodes, double leafFactor) {
+			int minNodes, double leafFactor, Verteilungsfunktionen verteilung) {
 
 		TreeFactory treeCreator = new TreeFactory(seed, maxDepth, minDepth, maxBranches, minBranches, maxNodes,
-				minNodes, leafFactor);
+				minNodes, leafFactor, verteilung);
 		tree = treeCreator.createTree();
 
 	}
 
 	public static TreeFactory createTreeFactory(int seed, int maxDepth, int minDepth, int maxBranches, int minBranches,
-			int maxNodes, int minNodes, double leafFactor) {
+			int maxNodes, int minNodes, double leafFactor, Verteilungsfunktionen verteilung) {
 
-		return new TreeFactory(seed, maxDepth, minDepth, maxBranches, minBranches, maxNodes, minNodes, leafFactor);
+		return new TreeFactory(seed, maxDepth, minDepth, maxBranches, minBranches, maxNodes, minNodes, leafFactor,verteilung);
 	}
 
 	private static void printTraversals(Traversal bestPath) {
@@ -186,16 +189,30 @@ public class ProgrammManager {
 
 	}
 
+	public static void calculateLeftWalker() {
+		SolutionManager solutionManager = new SolutionManager(tree, mainWindow.getNumberOfAgents());
+		
+		leftie = solutionManager.getLeftWalker();
+		
+		recentTraversal = leftie.getOptimum();
+		
+		paintAndPrintPaths();
+	}
+
+	private static void paintAndPrintPaths() {
+		paintAllAgents();
+		printTraversals(recentTraversal);
+		 System.out.println("number of Nodes in tree = "+ tree.getTreeNodeCount());
+		 System.out.println("number of Steps needed = "+ recentTraversal.getNumberOfSteps());
+	}
+	
 	public static void calculateCTE() {
 		SolutionManager solutionManager = new SolutionManager(tree, mainWindow.getNumberOfAgents());
 
 		colEx = solutionManager.getCTE();
 
 		recentTraversal = colEx.getOptimum();
-		paintAllAgents();
-		printTraversals(colEx.getOptimum());
-		 System.out.println("number of Nodes in tree = "+ tree.getTreeNodeCount());
-		 System.out.println("number of Steps needed = "+ recentTraversal.getNumberOfSteps());
+		paintAndPrintPaths();
 	}
 
 	public static void runSimulation(TreeFactory treeFactory, int[] numberOfAgents, int numberOfRuns) {
@@ -211,8 +228,8 @@ public class ProgrammManager {
 			ExportData[] solutionPack = new ExportData[numberOfAgents.length];
 			for (int agentNumber = 0; agentNumber < numberOfAgents.length; agentNumber++) {
 
-				 SolutionManager solutionManager = new SolutionManager(tree,numberOfAgents[agentNumber]);
-				 Traversal solution = solutionManager.getCTE().getOptimum();
+				 SolutionManager thisSolutionManager = new SolutionManager(tree,numberOfAgents[agentNumber]);
+				 Traversal solution = thisSolutionManager.getCTE().getOptimum();
 //				 System.out.println("number of Nodes in tree = "+ tree.getTreeNodeCount());
 //				 System.out.println("number of Steps needed = "+ solution.getNumberOfSteps());
 				 solutionPack[agentNumber] = new ExportData(solution);
@@ -255,5 +272,12 @@ public class ProgrammManager {
 		long usedTime = stoptime-startTime;
 		System.out.println("Start Simulation.... estimated Time to finish is " + (usedTime*numberOfRuns)/1000 +" seconds");
 	}
+
+	public static boolean isInitialized() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
 
 }

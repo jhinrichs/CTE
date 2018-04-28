@@ -24,6 +24,13 @@ import javax.swing.event.DocumentListener;
 
 import tree.TreeFactory;
 import treeExploration.ProgrammManager;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
+import tree.Verteilungsfunktionen;
 
 public class GuiBuilder {
 
@@ -65,6 +72,8 @@ public class GuiBuilder {
 	public JSpinner spinner;
 	public JSpinner stepSpinner;
 	public JSpinner stepSpinner_2;
+	public JComboBox pickedAlgorithm;
+	public JComboBox Verteilungsfunktion;
 
 	Random rand = new Random();
 	int seed = rand.nextInt();
@@ -92,35 +101,6 @@ public class GuiBuilder {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		treeInlayPanel = new JPanel();
-		btnCreateTree = new JButton("create tree");
-
-		btnCreateTree.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-
-				try {
-					validateData();
-					createTree();
-					startAlgo();
-					paintAllPaths();
-
-				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(frame,
-							"Cannot create Tree due to one ore more values are incorrect. Please correct "
-									+ e2.getMessage().substring(16));
-				}
-
-			}
-
-			private void createTree() {
-				ProgrammManager.createTree(seed, maxDepth, minDepth, maxBranches, minBranches, maxNodes, minNodes,
-						leafFactor);
-				rand = new Random(Integer.parseInt(seedField.getText()));
-				seedField.setText("" + rand.nextInt());
-			}
-
-		});
-		btnCreateTree.setBounds(6, 797, 140, 23);
-		frame.getContentPane().add(btnCreateTree);
 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(156, 11, 1302, 868);
@@ -172,15 +152,9 @@ public class GuiBuilder {
 		leafFactorField.setText("0,7");
 		leafFactorField.setColumns(10);
 
-		textField_2 = new JTextField();
-		textField_2.setBounds(6, 859, 140, 20);
-		frame.getContentPane().add(textField_2);
-		textField_2.setBackground(Color.WHITE);
-		textField_2.setColumns(10);
-
 		bigNodesCheckBox = new JCheckBox("Big numbered Nodes");
 		bigNodesCheckBox.setSelected(true);
-		bigNodesCheckBox.setBounds(6, 759, 140, 23);
+		bigNodesCheckBox.setBounds(6, 890, 140, 23);
 		frame.getContentPane().add(bigNodesCheckBox);
 
 		JButton btnShowAgent = new JButton("Show Agent");
@@ -203,10 +177,6 @@ public class GuiBuilder {
 		});
 		btnNewButton.setBounds(649, 890, 106, 23);
 		frame.getContentPane().add(btnNewButton);
-
-		JButton btnNewButton_1 = new JButton("Use Tree Code");
-		btnNewButton_1.setBounds(6, 825, 140, 23);
-		frame.getContentPane().add(btnNewButton_1);
 
 		JButton btnShowStepNumber = new JButton("Show Step");
 		btnShowStepNumber.addActionListener(new ActionListener() {
@@ -295,26 +265,61 @@ public class GuiBuilder {
 		spinner.setBounds(869, 891, 42, 20);
 		frame.getContentPane().add(spinner);
 
+		JPanel panel = new JPanel();
+		panel.setBackground(SystemColor.controlHighlight);
+		panel.setBounds(6, 601, 140, 161);
+		frame.getContentPane().add(panel);
+		panel.setLayout(null);
+
+		MultiAgentsRunsField = new JTextField();
+		MultiAgentsRunsField.setBounds(10, 73, 120, 20);
+		panel.add(MultiAgentsRunsField);
+		MultiAgentsRunsField.setToolTipText("");
+		MultiAgentsRunsField.setText("1;2;5;10;20;50");
+		MultiAgentsRunsField.setColumns(10);
+
+		JTextPane txtpnMultipleAgentsRuns = new JTextPane();
+		txtpnMultipleAgentsRuns.setBounds(10, 53, 120, 20);
+		panel.add(txtpnMultipleAgentsRuns);
+		txtpnMultipleAgentsRuns.setToolTipText("multiple integer Values that calculate for each run on each tree");
+		txtpnMultipleAgentsRuns.setText("multiple Agents Runs");
+		txtpnMultipleAgentsRuns.setOpaque(false);
+
+		JTextPane txtpnNumberOfRuns = new JTextPane();
+		txtpnNumberOfRuns.setBounds(10, 11, 120, 20);
+		panel.add(txtpnNumberOfRuns);
+		txtpnNumberOfRuns
+				.setToolTipText("gives the number of runs that are done for specified tree and  agent settings.");
+		txtpnNumberOfRuns.setText("Number of Runs");
+		txtpnNumberOfRuns.setOpaque(false);
+
+		NumberOfRunsTextfield = new JTextField();
+		NumberOfRunsTextfield.setBounds(10, 30, 120, 20);
+		panel.add(NumberOfRunsTextfield);
+		NumberOfRunsTextfield.setToolTipText("");
+		NumberOfRunsTextfield.setText("100");
+		NumberOfRunsTextfield.setColumns(10);
+
 		JButton runSimulationButton = new JButton("run Simulation");
+		runSimulationButton.setBounds(10, 104, 120, 23);
+		panel.add(runSimulationButton);
 		runSimulationButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				validateData();
 				TreeFactory fac = new TreeFactory(seed, maxDepth, minDepth, maxBranches, minBranches, maxNodes,
-						minNodes, leafFactor);
+						minNodes, leafFactor, (Verteilungsfunktionen) Verteilungsfunktion.getSelectedItem());
 				ProgrammManager.runSimulation(fac, numberOfAgents, numberOfRuns);
 				rand = new Random(Integer.parseInt(seedField.getText()));
 				seedField.setText("" + rand.nextInt());
 			}
 		});
-		runSimulationButton.setBounds(6, 555, 140, 23);
-		frame.getContentPane().add(runSimulationButton);
 
 	}
 
 	private JPanel treeSpecificator() {
 		JPanel treeSpecifier = new JPanel();
 		treeSpecifier.setBackground(SystemColor.controlHighlight);
-		treeSpecifier.setBounds(6, 11, 140, 533);
+		treeSpecifier.setBounds(6, 11, 140, 579);
 		frame.getContentPane().add(treeSpecifier);
 		treeSpecifier.setLayout(null);
 
@@ -339,7 +344,7 @@ public class GuiBuilder {
 				} catch (Exception e2) {
 					seed = 0;
 				}
-				//System.out.println("Seed updated");
+				// System.out.println("Seed updated");
 			}
 
 			@Override
@@ -409,18 +414,18 @@ public class GuiBuilder {
 		minNodesField.setBounds(10, 220, 120, 20);
 		treeSpecifier.add(minNodesField);
 
-		JTextPane minNodes = new JTextPane();
-		minNodes.setToolTipText("the tree creation wont stop before the minimum number of Nodes is reached");
-		minNodes.setText("minNodes");
-		minNodes.setOpaque(false);
-		minNodes.setBounds(10, 201, 120, 20);
-		treeSpecifier.add(minNodes);
+		JTextPane minNodesText = new JTextPane();
+		minNodesText.setToolTipText("the tree creation wont stop before the minimum number of Nodes is reached");
+		minNodesText.setText("minNodes");
+		minNodesText.setOpaque(false);
+		minNodesText.setBounds(10, 201, 120, 20);
+		treeSpecifier.add(minNodesText);
 
 		numberOfAgentsField = new JTextField();
 		numberOfAgentsField.setToolTipText("");
 		numberOfAgentsField.setText("5");
 		numberOfAgentsField.setColumns(10);
-		numberOfAgentsField.setBounds(10, 405, 120, 20);
+		numberOfAgentsField.setBounds(10, 433, 120, 20);
 		treeSpecifier.add(numberOfAgentsField);
 
 		JTextPane txtpnNumberOfAgents = new JTextPane();
@@ -428,48 +433,88 @@ public class GuiBuilder {
 				"gives a probability that the node is a leaf. And the tree ends. Even with minimum children but a leaffactor, the node can be a leaf. ");
 		txtpnNumberOfAgents.setText("Number of Agents");
 		txtpnNumberOfAgents.setOpaque(false);
-		txtpnNumberOfAgents.setBounds(10, 386, 120, 20);
+		txtpnNumberOfAgents.setBounds(10, 414, 120, 20);
 		treeSpecifier.add(txtpnNumberOfAgents);
+		btnCreateTree = new JButton("create tree");
+		btnCreateTree.setBounds(10, 492, 120, 23);
+		treeSpecifier.add(btnCreateTree);
 
-		NumberOfRunsTextfield = new JTextField();
-		NumberOfRunsTextfield.setToolTipText("");
-		NumberOfRunsTextfield.setText("100");
-		NumberOfRunsTextfield.setColumns(10);
-		NumberOfRunsTextfield.setBounds(10, 450, 120, 20);
-		treeSpecifier.add(NumberOfRunsTextfield);
+		JButton btnNewButton_1 = new JButton("Use Tree Code");
+		btnNewButton_1.setBounds(10, 526, 120, 20);
+		treeSpecifier.add(btnNewButton_1);
 
-		JTextPane txtpnNumberOfRuns = new JTextPane();
-		txtpnNumberOfRuns
-				.setToolTipText("gives the number of runs that are done for specified tree and  agent settings.");
-		txtpnNumberOfRuns.setText("Number of Runs");
-		txtpnNumberOfRuns.setOpaque(false);
-		txtpnNumberOfRuns.setBounds(10, 431, 120, 20);
-		treeSpecifier.add(txtpnNumberOfRuns);
+		textField_2 = new JTextField();
+		textField_2.setBounds(10, 548, 120, 20);
+		treeSpecifier.add(textField_2);
+		textField_2.setBackground(Color.WHITE);
+		textField_2.setColumns(10);
 
-		JTextPane txtpnMultipleAgentsRuns = new JTextPane();
-		txtpnMultipleAgentsRuns.setToolTipText("multiple integer Values that calculate for each run on each tree");
-		txtpnMultipleAgentsRuns.setText("multiple Agents Runs");
-		txtpnMultipleAgentsRuns.setOpaque(false);
-		txtpnMultipleAgentsRuns.setBounds(10, 481, 120, 20);
-		treeSpecifier.add(txtpnMultipleAgentsRuns);
+		pickedAlgorithm = new JComboBox();
+		pickedAlgorithm.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {
 
-		MultiAgentsRunsField = new JTextField();
-		MultiAgentsRunsField.setToolTipText("");
-		MultiAgentsRunsField.setText("1;2;5;10;20;50");
-		MultiAgentsRunsField.setColumns(10);
-		MultiAgentsRunsField.setBounds(10, 500, 120, 20);
-		treeSpecifier.add(MultiAgentsRunsField);
+					startAlgo();
+				
+			}
+		});
+
+		pickedAlgorithm.setModel(new DefaultComboBoxModel(implementedAlgorithms.values()));
+		pickedAlgorithm.setSelectedIndex(0);
+		pickedAlgorithm.setBounds(10, 464, 120, 22);
+		treeSpecifier.add(pickedAlgorithm);
+		
+		Verteilungsfunktion = new JComboBox();
+		Verteilungsfunktion.setModel(new DefaultComboBoxModel(Verteilungsfunktionen.values()));
+		Verteilungsfunktion.setSelectedIndex(0);
+		Verteilungsfunktion.setBounds(10, 386, 120, 22);
+		treeSpecifier.add(Verteilungsfunktion);
+
+		btnCreateTree.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				try {
+					validateData();
+					createTree();
+
+					startAlgo();
+					paintAllPaths();
+
+				} catch (Exception e2) {
+					JOptionPane.showMessageDialog(frame,
+							"Cannot create Tree due to one ore more values are incorrect. Please correct "
+									+ e2.getMessage().substring(16));
+				}
+
+			}
+
+			private void createTree() {
+				ProgrammManager.createTree(seed, maxDepth, minDepth, maxBranches, minBranches, maxNodes, minNodes,
+						leafFactor,(Verteilungsfunktionen) Verteilungsfunktion.getSelectedItem());
+				rand = new Random(Integer.parseInt(seedField.getText()));
+				seedField.setText("" + rand.nextInt());
+			}
+
+		});
 
 		return treeSpecifier;
 	}
 
+	public enum implementedAlgorithms {
+		CTE, LeftWalker;
+
+	}
+
 	private void startAlgo() {
-		startCTE();
+		if (pickedAlgorithm.getSelectedIndex() == implementedAlgorithms.CTE.ordinal()) {
+			ProgrammManager.calculateCTE();
+		} else {
+			ProgrammManager.calculateLeftWalker();
+		}
 	}
 
 	private void startCTE() {
 		// TODO Auto-generated method stub
-		ProgrammManager.calculateCTE();
+
 	}
 
 	private void paintStep(int i) {

@@ -1,7 +1,5 @@
 package solutionData;
 
-import mate.AgentManager;
-import mate.Brain.BrainModuleType;
 import optimalExploration.CollectiveExploration;
 import optimalExploration.LeftWalker;
 import tree.Node;
@@ -12,6 +10,7 @@ public class SolutionManager {
 	private int numberOfAgents;
 
 	private CollectiveExploration collectiveExploration;
+	private LeftWalker leftie ;
 
 	public SolutionManager(Node tree, int numberOfRobots) {
 		this.tree = tree;
@@ -24,6 +23,13 @@ public class SolutionManager {
 		}
 
 		return collectiveExploration;
+	}
+	
+	public LeftWalker getLeftWalker() {
+		if(leftie == null) {
+			leftie = new LeftWalker(tree, numberOfAgents);
+		}
+		return leftie;
 	}
 
 }
