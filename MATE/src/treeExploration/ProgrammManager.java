@@ -203,7 +203,7 @@ public class ProgrammManager {
 		exporter.addRun(1,treeFactory.seed);
 		for (int i = 0; i < numberOfRuns; i++) {
 			tree = treeFactory.createTree(); 			// eventuell muss seed neu gesetzt werden Wenn alle Bäume gleichen Seed haben
-			mainWindow.paintAllPaths();
+//			mainWindow.paintAllPaths();
 			
 			
 			for (int agentNumber = 0; agentNumber < numberOfAgents.length; agentNumber++) {

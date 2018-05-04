@@ -106,7 +106,8 @@ public class ExportDesigner {
 			writer.write(actualRow,2, "Nodes in Tree : "+t.getNumberOfNodes());
 			writer.write(actualRow,1, "treecode : " +  t.getTreeCode());							
 				//Table: write solution data
-				writer.write(actualRow,3 + a, "steps "+t.getNumberOfSteps() + " agents " + t.getAgents().size() + " nodes " + t.getNumberOfNodes());
+				//writer.write(actualRow,3 + a, "steps "+t.getNumberOfSteps() + " agents " + t.getAgents().size() + " nodes " + t.getNumberOfNodes());
+				writer.write(actualRow,3 + a,t.getNumberOfSteps()+"" );
 				
 				a++;
 				if(a==agents.length-1) {
