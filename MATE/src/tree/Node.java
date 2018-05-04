@@ -257,7 +257,10 @@ public class Node implements INode {
 	}
 
 	/*
-	 * (non-Javadoc)
+	 * for the given Node it checks if it is a Leaf. If so it adds the node to the List. 
+	 * Otherwise it deligates the task to his children. 
+	 * 
+	 * Basically the procedure goes through the whole tree and every Node that is a Leaf checks himself into the List
 	 * 
 	 * @see tree.INode#getNodeList(java.util.List)
 	 */
