@@ -85,6 +85,10 @@ public class CollectiveExploration {
 		List<Node> activeNodes = getNodesWithAgents();
 
 		for (Node n : activeNodes) {
+			if(n.getId()==3 ) {
+				System.out.println("Agent x at node x");
+			}
+			// wenn knoten fertig, gehe zu parent. Es sei denn es ist die Wurzel
 			if (n.isLeaf() || n.isFinished() && !n.isRoot()) {
 				for (IAgent a : n.getRobPos().getAgentsAtNode()) {
 					plan.add(new MovingPlan(n.getParent(), a));
@@ -103,9 +107,11 @@ public class CollectiveExploration {
 					// getChildWithLeastNodes
 					Node least = unfinishedSubtrees.get(0);
 					int agentsInLeast = least.getRobPos().getAllAgentsInTree();
+					System.out.println("Node ID = "+n.getId());
 					for (Node subtree : unfinishedSubtrees) {
 						if (subtree.getRobPos().getAllAgentsInTree() < agentsInLeast) {
 							least = subtree;
+							
 							agentsInLeast = least.getRobPos().getAllAgentsInTree();
 						}
 					}

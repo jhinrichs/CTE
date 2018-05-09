@@ -60,8 +60,12 @@ public class TreeFactory {
 		List<Node> leafs = new ArrayList<Node>();
 
 		int numberOfNodes = getNumberOfNodes();
+
+		
+		
 		
 		while (Node.getIdCount() < numberOfNodes) {
+			
 			leafs.add(getRandomLeaf(root));
 			// add nodes current leaf until number of calculated nodes is reached
 			while (Node.getIdCount() < numberOfNodes && !leafs.isEmpty()) {
@@ -90,21 +94,16 @@ public class TreeFactory {
 	}
 
 	private Node getRandomLeaf(Node n) {
-//		if (n.isLeaf()) {
-//			return n;
-//		} else {
-//			Node leaf = null;
-//			while (leaf == null) {
-//
-//				leaf = getLeaf(n.getChildAt(0));
-//			}
-//			return leaf;
-//	}
+
 		List<Node> leafList =  n.getLeafList(null);
 		
-		int nextNode = numberGenerator.nextInt(leafList.size()-1);
-		return leafList.get(0);
-	
+		if(leafList.isEmpty()) {
+			return n;
+		}else {
+			int nextNode = numberGenerator.nextInt(leafList.size());
+			return leafList.get(nextNode);	
+		}
+		
 		
 	
 	}
@@ -120,7 +119,7 @@ public class TreeFactory {
 			return gleichverteilt();
 			
 		case random:
-			return 1;
+			return random();
 			
 		case wurzel:
 			return wurzelverteilung();
@@ -132,6 +131,9 @@ public class TreeFactory {
 		
 		
 		
+	}
+	private int random() {
+		return minBranches+numberGenerator.nextInt(quadratischeVerteilung()+wurzelverteilung());
 	}
 	
 	private int gleichverteilt() {
