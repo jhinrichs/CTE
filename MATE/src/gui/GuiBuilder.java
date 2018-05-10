@@ -74,6 +74,7 @@ public class GuiBuilder {
 	public JSpinner stepSpinner_2;
 	public JComboBox pickedAlgorithm;
 	public JComboBox Verteilungsfunktion;
+	public JTextPane outputWindow;
 
 	Random rand = new Random();
 	int seed = rand.nextInt();
@@ -267,7 +268,7 @@ public class GuiBuilder {
 
 		JPanel panel = new JPanel();
 		panel.setBackground(SystemColor.controlHighlight);
-		panel.setBounds(6, 601, 140, 161);
+		panel.setBounds(6, 601, 140, 135);
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
 
@@ -275,7 +276,7 @@ public class GuiBuilder {
 		MultiAgentsRunsField.setBounds(10, 73, 120, 20);
 		panel.add(MultiAgentsRunsField);
 		MultiAgentsRunsField.setToolTipText("");
-		MultiAgentsRunsField.setText("1;2;5;10;20;50");
+		MultiAgentsRunsField.setText("1000");
 		MultiAgentsRunsField.setColumns(10);
 
 		JTextPane txtpnMultipleAgentsRuns = new JTextPane();
@@ -297,18 +298,22 @@ public class GuiBuilder {
 		NumberOfRunsTextfield.setBounds(10, 30, 120, 20);
 		panel.add(NumberOfRunsTextfield);
 		NumberOfRunsTextfield.setToolTipText("");
-		NumberOfRunsTextfield.setText("100");
+		NumberOfRunsTextfield.setText("1");
 		NumberOfRunsTextfield.setColumns(10);
 
 		JButton runSimulationButton = new JButton("run Simulation");
 		runSimulationButton.setBounds(10, 104, 120, 23);
 		panel.add(runSimulationButton);
+		
+		outputWindow = new JTextPane();
+		outputWindow.setBounds(6, 747, 139, 132);
+		frame.getContentPane().add(outputWindow);
 		runSimulationButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				validateData();
 				TreeFactory fac = new TreeFactory(seed, maxDepth, minDepth, maxBranches, minBranches, maxNodes,
 						minNodes, leafFactor, (Verteilungsfunktionen) Verteilungsfunktion.getSelectedItem());
-				ProgrammManager.runSimulationComparison(fac, numberOfAgents, numberOfRuns);
+				ProgrammManager.runSimulationThreaded(fac, numberOfAgents, numberOfRuns);
 				rand = new Random(Integer.parseInt(seedField.getText()));
 				seedField.setText("" + rand.nextInt());
 			}
@@ -402,14 +407,14 @@ public class GuiBuilder {
 
 		maxNodesField = new JTextField();
 		maxNodesField.setToolTipText("Enter an Integer value here");
-		maxNodesField.setText("100");
+		maxNodesField.setText("100000");
 		maxNodesField.setColumns(10);
 		maxNodesField.setBounds(10, 177, 120, 20);
 		treeSpecifier.add(maxNodesField);
 
 		minNodesField = new JTextField();
 		minNodesField.setToolTipText("Enter an Integer value here");
-		minNodesField.setText("10");
+		minNodesField.setText("50000");
 		minNodesField.setColumns(10);
 		minNodesField.setBounds(10, 220, 120, 20);
 		treeSpecifier.add(minNodesField);

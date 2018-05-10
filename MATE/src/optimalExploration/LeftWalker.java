@@ -79,11 +79,11 @@ public class LeftWalker {
 	@SuppressWarnings("unused")
 	private List<Node> leftWalker(Node root, int energy) {
 		List<Node> nodesToVisit = new ArrayList<Node>();
-		while (!root.isFinished() && energy / 2 > 0) {
+		while (!root.checkIfFinished() && energy / 2 > 0) {
 
 			for (Node child : root.getChildren()) {
 				// if not finished continue to traverse the tree to its leaf
-				if (!child.isFinished() && energy / 2 > 0 && !child.isLeaf()) {
+				if (!child.checkIfFinished() && energy / 2 > 0 && !child.isLeaf()) {
 
 					nodesToVisit.addAll(leftWalker(child, energy - 1));
 					energy -= nodesToVisit.size();
@@ -104,10 +104,10 @@ public class LeftWalker {
 	private void leftWalker(Node root, Agent a) {
 		a.addNode(root);
 		a.energy -= 1;
-		while (!root.isFinished() && a.enoughEnergy()) {
+		while (!root.checkIfFinished() && a.enoughEnergy()) {
 
 			for (Node child : root.getChildren()) {
-				if (!child.isFinished() && a.enoughEnergy()) {
+				if (!child.checkIfFinished() && a.enoughEnergy()) {
 
 					// if not finished continue to traverse the tree to its leaf
 					if (!child.isLeaf()) {

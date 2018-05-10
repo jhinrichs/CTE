@@ -1,7 +1,10 @@
 package solutionData;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
+
+import javax.net.ssl.HandshakeCompletedListener;
 
 import optimalExploration.MovingPlanList;
 import tree.Node;
@@ -84,17 +87,31 @@ public class Traversal {
 	 * @returns true if all Nodes of the tree are covered by at least one Agent
 	 */
 	public boolean isValidSolution() {
-
+		System.out.print("test if isvalidsolution ");
 		List<Node> listOfNodes = new ArrayList<Node>();
 		listOfNodes = root.getLeafList(listOfNodes);
-
+		
+		Hashtable<Integer, Node> leafs = new Hashtable<>(listOfNodes.size());
+		for(Node n : listOfNodes) {
+			leafs.put(n.getId(), n);
+		}
+		
 		int i = 0;
-		while (!listOfNodes.isEmpty() && i < agents.size()) {
-			listOfNodes.removeAll(agents.get(i).getNodesToVisit());
-			i++;
+//		while (!listOfNodes.isEmpty() && i < agents.size()) {
+//			System.out.print("remove ");
+//			System.out.println(agents.get(i).getNodesToVisit().size() + " Nodes " +agents.get(i).getLeafs().size());
+////			listOfNodes.removeAll(agents.get(i).getNodesToVisit());
+////			listOfNodes.removeAll(agents.get(i).getLeafs());
+//			i++;
+//		}
+		
+		for(IAgent a : agents) {
+			for (Node n : a.getLeafs()) {
+				leafs.remove(n.getId());
+			}
 		}
 
-		if (listOfNodes.isEmpty()) {
+		if (leafs.isEmpty()) {
 			return true;
 		} else {
 			return false;

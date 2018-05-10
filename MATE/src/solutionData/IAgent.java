@@ -13,10 +13,12 @@ public interface IAgent {
 	void moveAgent(Node nodeToGo);
 	int getStepsCount();
 	ArrayList<Node> getNodesToVisit();
+	ArrayList<Node> getLeafs();
 	Node getPosition();
 	void addNode(Node node);
 	void addNodes(List<Node> subList);
 	Node getTree();
 	MovingPlan calculateMove();
+	
 	
 }

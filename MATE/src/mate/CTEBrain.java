@@ -15,7 +15,7 @@ public class CTEBrain implements IBrainModule {
 	public Node getNextNode() {
 		Node nextNode = agent.activeNode();
 
-		if (nextNode.isLeaf() || nextNode.isFinished() && !nextNode.isRoot()) {
+		if (nextNode.isLeaf() || nextNode.checkIfFinished() && !nextNode.isRoot()) {
 
 			System.out.println("Knoten " + nextNode.getId() +" ist fertig --> gehe zu parent");
 			return nextNode.getParent();
@@ -26,7 +26,7 @@ public class CTEBrain implements IBrainModule {
 			int minAgents = nextNode.getRobPos().getAllAgentsInTree()+1;
 
 			for (Node child : nextNode.getChildren()) {
-				if (!child.isFinished()) {
+				if (!child.checkIfFinished()) {
 					int tempAgentsNumber = child.getRobPos().getAllAgentsInTree();
 					tempAgentsNumber  += agent.traversal.getPlan().getAgentPlannedFromTo(agent.getPosition(),child);
 					System.out.println(agent.traversal.getPlan().getAgentPlannedFromTo(agent.getPosition(),child) + " Agents in Knoten " + child.getId());

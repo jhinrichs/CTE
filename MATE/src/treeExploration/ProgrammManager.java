@@ -3,6 +3,7 @@ package treeExploration;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
+import javax.swing.JTextPane;
 
 import drawTree.TreePainter;
 import gui.GuiBuilder;
@@ -105,7 +106,7 @@ public class ProgrammManager {
 	}
 
 	public static void paintAllAgents() {
-		//System.out.println("print paths for all agents");
+		// System.out.println("print paths for all agents");
 		TreePainter painter = new TreePainter();
 		mainWindow.treeInlayPanel.removeAll();
 		// treeInlayPanel.repaint();
@@ -158,7 +159,8 @@ public class ProgrammManager {
 	public static TreeFactory createTreeFactory(int seed, int maxDepth, int minDepth, int maxBranches, int minBranches,
 			int maxNodes, int minNodes, double leafFactor, Verteilungsfunktionen verteilung) {
 
-		return new TreeFactory(seed, maxDepth, minDepth, maxBranches, minBranches, maxNodes, minNodes, leafFactor,verteilung);
+		return new TreeFactory(seed, maxDepth, minDepth, maxBranches, minBranches, maxNodes, minNodes, leafFactor,
+				verteilung);
 	}
 
 	private static void printTraversals(Traversal bestPath) {
@@ -191,21 +193,21 @@ public class ProgrammManager {
 
 	public static void calculateLeftWalker() {
 		SolutionManager solutionManager = new SolutionManager(tree, mainWindow.getNumberOfAgents());
-		
+
 		leftie = solutionManager.getLeftWalker();
-		
+
 		recentTraversal = leftie.getOptimum();
-		
+
 		paintAndPrintPaths();
 	}
 
 	private static void paintAndPrintPaths() {
 		paintAllAgents();
-		printTraversals(recentTraversal);
-		 System.out.println("number of Nodes in tree = "+ tree.getTreeNodeCount());
-		 System.out.println("number of Steps needed = "+ recentTraversal.getNumberOfSteps());
+		//printTraversals(recentTraversal);
+		System.out.println("number of Nodes in tree = " + tree.getTreeNodeCount());
+		System.out.println("number of Steps needed = " + recentTraversal.getNumberOfSteps());
 	}
-	
+
 	public static void calculateCTE() {
 		SolutionManager solutionManager = new SolutionManager(tree, mainWindow.getNumberOfAgents());
 
@@ -215,35 +217,35 @@ public class ProgrammManager {
 		paintAndPrintPaths();
 	}
 
-	
-	/**@deprecated
+	/**
+	 * @deprecated
 	 * @param treeFactory
 	 * @param numberOfAgents
 	 * @param numberOfRuns
 	 */
-	public static void runSimulation(TreeFactory treeFactory, int[] numberOfAgents, int numberOfRuns) { 
-		int percent =0;
-		estimateTime(numberOfAgents, numberOfRuns);		
+	public static void runSimulation(TreeFactory treeFactory, int[] numberOfAgents, int numberOfRuns) {
+		int percent = 0;
+		estimateTime(numberOfAgents, numberOfRuns);
 		long startTime = System.currentTimeMillis();
-		
+
 		NKExport exporter = new NKExport(treeFactory, numberOfAgents, numberOfRuns);
 		ExportData[][] allSolutions = new ExportData[numberOfRuns][];
 		for (int i = 0; i < numberOfRuns; i++) {
-			tree = treeFactory.createTree(); 			// eventuell muss seed neu gesetzt werden Wenn alle Bäume gleichen Seed haben
+			tree = treeFactory.createTree(); // eventuell muss seed neu gesetzt werden Wenn alle Bäume gleichen Seed
+												// haben
 
-			
 			ExportData[] solutionPack = new ExportData[numberOfAgents.length];
 			for (int agentNumber = 0; agentNumber < numberOfAgents.length; agentNumber++) {
 
-				 SolutionManager thisSolutionManager = new SolutionManager(tree,numberOfAgents[agentNumber]);
-				 Traversal solution = thisSolutionManager.getCTE().getOptimum();
-//				 System.out.println("number of Nodes in tree = "+ tree.getTreeNodeCount());
-//				 System.out.println("number of Steps needed = "+ solution.getNumberOfSteps());
-				 solutionPack[agentNumber] = new ExportData(solution);
+				SolutionManager thisSolutionManager = new SolutionManager(tree, numberOfAgents[agentNumber]);
+				Traversal solution = thisSolutionManager.getCTE().getOptimum();
+				// System.out.println("number of Nodes in tree = "+ tree.getTreeNodeCount());
+				// System.out.println("number of Steps needed = "+ solution.getNumberOfSteps());
+				solutionPack[agentNumber] = new ExportData(solution);
 			}
-			allSolutions[i]=solutionPack;
-			
-			if(i%(numberOfRuns/100) ==0 ) {
+			allSolutions[i] = solutionPack;
+
+			if (i % (numberOfRuns / 100) == 0) {
 				System.out.println(percent + " Prozent erreicht");
 				percent++;
 			}
@@ -251,83 +253,89 @@ public class ProgrammManager {
 		exporter.addSolutions(allSolutions);
 		exporter.save();
 		long stoptime = System.currentTimeMillis();
-		long usedTime = stoptime-startTime;
-		System.out.println("Simulation finished... time used: " + usedTime /1000+" seconds");
+		long usedTime = stoptime - startTime;
+		System.out.println("Simulation finished... time used: " + usedTime / 1000 + " seconds");
 	}
-	
-public static void runSimulationComparison(TreeFactory treeFactory, int[] numberOfAgents, int numberOfRuns) {
-		
-		int percent =0;
+
+	public static void runSimulationComparison(TreeFactory treeFactory, int[] numberOfAgents, int numberOfRuns) {
+
+		int percent = 0;
 
 		long startTime = System.currentTimeMillis();
-		
+
 		NKExport exporter = new NKExport(treeFactory, numberOfAgents, numberOfRuns);
 		exporter.initializeWriteSolution();
 		for (int i = 0; i < numberOfRuns; i++) {
-			tree = treeFactory.createTree(); 			// eventuell muss seed neu gesetzt werden Wenn alle Bäume gleichen Seed haben
-			
+			tree = treeFactory.createTree(); // eventuell muss seed neu gesetzt werden Wenn alle Bäume gleichen Seed
+												// haben
+
 			ExportData[][] solutionPack = new ExportData[2][numberOfAgents.length];
-			
+
 			for (int agentNumber = 0; agentNumber < numberOfAgents.length; agentNumber++) {
 
-				 SolutionManager thisSolutionManager = new SolutionManager(tree,numberOfAgents[agentNumber]);
-				 Traversal cteSolution = thisSolutionManager.getCTE().getOptimum();
-				 Traversal leftieSolution = thisSolutionManager.getLeftWalker().getOptimum();
-//				 System.out.println("number of Nodes in tree = "+ tree.getTreeNodeCount());
-//				 System.out.println("number of Steps needed = "+ solution.getNumberOfSteps());
-				 solutionPack[0][agentNumber] = new ExportData(cteSolution);
-				 solutionPack[1][agentNumber]= new ExportData(leftieSolution);
-				 
+				SolutionManager thisSolutionManager = new SolutionManager(tree, numberOfAgents[agentNumber]);
+				Traversal cteSolution = thisSolutionManager.getCTE().getOptimum();
+				Traversal leftieSolution = thisSolutionManager.getLeftWalker().getOptimum();
+				// System.out.println("number of Nodes in tree = "+ tree.getTreeNodeCount());
+				// System.out.println("number of Steps needed = "+ solution.getNumberOfSteps());
+				solutionPack[0][agentNumber] = new ExportData(cteSolution);
+				solutionPack[1][agentNumber] = new ExportData(leftieSolution);
+
 			}
 			exporter.writeSolutionPack(solutionPack);
-			
-			if(i%(numberOfRuns/100) ==0 ) {
+
+			if (i % (numberOfRuns / 100) == 0) {
 				long stoptime = System.currentTimeMillis();
-				long usedTime = stoptime-startTime;
-				System.out.println(percent + " Prozent erreicht : --- Verbleibende Zeit = "+ (100-percent)*usedTime/100000);
+				long usedTime = stoptime - startTime;
+				System.out.println(
+						percent + " Prozent erreicht : --- Verbleibende Zeit = " + (100 - percent) * usedTime / 100000);
 				percent++;
-				
+
 			}
 		}
 
 		exporter.save();
 		long stoptime = System.currentTimeMillis();
-		long usedTime = stoptime-startTime;
-		System.out.println("Simulation finished... time used: " + usedTime /1000+" seconds");
+		long usedTime = stoptime - startTime;
+		System.out.println("Simulation finished... time used: " + usedTime / 1000 + " seconds");
 	}
-	
-	
+
 	public static void runSimulationThreaded(TreeFactory treeFactory, int[] numberOfAgents, int numberOfRuns) {
 		ExportData[][] allSolutions = new ExportData[numberOfRuns][];
+		Simulator.mainWindow= mainWindow;
 		
-		ArrayList<Simulator> worker = new ArrayList<Simulator>();
-		for(int i = 0 ; i< 16; i++ ) {
-			treeFactory = treeFactory.getNewFactory();
-			Simulator simulator = new Simulator(treeFactory.getNewFactory(), numberOfAgents,  numberOfRuns/16);
-			worker.add(simulator);
-			simulator.run();
+		for (int i = 0; i < numberOfRuns; i++) {
+			tree = treeFactory.createTree();
+			for (int j = 0; j < numberOfAgents.length; j++) {
+				Simulator simulator = new Simulator(tree, numberOfAgents[j]);
+			}
 		}
+		Simulator.startSimulation();
+
+
+	}
+
+	private static void analyse(ArrayList<Simulator> worker) {
+		
 		
 	}
-	
 
 	private static void estimateTime(int[] numberOfAgents, int numberOfRuns) {
 		long startTime = System.currentTimeMillis();
 		for (int agentNumber = 0; agentNumber < numberOfAgents.length; agentNumber++) {
 
-			 SolutionManager solutionManager = new SolutionManager(tree,numberOfAgents[agentNumber]);
-			 Traversal solution = solutionManager.getCTE().getOptimum();
+			SolutionManager solutionManager = new SolutionManager(tree, numberOfAgents[agentNumber]);
+			Traversal solution = solutionManager.getCTE().getOptimum();
 		}
 		long stoptime = System.currentTimeMillis();
-		long usedTime = stoptime-startTime;
-		System.out.println("Start Simulation.... estimated Time to finish is " + (usedTime*numberOfRuns)/1000 +" seconds");
+		long usedTime = stoptime - startTime;
+		System.out.println(
+				"Start Simulation.... estimated Time to finish is " + (usedTime * numberOfRuns) / 1000 + " seconds");
 	}
 
 	public static boolean isInitialized() {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
-
 
 }

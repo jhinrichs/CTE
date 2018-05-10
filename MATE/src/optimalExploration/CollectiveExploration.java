@@ -46,10 +46,13 @@ public class CollectiveExploration {
 	private boolean computeOpt() {
 //		System.out.println("Start calculating Collective Tree Exploration Solution");
 		int steps = 0;
-		while (!root.isFinished() || !solution.allRobotsAtRoot() ) {
+		while (!root.checkIfFinished() || !solution.allRobotsAtRoot() ) {
 			//System.out.println("calculating step " + steps);
 			step();
 			steps++;
+			if(steps%100 == 0) {
+				System.out.println("calculated steps " +steps);
+			}
 		}
 
 		return solution.isValidSolution();
@@ -71,7 +74,7 @@ public class CollectiveExploration {
 	}
 
 	private void move(List<MovingPlan> plan) {
-
+//		System.out.println("execute");
 		for (MovingPlan p : plan) {
 			p.execute();
 		}
@@ -87,30 +90,35 @@ public class CollectiveExploration {
 		for (Node n : activeNodes) {
 
 			// wenn knoten fertig, gehe zu parent. Es sei denn es ist die Wurzel
-			if (n.isLeaf() || n.isFinished() && !n.isRoot()) {
+			if (n.isLeaf() || n.checkIfFinished() && !n.isRoot()) {
+//				System.out.println("first loop");
 				for (IAgent a : n.getRobPos().getAgentsAtNode()) {
 					plan.add(new MovingPlan(n.getParent(), a));
+					
 				}
 
 			} else {
 				// get unfinished subtrees
 				ArrayList<Node> unfinishedSubtrees = new ArrayList<>();
 				for (Node child : n.getChildren()) {
-					if (!child.isFinished()) {
+					if (!child.checkIfFinished()) {
 						unfinishedSubtrees.add(child);
 					}
 				}
 				if (!unfinishedSubtrees.isEmpty()) {
-
+//					System.out.println("second loop");
 					// getChildWithLeastNodes
 					Node least = unfinishedSubtrees.get(0);
+//					System.out.println("getAgents");
 					int agentsInLeast = least.getRobPos().getAllAgentsInTree();
+//					System.out.println("get agents finished");
 					//System.out.println("Node ID = "+n.getId());
 					for (Node subtree : unfinishedSubtrees) {
-						if (subtree.getRobPos().getAllAgentsInTree() < agentsInLeast) {
+						int subtreeAgents =subtree.getRobPos().getAllAgentsInTree();
+						if ( subtreeAgents < agentsInLeast) {
 							least = subtree;
 							
-							agentsInLeast = least.getRobPos().getAllAgentsInTree();
+							agentsInLeast = subtreeAgents;
 						}
 					}
 

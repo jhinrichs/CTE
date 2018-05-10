@@ -18,9 +18,10 @@ public class Node implements INode {
 	private int id;
 	private UUID uid;
 	private Node parent;
-	private TreeDataCalculator treeData;
+	public TreeDataCalculator treeData;
 	private RobPosTree robPos;
 	private String treeCode;
+	public int numberOfNodesInTree = 0;
 
 	public static int getIdCount() {
 		return idCount;
@@ -56,20 +57,28 @@ public class Node implements INode {
 	}
 
 	/**
-	 * sets the visited flag from a node and updates its finished state and all changing finished states for parents and parents ......
+	 * sets the visited flag from a node and updates its finished state and all
+	 * changing finished states for parents and parents ......
+	 * 
 	 * @param b
 	 */
 	public void setVisited(boolean b) {
 		visited = b;
 		if (isLeaf() && visited) {
-			finished=true;
+			finished = true;
 			Node nextNode = parent;
-		while(nextNode!= null && !nextNode.isFinished()) {
-			nextNode = nextNode.getParent();
+			// while(nextNode!= null && !nextNode.isFinished()) {
+			// nextNode = nextNode.getParent();
+			// }
+			if (parent != null) {
+				parent.checkIfFinished();
+			}
+			else {  // no parent means its root.
+				this.checkIfFinished();
 			}
 		}
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -82,21 +91,21 @@ public class Node implements INode {
 		}
 		return treeData.getNumberOfNodes();
 	}
-	
-	public List<Node> getAllNodes(){
-		
+
+	public List<Node> getAllNodes() {
+
 		List<Node> nodes = new ArrayList<Node>();
-		for(Node child : children) {
+		for (Node child : children) {
 			child.getNodesInternal(nodes);
 		}
 		nodes.add(this);
 		System.out.println("number of Nodes in tree = " + nodes.size());
-		
+
 		return nodes;
 	}
-	
-	private List<Node> getNodesInternal(List<Node> nodes){
-		for(Node child : children) {
+
+	private List<Node> getNodesInternal(List<Node> nodes) {
+		for (Node child : children) {
 			child.getNodesInternal(nodes);
 		}
 		nodes.add(this);
@@ -159,8 +168,8 @@ public class Node implements INode {
 	 * @see tree.INode#isFinished()
 	 */
 	@Override
-	public Boolean isFinished() {
-		if(isLeaf() && isVisited()) {
+	public Boolean checkIfFinished() {
+		if (isLeaf() && isVisited()) {
 			finished = true;
 			return true;
 		}
@@ -257,10 +266,11 @@ public class Node implements INode {
 	}
 
 	/*
-	 * for the given Node it checks if it is a Leaf. If so it adds the node to the List. 
-	 * Otherwise it deligates the task to his children. 
+	 * for the given Node it checks if it is a Leaf. If so it adds the node to the
+	 * List. Otherwise it deligates the task to his children.
 	 * 
-	 * Basically the procedure goes through the whole tree and every Node that is a Leaf checks himself into the List
+	 * Basically the procedure goes through the whole tree and every Node that is a
+	 * Leaf checks himself into the List
 	 * 
 	 * @see tree.INode#getNodeList(java.util.List)
 	 */
@@ -269,7 +279,6 @@ public class Node implements INode {
 
 		if (isLeaf()) {
 			if (listOfNodes == null) {
-				//System.out.println("ListOfNoes = null and root is " + this.id);
 
 				listOfNodes = new ArrayList<Node>();
 			}
@@ -323,7 +332,7 @@ public class Node implements INode {
 	}
 
 	public RobPosTree getRobPos() {
-		if(robPos == null) {
+		if (robPos == null) {
 			robPos = new RobPosTree(this);
 		}
 		return robPos;
@@ -333,32 +342,30 @@ public class Node implements INode {
 		this.robPos = robPos;
 	}
 
-	
 	/**
 	 * @param n
 	 * @returns if the given Node n is contained in a Subtree of this Node
 	 */
-	public boolean isRootOf(Node n){
-		if(maxIdOfSubTree() > n.getId() && n.getId() > id){
+	public boolean isRootOf(Node n) {
+		if (maxIdOfSubTree() > n.getId() && n.getId() > id) {
 			return true;
-		}
-		else return false;
+		} else
+			return false;
 	}
-	
+
 	/**
 	 * @return id of the next Node that is not within the Subtree of this Node
 	 */
 	public int maxIdOfSubTree() {
-		
+
 		int index = parent.getChildren().indexOf(this);
-		//if parent has another child after this one
+		// if parent has another child after this one
 		if (parent.getChildCount() > index + 1) {
 			return parent.getChildAt(index).getId();
-		}
-		else {
+		} else {
 			return parent.maxIdOfSubTree();
 		}
-		
+
 	}
 
 	public boolean isVisited() {
@@ -366,12 +373,12 @@ public class Node implements INode {
 	}
 
 	public String getTreeCode() {
-		
+
 		return treeCode;
 	}
 
 	public void setTreeCode(String createedTreeCode) {
-		treeCode = createedTreeCode;		
+		treeCode = createedTreeCode;
 	}
 
 }

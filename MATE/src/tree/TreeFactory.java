@@ -53,25 +53,38 @@ public class TreeFactory {
 	public Node createTree() {
 		lastSeed = numberGenerator.nextLong();
 		numberGenerator = new Random(lastSeed);
-
+		numberOfNodes = getNumberOfNodes();
 		Node.setIdCount(0);
 		Node root = new Node(null);
 		root.setTreeCode(createTreeCode());
+		root.numberOfNodesInTree = numberOfNodes;
 		// List to save all leafs
 		List<Node> leafs = new ArrayList<Node>();
-
-		numberOfNodes = getNumberOfNodes();
+		List<Node> allLeafs = new ArrayList<Node>();
+		allLeafs.add(root);
+		System.out.println("create new Tree with " + numberOfNodes + " nodes");
+		
 
 		
 		
 		
 		while (Node.getIdCount() < numberOfNodes) {
 			
-			leafs.add(getRandomLeaf(root));
+			
+			leafs.add(allLeafs.get(numberGenerator.nextInt(allLeafs.size())));
+//			leafs.add(getRandomLeaf(root));
 			// add nodes current leaf until number of calculated nodes is reached
 			while (Node.getIdCount() < numberOfNodes && !leafs.isEmpty()) {
 				Node parent = leafs.get(0);
 				int numberOfChildren = getNumberofChildren();
+				
+				if(numberOfChildren == 0) {
+				// wenn numer == 0 bedeuted dass, das es sich um ein Leaf handelt.
+				allLeafs.add(parent);
+				}
+				else {
+					allLeafs.remove(parent);
+				}
 
 				while (numberOfChildren > 0 && Node.getIdCount() < numberOfNodes) {
 					Node newNode = new Node(parent);
@@ -86,6 +99,8 @@ public class TreeFactory {
 
 		// System.out.println("Number of node = " + Node.getIdCount());
 
+		
+		
 		return root;
 	}
 

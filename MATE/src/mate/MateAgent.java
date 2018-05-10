@@ -65,7 +65,7 @@ public class MateAgent extends Agent {
 	public void forwardToUnfinishedChild() {
 		if (!activeNode.isLeaf()) {
 			int i = 0;
-			while (activeNode.getChildAt(i).isFinished() && i < activeNode.getChildCount()) {
+			while (activeNode.getChildAt(i).checkIfFinished() && i < activeNode.getChildCount()) {
 				i++;
 			}
 			if (i < activeNode.getChildCount()) {

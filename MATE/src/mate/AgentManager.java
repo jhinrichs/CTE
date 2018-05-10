@@ -46,7 +46,7 @@ public class AgentManager {
 	private boolean computeOpt() {
 		System.out.println("Start calculating mate Solution");
 		int steps = 0;
-		while (!root.isFinished() || !solution.allRobotsAtRoot()) {
+		while (!root.checkIfFinished() || !solution.allRobotsAtRoot()) {
 			// System.out.println("calculating step " + steps);
 			step();
 			steps++;

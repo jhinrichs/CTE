@@ -6,7 +6,10 @@ public class TreeDataCalculator {
 	private int numberOfNodes=0;
 	private boolean isCalculated = false;
 	
-	
+	public void recalculate() {
+		isCalculated = false;
+		calculateTreeData(tree);
+	}
 	public TreeDataCalculator(Node root){
 		tree = root;
 	}

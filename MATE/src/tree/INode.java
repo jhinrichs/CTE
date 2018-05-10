@@ -31,7 +31,7 @@ public interface INode extends TreeNode{
 	 * 
 	 * @return
 	 */
-	Boolean isFinished();
+	Boolean checkIfFinished();
 
 	Enumeration<Node> children();
 

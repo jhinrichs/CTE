@@ -29,7 +29,7 @@ public class SimpleBrain implements IBrainModule {
 		
 		List<Node> possibleNodes = new ArrayList<Node>();
 		for (Node n : agent.activeNode().getChildren()) {
-			if (!n.isFinished()) {
+			if (!n.checkIfFinished()) {
 				possibleNodes.add(n);
 			}
 		}

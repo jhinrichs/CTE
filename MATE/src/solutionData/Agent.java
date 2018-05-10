@@ -17,11 +17,15 @@ public class Agent implements IAgent {
 	private int id;
 	private static int idCounter = 0;
 	private ArrayList<Node> path;
+	private ArrayList<Node> leafs;
 	public Traversal traversal;
 	
 	public Brain brainModule;
 	
 	
+	public ArrayList<Node> getLeafs() {
+		return leafs;
+	}
 	public Agent(Node root, BrainModuleType brainType) {
 		this(root);
 		this.brainModule = new Brain(this, brainType);
@@ -30,6 +34,7 @@ public class Agent implements IAgent {
 	public Agent() {
 		setId();
 		path = new ArrayList<Node>();
+		leafs = new ArrayList<Node>();
 	}
 
 	private void setId() {
@@ -134,6 +139,9 @@ public class Agent implements IAgent {
 		activeNode().getRobPos().moveAgentTo(this, newNode);
 		path.add(newNode);
 		newNode.setVisited(true);
+		if(newNode.isLeaf()) {
+			leafs.add(newNode);
+		}
 		
 	}
 
