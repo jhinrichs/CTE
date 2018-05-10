@@ -18,6 +18,7 @@ public class TreeFactory {
 	public double branchingfactor;
 	public int maxNodes;
 	public int minNodes;
+	public int numberOfNodes;
 	
 	public Verteilungsfunktionen verteilung; 
 	
@@ -59,7 +60,7 @@ public class TreeFactory {
 		// List to save all leafs
 		List<Node> leafs = new ArrayList<Node>();
 
-		int numberOfNodes = getNumberOfNodes();
+		numberOfNodes = getNumberOfNodes();
 
 		
 		

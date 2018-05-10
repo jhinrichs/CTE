@@ -308,7 +308,7 @@ public class GuiBuilder {
 				validateData();
 				TreeFactory fac = new TreeFactory(seed, maxDepth, minDepth, maxBranches, minBranches, maxNodes,
 						minNodes, leafFactor, (Verteilungsfunktionen) Verteilungsfunktion.getSelectedItem());
-				ProgrammManager.runSimulation(fac, numberOfAgents, numberOfRuns);
+				ProgrammManager.runSimulationComparison(fac, numberOfAgents, numberOfRuns);
 				rand = new Random(Integer.parseInt(seedField.getText()));
 				seedField.setText("" + rand.nextInt());
 			}

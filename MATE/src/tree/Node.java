@@ -269,7 +269,7 @@ public class Node implements INode {
 
 		if (isLeaf()) {
 			if (listOfNodes == null) {
-				System.out.println("ListOfNoes = null and root is " + this.id);
+				//System.out.println("ListOfNoes = null and root is " + this.id);
 
 				listOfNodes = new ArrayList<Node>();
 			}

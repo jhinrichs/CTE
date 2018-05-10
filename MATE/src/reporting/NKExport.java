@@ -129,6 +129,7 @@ public class NKExport {
 		writeSolutions(allSolutions2);
 
 	}
+	
 
 	private void writeSolutions(ExportData[][] allSolutions2) {
 	
@@ -175,6 +176,71 @@ public class NKExport {
 			}
 		}
 		return allSolutions2;
+	}
+
+	public void initializeWriteSolution() {
+
+		writer.write(actualRow, 3, "Steps");
+		writer.write(actualRow, 4, "agents");
+		writer.write(actualRow, 5, "nodes");
+		writer.write(actualRow, 7, "Steps");
+		writer.write(actualRow, 8, "agents");
+		writer.write(actualRow, 9, "nodes");
+		
+		actualRow ++;
+	}
+	public void writeSolutionPack(ExportData[][] solutionPack) {
+		int a = 0;
+		writer.write(actualRow, 1, "treecode : " + solutionPack[0][0].treeCode);
+		writer.write(actualRow, 2, "Nodes in Tree : " + solutionPack[0][0].numberOfNodes);
+
+		
+		for (int i =0 ;i < solutionPack[0].length; i++) {
+			writer.write(actualRow, 3, solutionPack[0][i].numberOfSteps);
+			writer.write(actualRow, 4, solutionPack[0][i].numberOfAgents);
+			writer.write(actualRow, 5, solutionPack[0][i].numberOfNodes);
+			writer.write(actualRow, 7, solutionPack[1][i].numberOfSteps);
+			writer.write(actualRow, 8, solutionPack[1][i].numberOfAgents);
+			writer.write(actualRow, 9, solutionPack[1][i].numberOfNodes);
+			
+//			// first column: write number of nodes to table
+//			
+//			
+//			// Table: write solution data for first solution into first a rows.
+//			writer.write(actualRow, 3 + a, solutionPack[0][i].numberOfSteps + " agents " + exportData.numberOfAgents
+//					+ " nodes " + exportData.numberOfNodes);
+//			writer.write(actualRow, 3+a, value);
+//			
+//			// write solution data for second pack into second a rows
+//			writer.write(actualRow, 3 + a+agents.length+2, "steps " + exportData.numberOfSteps + " agents " + exportData.numberOfAgents
+//					+ " nodes " + exportData.numberOfNodes);
+//			
+			a++;
+			if (a == agents.length - 1) {
+				a = 0;
+				actualRow++;
+			}
+		}
+		
+	}
+
+	public void writeLeftieSolutionData(ExportData[] solutionPack) {
+		int a = 0;
+		for (ExportData exportData : solutionPack) {
+			// first column: write number of nodes to table
+			writer.write(actualRow, 5, "treecode : " + exportData.treeCode);
+			writer.write(actualRow, 6, "Nodes in Tree : " + exportData.numberOfNodes);
+			// Table: write solution data
+			writer.write(actualRow, 7 + a, "steps " + exportData.numberOfSteps + " agents " + exportData.numberOfAgents
+					+ " nodes " + exportData.numberOfNodes);
+
+			a++;
+			if (a == agents.length - 1) {
+				a = 0;
+				actualRow++;
+			}
+		}
+		
 	}
 
 }

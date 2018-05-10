@@ -215,7 +215,13 @@ public class ProgrammManager {
 		paintAndPrintPaths();
 	}
 
-	public static void runSimulation(TreeFactory treeFactory, int[] numberOfAgents, int numberOfRuns) {
+	
+	/**@deprecated
+	 * @param treeFactory
+	 * @param numberOfAgents
+	 * @param numberOfRuns
+	 */
+	public static void runSimulation(TreeFactory treeFactory, int[] numberOfAgents, int numberOfRuns) { 
 		int percent =0;
 		estimateTime(numberOfAgents, numberOfRuns);		
 		long startTime = System.currentTimeMillis();
@@ -248,6 +254,49 @@ public class ProgrammManager {
 		long usedTime = stoptime-startTime;
 		System.out.println("Simulation finished... time used: " + usedTime /1000+" seconds");
 	}
+	
+public static void runSimulationComparison(TreeFactory treeFactory, int[] numberOfAgents, int numberOfRuns) {
+		
+		int percent =0;
+
+		long startTime = System.currentTimeMillis();
+		
+		NKExport exporter = new NKExport(treeFactory, numberOfAgents, numberOfRuns);
+		exporter.initializeWriteSolution();
+		for (int i = 0; i < numberOfRuns; i++) {
+			tree = treeFactory.createTree(); 			// eventuell muss seed neu gesetzt werden Wenn alle Bäume gleichen Seed haben
+			
+			ExportData[][] solutionPack = new ExportData[2][numberOfAgents.length];
+			
+			for (int agentNumber = 0; agentNumber < numberOfAgents.length; agentNumber++) {
+
+				 SolutionManager thisSolutionManager = new SolutionManager(tree,numberOfAgents[agentNumber]);
+				 Traversal cteSolution = thisSolutionManager.getCTE().getOptimum();
+				 Traversal leftieSolution = thisSolutionManager.getLeftWalker().getOptimum();
+//				 System.out.println("number of Nodes in tree = "+ tree.getTreeNodeCount());
+//				 System.out.println("number of Steps needed = "+ solution.getNumberOfSteps());
+				 solutionPack[0][agentNumber] = new ExportData(cteSolution);
+				 solutionPack[1][agentNumber]= new ExportData(leftieSolution);
+				 
+			}
+			exporter.writeSolutionPack(solutionPack);
+			
+			if(i%(numberOfRuns/100) ==0 ) {
+				long stoptime = System.currentTimeMillis();
+				long usedTime = stoptime-startTime;
+				System.out.println(percent + " Prozent erreicht : --- Verbleibende Zeit = "+ (100-percent)*usedTime/100000);
+				percent++;
+				
+			}
+		}
+
+		exporter.save();
+		long stoptime = System.currentTimeMillis();
+		long usedTime = stoptime-startTime;
+		System.out.println("Simulation finished... time used: " + usedTime /1000+" seconds");
+	}
+	
+	
 	public static void runSimulationThreaded(TreeFactory treeFactory, int[] numberOfAgents, int numberOfRuns) {
 		ExportData[][] allSolutions = new ExportData[numberOfRuns][];
 		

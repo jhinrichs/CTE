@@ -33,12 +33,12 @@ public class LeftWalker {
 	}
 
 	private boolean computeOpt() {
-		System.out.println("Start calculating LeftWalker Solution");
-		System.out.println("Tree Depth = " + treeData.getDepth() + ", Number of Nodes = " + treeData.getNumberOfNodes()
-				+ ", number of robots = " + numberOfRobots);
+//		System.out.println("Start calculating LeftWalker Solution");
+//		System.out.println("Tree Depth = " + treeData.getDepth() + ", Number of Nodes = " + treeData.getNumberOfNodes()
+//				+ ", number of robots = " + numberOfRobots);
 		optimumSolution = new Traversal(tree, numberOfRobots);
 		int energy = Integer.max(treeData.getDepth(), (treeData.getNumberOfNodes() - 1) / numberOfRobots);
-		System.out.println("Maximale Energie = max(TreeDepth, (numberOfNodes -1)/number of robots) = " + energy);
+//		System.out.println("Maximale Energie = max(TreeDepth, (numberOfNodes -1)/number of robots) = " + energy);
 
 		for (int i = 0; i < numberOfRobots; i++) {
 
