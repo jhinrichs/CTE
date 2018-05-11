@@ -203,7 +203,7 @@ public class ProgrammManager {
 
 	private static void paintAndPrintPaths() {
 		paintAllAgents();
-		//printTraversals(recentTraversal);
+		// printTraversals(recentTraversal);
 		System.out.println("number of Nodes in tree = " + tree.getTreeNodeCount());
 		System.out.println("number of Steps needed = " + recentTraversal.getNumberOfSteps());
 	}
@@ -302,22 +302,21 @@ public class ProgrammManager {
 
 	public static void runSimulationThreaded(TreeFactory treeFactory, int[] numberOfAgents, int numberOfRuns) {
 
-		Simulator.mainWindow= mainWindow;
-		
+		Simulator.mainWindow = mainWindow;
+
 		for (int i = 0; i < numberOfRuns; i++) {
 			tree = treeFactory.createTree();
 			for (int j = 0; j < numberOfAgents.length; j++) {
 				Simulator simulator = new Simulator(tree, numberOfAgents[j]);
 			}
-		}
-		Simulator.startSimulation();
 
+			Simulator.startSimulation();
+		}
 
 	}
 
 	private static void analyse(ArrayList<Simulator> worker) {
-		
-		
+
 	}
 
 	private static void estimateTime(int[] numberOfAgents, int numberOfRuns) {

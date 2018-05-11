@@ -276,7 +276,7 @@ public class GuiBuilder {
 		MultiAgentsRunsField.setBounds(10, 73, 120, 20);
 		panel.add(MultiAgentsRunsField);
 		MultiAgentsRunsField.setToolTipText("");
-		MultiAgentsRunsField.setText("100;500;1000");
+		MultiAgentsRunsField.setText("10;100;500;1000;5000;10000");
 		MultiAgentsRunsField.setColumns(10);
 
 		JTextPane txtpnMultipleAgentsRuns = new JTextPane();
@@ -407,14 +407,14 @@ public class GuiBuilder {
 
 		maxNodesField = new JTextField();
 		maxNodesField.setToolTipText("Enter an Integer value here");
-		maxNodesField.setText("100000");
+		maxNodesField.setText("1000");
 		maxNodesField.setColumns(10);
 		maxNodesField.setBounds(10, 177, 120, 20);
 		treeSpecifier.add(maxNodesField);
 
 		minNodesField = new JTextField();
 		minNodesField.setToolTipText("Enter an Integer value here");
-		minNodesField.setText("50000");
+		minNodesField.setText("100");
 		minNodesField.setColumns(10);
 		minNodesField.setBounds(10, 220, 120, 20);
 		treeSpecifier.add(minNodesField);

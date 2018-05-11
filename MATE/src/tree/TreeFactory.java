@@ -5,8 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-
-
 public class TreeFactory {
 
 	public long seed;
@@ -19,9 +17,8 @@ public class TreeFactory {
 	public int maxNodes;
 	public int minNodes;
 	public int numberOfNodes;
-	
-	public Verteilungsfunktionen verteilung; 
-	
+
+	public Verteilungsfunktionen verteilung;
 
 	private Random numberGenerator = new Random();
 	public String function;
@@ -47,7 +44,8 @@ public class TreeFactory {
 	}
 
 	public TreeFactory getNewFactory() {
-		return  new TreeFactory(numberGenerator.nextLong(), maxDepth, minDepth, maxBranches, minBranches, maxNodes, minNodes, branchingfactor, verteilung);
+		return new TreeFactory(numberGenerator.nextLong(), maxDepth, minDepth, maxBranches, minBranches, maxNodes,
+				minNodes, branchingfactor, verteilung);
 	}
 
 	public Node createTree() {
@@ -63,26 +61,23 @@ public class TreeFactory {
 		List<Node> allLeafs = new ArrayList<Node>();
 		allLeafs.add(root);
 		System.out.println("create new Tree with " + numberOfNodes + " nodes");
-		
 
-		
-		
-		
 		while (Node.getIdCount() < numberOfNodes) {
-			
-			
-			leafs.add(allLeafs.get(numberGenerator.nextInt(allLeafs.size())));
-//			leafs.add(getRandomLeaf(root));
+
+			if (leafs.isEmpty()) {
+				leafs.add(allLeafs.get(numberGenerator.nextInt(allLeafs.size())));
+			}
+			// leafs.add(getRandomLeaf(root));
 			// add nodes current leaf until number of calculated nodes is reached
 			while (Node.getIdCount() < numberOfNodes && !leafs.isEmpty()) {
 				Node parent = leafs.get(0);
 				int numberOfChildren = getNumberofChildren();
-				
-				if(numberOfChildren == 0) {
-				// wenn numer == 0 bedeuted dass, das es sich um ein Leaf handelt.
-				allLeafs.add(parent);
-				}
-				else {
+
+				if (numberOfChildren == 0) {
+					// wenn numer == 0 bedeuted dass, das es sich um ein Leaf handelt.
+					allLeafs.remove(parent);
+					allLeafs.add(parent);
+				} else {
 					allLeafs.remove(parent);
 				}
 
@@ -93,74 +88,69 @@ public class TreeFactory {
 				}
 				// remove the parent Node because it already got all children
 				leafs.remove(0);
-				//Collections.shuffle(leafs);
+				// Collections.shuffle(leafs);
 			}
 		}
 
 		// System.out.println("Number of node = " + Node.getIdCount());
 
-		
-		
 		return root;
 	}
 
-//	returns a value beetween the min and max nodes value
+	// returns a value beetween the min and max nodes value
 	private int getNumberOfNodes() {
-		return numberGenerator.nextInt(maxNodes-minNodes)+minNodes;		 
+		return numberGenerator.nextInt((maxNodes+ 1) - minNodes) + minNodes;
 	}
 
 	private Node getRandomLeaf(Node n) {
 
-		List<Node> leafList =  n.getLeafList(null);
-		
-		if(leafList.isEmpty()) {
+		List<Node> leafList = n.getLeafList(null);
+
+		if (leafList.isEmpty()) {
 			return n;
-		}else {
+		} else {
 			int nextNode = numberGenerator.nextInt(leafList.size());
-			return leafList.get(nextNode);	
+			return leafList.get(nextNode);
 		}
-		
-		
-	
+
 	}
 
 	private int getNumberofChildren() {
 
-		switch(verteilung) {
-		
-		case quadratisch: 
+		switch (verteilung) {
+
+		case quadratisch:
 			return quadratischeVerteilung();
-			
+
 		case gleich:
 			return gleichverteilt();
-			
+
 		case random:
 			return random();
-			
+
 		case wurzel:
 			return wurzelverteilung();
-			
-		
+
 		}
-		
+
 		return 1;
-		
-		
-		
+
 	}
+
 	private int random() {
-		return minBranches+numberGenerator.nextInt(quadratischeVerteilung()+wurzelverteilung());
+		return minBranches + numberGenerator.nextInt(quadratischeVerteilung() + wurzelverteilung());
 	}
-	
+
 	private int gleichverteilt() {
 		return minBranches + numberGenerator.nextInt(maxBranches - minBranches + 1);
 	}
+
 	private int quadratischeVerteilung() {
-		return (int) (minBranches + Math.pow(numberGenerator.nextDouble(), 2) * maxBranches);
+		return (int) (minBranches + Math.pow(numberGenerator.nextDouble(), 2) * (maxBranches +1));
 	}
 
 	private int wurzelverteilung() {
-		return (int) (minBranches + Math.sqrt(numberGenerator.nextDouble()) * maxBranches);
+		return (int) (minBranches + Math.sqrt(numberGenerator.nextDouble()) * (maxBranches +1));
 	}
 
 	/**
@@ -200,16 +190,9 @@ public class TreeFactory {
 		return newTree;
 	}
 
-	public String createTreeCode(){
-		String treeCode = "#" + 
-		lastSeed +";"+             
-		maxDepth +";"+          
-		minDepth +";"+
-		maxBranches +";"+       
-		minBranches +";"+  
-		branchingfactor +";"+ 
-		maxNodes +";"+ 
-		minNodes;          
+	public String createTreeCode() {
+		String treeCode = "#" + lastSeed + ";" + maxDepth + ";" + minDepth + ";" + maxBranches + ";" + minBranches + ";"
+				+ branchingfactor + ";" + maxNodes + ";" + minNodes;
 		return treeCode;
 	}
 
