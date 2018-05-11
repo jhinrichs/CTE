@@ -303,10 +303,9 @@ public class ProgrammManager {
 
 	public static void runSimulationThreaded(TreeFactory treeFactory, int[] numberOfAgents, int numberOfRuns) {
 
-		Simulator.mainWindow = mainWindow;
-
-		Simulator.initSimulation(numberOfRuns, treeFactory, numberOfAgents);
-
+		SimulationManager simulationManager = new SimulationManager(numberOfRuns, treeFactory, numberOfAgents);
+	
+		simulationManager.start();
 	}
 
 
