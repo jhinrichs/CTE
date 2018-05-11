@@ -65,21 +65,22 @@ public class TreeFactory {
 		while (Node.getIdCount() < numberOfNodes) {
 
 			if (leafs.isEmpty()) {
-				leafs.add(allLeafs.get(numberGenerator.nextInt(allLeafs.size())));
+				int rand = numberGenerator.nextInt(allLeafs.size());
+				Node temp = allLeafs.get(rand);
+				leafs.add(temp);
+				allLeafs.remove(rand);
 			}
 			// leafs.add(getRandomLeaf(root));
 			// add nodes current leaf until number of calculated nodes is reached
 			while (Node.getIdCount() < numberOfNodes && !leafs.isEmpty()) {
-				Node parent = leafs.get(0);
+				int rand =numberGenerator.nextInt(leafs.size());
+				Node parent = leafs.get(rand);
 				int numberOfChildren = getNumberofChildren();
 
 				if (numberOfChildren == 0) {
 					// wenn numer == 0 bedeuted dass, das es sich um ein Leaf handelt.
-					allLeafs.remove(parent);
 					allLeafs.add(parent);
-				} else {
-					allLeafs.remove(parent);
-				}
+				} 
 
 				while (numberOfChildren > 0 && Node.getIdCount() < numberOfNodes) {
 					Node newNode = new Node(parent);
@@ -87,7 +88,7 @@ public class TreeFactory {
 					numberOfChildren--;
 				}
 				// remove the parent Node because it already got all children
-				leafs.remove(0);
+				leafs.remove(rand);
 				// Collections.shuffle(leafs);
 			}
 		}

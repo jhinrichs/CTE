@@ -264,7 +264,7 @@ public class ProgrammManager {
 		long startTime = System.currentTimeMillis();
 
 		NKExport exporter = new NKExport(treeFactory, numberOfAgents, numberOfRuns);
-		exporter.initializeWriteSolution();
+		exporter.initializeWriteSolutionSimulation();
 		for (int i = 0; i < numberOfRuns; i++) {
 			tree = treeFactory.createTree(); // eventuell muss seed neu gesetzt werden Wenn alle Bäume gleichen Seed
 												// haben
@@ -300,24 +300,15 @@ public class ProgrammManager {
 		System.out.println("Simulation finished... time used: " + usedTime / 1000 + " seconds");
 	}
 
+
 	public static void runSimulationThreaded(TreeFactory treeFactory, int[] numberOfAgents, int numberOfRuns) {
 
 		Simulator.mainWindow = mainWindow;
 
-		for (int i = 0; i < numberOfRuns; i++) {
-			tree = treeFactory.createTree();
-			for (int j = 0; j < numberOfAgents.length; j++) {
-				Simulator simulator = new Simulator(tree, numberOfAgents[j]);
-			}
-
-			Simulator.startSimulation();
-		}
+		Simulator.initSimulation(numberOfRuns, treeFactory, numberOfAgents);
 
 	}
 
-	private static void analyse(ArrayList<Simulator> worker) {
-
-	}
 
 	private static void estimateTime(int[] numberOfAgents, int numberOfRuns) {
 		long startTime = System.currentTimeMillis();

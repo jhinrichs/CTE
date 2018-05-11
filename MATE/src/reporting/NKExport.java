@@ -129,99 +129,86 @@ public class NKExport {
 		writeSolutions(allSolutions2);
 
 	}
-	
 
 	private void writeSolutions(ExportData[][] allSolutions2) {
-	
-		
-		
-		actualColumn=3;
-		//erste zeile mit anzahl der agenten
-		for (int j =0; j< allSolutions2[0].length;j++) {
+
+		actualColumn = 3;
+		// erste zeile mit anzahl der agenten
+		for (int j = 0; j < allSolutions2[0].length; j++) {
 			writer.write(actualRow, actualColumn, allSolutions2[0][j].numberOfAgents);
 			actualColumn++;
 		}
 		actualRow++;
-		
-		
-		
-		for(int i =0 ; i<allSolutions2.length;i++) {
-			actualColumn=1;
+
+		for (int i = 0; i < allSolutions2.length; i++) {
+			actualColumn = 1;
 			writer.write(actualRow, actualColumn, allSolutions2[i][0].treeCode);
 			actualColumn++;
 			writer.write(actualRow, actualColumn, allSolutions2[i][0].numberOfNodes);
 			actualColumn++;
-			
-			for (int j =0; j< allSolutions2[i].length;j++) {
+
+			for (int j = 0; j < allSolutions2[i].length; j++) {
 				writer.write(actualRow, actualColumn, allSolutions2[i][j].numberOfSteps);
 				actualColumn++;
 			}
-			actualRow++;			
+			actualRow++;
 		}
 	}
 
 	private ExportData[][] sortForNodes(ExportData[][] allSolutions2) {
 		boolean sorted = false;
 		while (!sorted) {
-			int i =0; 
+			int i = 0;
 			sorted = true;
-			while(i<allSolutions2.length-1) {
-				if(allSolutions2[i][0].numberOfNodes > allSolutions2[i+1][0].numberOfNodes) {
+			while (i < allSolutions2.length - 1) {
+				if (allSolutions2[i][0].numberOfNodes > allSolutions2[i + 1][0].numberOfNodes) {
 					ExportData[] temp = allSolutions2[i];
-					allSolutions2[i]=allSolutions2[i+1];
-					allSolutions2[i+1] = temp;
-					sorted=false;
+					allSolutions2[i] = allSolutions2[i + 1];
+					allSolutions2[i + 1] = temp;
+					sorted = false;
 				}
-				i++;				
+				i++;
 			}
 		}
 		return allSolutions2;
 	}
 
-	public void initializeWriteSolution() {
+	
 
-		writer.write(actualRow, 3, "Steps");
-		writer.write(actualRow, 4, "agents");
-		writer.write(actualRow, 5, "nodes");
-		writer.write(actualRow, 7, "Steps");
-		writer.write(actualRow, 8, "agents");
-		writer.write(actualRow, 9, "nodes");
-		
-		actualRow ++;
-	}
 	public void writeSolutionPack(ExportData[][] solutionPack) {
 		int a = 0;
 		writer.write(actualRow, 1, "treecode : " + solutionPack[0][0].treeCode);
 		writer.write(actualRow, 2, "Nodes in Tree : " + solutionPack[0][0].numberOfNodes);
 
-		
-		for (int i =0 ;i < solutionPack[0].length; i++) {
+		for (int i = 0; i < solutionPack[0].length; i++) {
 			writer.write(actualRow, 3, solutionPack[0][i].numberOfSteps);
 			writer.write(actualRow, 4, solutionPack[0][i].numberOfAgents);
 			writer.write(actualRow, 5, solutionPack[0][i].numberOfNodes);
 			writer.write(actualRow, 7, solutionPack[1][i].numberOfSteps);
 			writer.write(actualRow, 8, solutionPack[1][i].numberOfAgents);
 			writer.write(actualRow, 9, solutionPack[1][i].numberOfNodes);
-			
-//			// first column: write number of nodes to table
-//			
-//			
-//			// Table: write solution data for first solution into first a rows.
-//			writer.write(actualRow, 3 + a, solutionPack[0][i].numberOfSteps + " agents " + exportData.numberOfAgents
-//					+ " nodes " + exportData.numberOfNodes);
-//			writer.write(actualRow, 3+a, value);
-//			
-//			// write solution data for second pack into second a rows
-//			writer.write(actualRow, 3 + a+agents.length+2, "steps " + exportData.numberOfSteps + " agents " + exportData.numberOfAgents
-//					+ " nodes " + exportData.numberOfNodes);
-//			
+
+			// // first column: write number of nodes to table
+			//
+			//
+			// // Table: write solution data for first solution into first a rows.
+			// writer.write(actualRow, 3 + a, solutionPack[0][i].numberOfSteps + " agents "
+			// + exportData.numberOfAgents
+			// + " nodes " + exportData.numberOfNodes);
+			// writer.write(actualRow, 3+a, value);
+			//
+			// // write solution data for second pack into second a rows
+			// writer.write(actualRow, 3 + a+agents.length+2, "steps " +
+			// exportData.numberOfSteps + " agents " + exportData.numberOfAgents
+			// + " nodes " + exportData.numberOfNodes);
+			//
 			a++;
 			if (a == agents.length - 1) {
 				a = 0;
 				actualRow++;
 			}
 		}
-		
+
 	}
 
 	public void writeLeftieSolutionData(ExportData[] solutionPack) {
@@ -240,7 +227,33 @@ public class NKExport {
 				actualRow++;
 			}
 		}
-		
 	}
+	
+	int treeCodeColumn = 1;
+	int numberOfNodesColumn =2;
+	int agentsColumn = 3;
+	int CTEStepsColumn = 4;
+	int leftieStepsColumn = 5;
+	int factorColumn = 6;
+	
+	public void writeSolutionsSimulator(ExportData CTE, ExportData leftie, double factor) {
+		
+		writer.write(actualRow, treeCodeColumn, CTE.treeCode);
+		writer.write(actualRow, numberOfNodesColumn, CTE.numberOfNodes);
+		writer.write(actualRow, agentsColumn, CTE.numberOfAgents);
+		writer.write(actualRow, CTEStepsColumn, CTE.numberOfSteps);
+		writer.write(actualRow, leftieStepsColumn, leftie.numberOfSteps);
+		writer.write(actualRow, factorColumn, ""+factor);
+		actualRow++;	
+	}
+	public void initializeWriteSolutionSimulation() {
 
+		writer.write(actualRow, treeCodeColumn, "Treecode");
+		writer.write(actualRow, numberOfNodesColumn, "Number of Nodes");
+		writer.write(actualRow, agentsColumn, "Number of Agents");
+		writer.write(actualRow, CTEStepsColumn, "CTE Steps");
+		writer.write(actualRow, leftieStepsColumn, "Leftie Steps");
+		writer.write(actualRow, factorColumn, "Overhead");
+		actualRow++;
+	}
 }
