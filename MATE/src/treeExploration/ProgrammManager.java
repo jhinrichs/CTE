@@ -301,7 +301,7 @@ public class ProgrammManager {
 	}
 
 	public static void runSimulationThreaded(TreeFactory treeFactory, int[] numberOfAgents, int numberOfRuns) {
-		ExportData[][] allSolutions = new ExportData[numberOfRuns][];
+
 		Simulator.mainWindow= mainWindow;
 		
 		for (int i = 0; i < numberOfRuns; i++) {

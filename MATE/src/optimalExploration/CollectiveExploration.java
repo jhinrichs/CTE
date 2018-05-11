@@ -51,7 +51,7 @@ public class CollectiveExploration {
 			step();
 			steps++;
 			if(steps%100 == 0) {
-				System.out.println("calculated steps " +steps);
+//				System.out.println("calculated steps " +steps);
 			}
 		}
 

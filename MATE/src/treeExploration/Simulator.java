@@ -32,6 +32,8 @@ public class Simulator extends Thread {
 		worker.add(this);
 
 	}
+	
+	
 
 	public static void startSimulation() {
 		while (worker.size() > lastStarted) {
@@ -56,8 +58,8 @@ public class Simulator extends Thread {
 		if (!finished) {
 
 			long startTime = System.currentTimeMillis();
-			System.out
-					.println("starting thread number " + threadnumber + " with " + tree.numberOfNodesInTree + " nodes "+ tree.getTreeNodeCount());
+//			System.out
+//					.println("starting thread number " + threadnumber + " with " + tree.numberOfNodesInTree + " nodes "+ tree.getTreeNodeCount());
 			threadnumber++;
 			getLeftie();
 			getCTE();
@@ -65,8 +67,8 @@ public class Simulator extends Thread {
 			long usedTime = stoptime - startTime;
 			calculateFactor();
 			activeThreads--;
-			System.out.println("finished thread number " + threadnumber + " with " + tree.getTreeNodeCount()
-					+ " Nodes in " + usedTime + " Seconds ... active Threads = " + activeThreads + " Remaining runs : " + (worker.size()-lastStarted));
+//			System.out.println("finished thread number " + threadnumber + " with " + tree.getTreeNodeCount()
+//					+ " Nodes in " + usedTime + " Seconds ... active Threads = " + activeThreads + " Remaining runs : " + (worker.size()-lastStarted));
 			finished = true;
 		}
 
@@ -80,17 +82,17 @@ public class Simulator extends Thread {
 	}
 
 	private void getCTE() {
-		System.out.println("Start cte ");
+//		System.out.println("Start cte ");
 		CollectiveExploration colEx = new CollectiveExploration(tree, numberOfAgents);
 		CTEData = new ExportData(colEx.getOptimum());
-		System.out.println("finish cte");
+//		System.out.println("finish cte");
 	}
 
 	private void getLeftie() {
-		System.out.println("start leftie");
+//		System.out.println("start leftie");
 		LeftWalker leftie = new LeftWalker(tree, numberOfAgents);
 		leftWalkerData = new ExportData(leftie.getOptimum());
-		System.out.println("finish leftie");
+//		System.out.println("finish leftie");
 	}
 
 }

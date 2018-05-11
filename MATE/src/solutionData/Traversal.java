@@ -87,7 +87,8 @@ public class Traversal {
 	 * @returns true if all Nodes of the tree are covered by at least one Agent
 	 */
 	public boolean isValidSolution() {
-		System.out.print("test if isvalidsolution ");
+		
+//		System.out.print("test if isvalidsolution ");
 		List<Node> listOfNodes = new ArrayList<Node>();
 		listOfNodes = root.getLeafList(listOfNodes);
 		
@@ -96,17 +97,13 @@ public class Traversal {
 			leafs.put(n.getId(), n);
 		}
 		
-		int i = 0;
-//		while (!listOfNodes.isEmpty() && i < agents.size()) {
-//			System.out.print("remove ");
-//			System.out.println(agents.get(i).getNodesToVisit().size() + " Nodes " +agents.get(i).getLeafs().size());
-////			listOfNodes.removeAll(agents.get(i).getNodesToVisit());
-////			listOfNodes.removeAll(agents.get(i).getLeafs());
-//			i++;
-//		}
-		
 		for(IAgent a : agents) {
-			for (Node n : a.getLeafs()) {
+			List<Node> nodesToRemove = a.getLeafs();
+			if(nodesToRemove.isEmpty()) {
+					nodesToRemove =a.getNodesToVisit();
+			}
+				
+			for (Node n : nodesToRemove) {
 				leafs.remove(n.getId());
 			}
 		}
@@ -114,6 +111,7 @@ public class Traversal {
 		if (leafs.isEmpty()) {
 			return true;
 		} else {
+
 			return false;
 		}
 

@@ -276,7 +276,7 @@ public class GuiBuilder {
 		MultiAgentsRunsField.setBounds(10, 73, 120, 20);
 		panel.add(MultiAgentsRunsField);
 		MultiAgentsRunsField.setToolTipText("");
-		MultiAgentsRunsField.setText("1000");
+		MultiAgentsRunsField.setText("100;500;1000");
 		MultiAgentsRunsField.setColumns(10);
 
 		JTextPane txtpnMultipleAgentsRuns = new JTextPane();
@@ -298,7 +298,7 @@ public class GuiBuilder {
 		NumberOfRunsTextfield.setBounds(10, 30, 120, 20);
 		panel.add(NumberOfRunsTextfield);
 		NumberOfRunsTextfield.setToolTipText("");
-		NumberOfRunsTextfield.setText("1");
+		NumberOfRunsTextfield.setText("3");
 		NumberOfRunsTextfield.setColumns(10);
 
 		JButton runSimulationButton = new JButton("run Simulation");
