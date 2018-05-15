@@ -65,7 +65,7 @@ public class ExcelExport {
 //			workbook.write(new FileOutputStream("C:\\Users\\jonas\\OneDrive\\Dokumente\\Uni\\BA\\Bachelor Arbeit-DESKTOP-2ID5GM5\\output\\testfile.xlsx"));
 			String savePath = System.getProperty("user.dir");
 			workbook.write(new FileOutputStream(savePath + "\\testfile.xlsx"));
-			workbook.close();
+
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

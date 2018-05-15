@@ -9,10 +9,10 @@ import tree.Node;
 import tree.TreeFactory;
 
 public class SimulationManager extends Thread {
-	int maximumThreads = 16;
+	int maximumThreads = 1;
 	int threads = 0;
 	private ArrayList<Simulator> activeWorker = new ArrayList();
-	private ArrayList<Simulator> allWorker = new ArrayList();
+	private ArrayList<Simulator> unfinishedWorker = new ArrayList();
 	private NKExport exporter;
 	public GuiBuilder mainWindow;
 	public int finishedThreads = 0;
@@ -33,29 +33,40 @@ public class SimulationManager extends Thread {
 		this.numberOfRuns = numberOfRuns;
 		this.fac = treeFactory;
 	}
+	public SimulationManager(int numberOfRuns, TreeFactory treeFactory, int[] numberOfAgents, NKExport exporter) {
+		this.exporter = exporter;
+		exporter.addRun(treeFactory, numberOfAgents, numberOfRuns);
+		this.numberOfAgents = numberOfAgents;
+		this.numberOfRuns = numberOfRuns;
+		this.fac = treeFactory;
+	}
 
 
 	@Override
 	public void run() {
 
 //		SmallSimulator.getSmallWindow().writeLine("Start Simulation");
+		System.out.println("Start Simulation");
 		for (int i = 0; i < numberOfRuns; i++) {
+			System.out.println("Start tree with " + fac.numberOfNodes);
 			Node tree = fac.createTree();
 			
 			for (int j = 0; j < numberOfAgents.length; j++) {
 				Simulator sim = new Simulator(tree, numberOfAgents[j]);
-				allWorker.add(sim);
-			}
-			startThreads();
-			while(!activeWorker.isEmpty()) {
-				try {
-					sleep(100);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				unfinishedWorker.add(sim);
+				startThreads();
+				while(activeWorker.size() < maximumThreads) {
+					try {
+						sleep(100);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					checkIfFinished();
 				}
-				checkIfFinished();
 			}
+			
+			
 		}
 		finishedInitialization =true;
 		while (!isFinished) {
@@ -87,7 +98,7 @@ public class SimulationManager extends Thread {
 				}
 			}
 
-			if (finishedThreads == allWorker.size()&& finishedInitialization) {
+			if (unfinishedWorker.isEmpty() && activeWorker.isEmpty() && finishedInitialization) {
 				isFinished = true;
 				exporter.save();
 			}
@@ -98,13 +109,13 @@ public class SimulationManager extends Thread {
 
 	private void startThreads() {
 
-		while (allWorker.size() > lastStarted && activeWorker.size() < maximumThreads) {
+		while (!unfinishedWorker.isEmpty() && activeWorker.size() < maximumThreads) {
 
-			Simulator sim = allWorker.get(lastStarted);
-
+			Simulator sim = unfinishedWorker.get(0);
+			unfinishedWorker.remove(sim);
 			activeWorker.add(sim);
 			sim.start();
-			lastStarted++;
+
 		}
 
 	}

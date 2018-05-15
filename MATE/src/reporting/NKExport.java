@@ -256,4 +256,12 @@ public class NKExport {
 		writer.write(actualRow, factorColumn, "Overhead");
 		actualRow++;
 	}
+
+	public void addRun(TreeFactory treeFactory, int[] numberOfAgents, int numberOfRuns) {
+		
+		actualRow++;
+		writer.write(actualRow, treeCodeColumn, "Next Run");
+		actualRow++;
+		
+	}
 }

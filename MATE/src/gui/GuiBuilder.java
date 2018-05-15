@@ -22,6 +22,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import reporting.NKExport;
+import tree.Node;
 import tree.TreeFactory;
 import treeExploration.ProgrammManager;
 import treeExploration.SimulationManager;
@@ -77,7 +79,7 @@ public class GuiBuilder {
 	public JComboBox pickedAlgorithm;
 	public JComboBox Verteilungsfunktion;
 	public JTextPane outputWindow;
-
+	public NKExport exporter;
 	Random rand = new Random();
 	int seed = rand.nextInt();
 	private JTextField maxNodesField;
@@ -278,7 +280,7 @@ public class GuiBuilder {
 		MultiAgentsRunsField.setBounds(10, 73, 120, 20);
 		panel.add(MultiAgentsRunsField);
 		MultiAgentsRunsField.setToolTipText("");
-		MultiAgentsRunsField.setText("10;100;500;1000;5000;10000");
+		MultiAgentsRunsField.setText("10;50;100;250;500;750;1000;1500;3000;5000;7500;10000;15000;30000;50000");
 		MultiAgentsRunsField.setColumns(10);
 
 		JTextPane txtpnMultipleAgentsRuns = new JTextPane();
@@ -316,8 +318,15 @@ public class GuiBuilder {
 //				TreeFactory fac = new TreeFactory(seed, maxDepth, minDepth, maxBranches, minBranches, maxNodes,
 //						minNodes, leafFactor, (Verteilungsfunktionen) Verteilungsfunktion.getSelectedItem());
 				//ProgrammManager.runSimulationThreaded(fac, numberOfAgents, numberOfRuns);
-				SimulationManager simman = new SimulationManager(numberOfRuns, new TreeFactory(seed, maxDepth, minDepth, maxBranches, minBranches, maxNodes,
-						minNodes, leafFactor, (Verteilungsfunktionen) Verteilungsfunktion.getSelectedItem()), numberOfAgents);
+				TreeFactory fac = new TreeFactory(seed, maxDepth, minDepth, maxBranches, minBranches, maxNodes,
+						minNodes, leafFactor, (Verteilungsfunktionen) Verteilungsfunktion.getSelectedItem());
+				
+				if(exporter == null) {
+					exporter = new NKExport(fac, numberOfAgents, numberOfRuns);
+					exporter.initializeWriteSolutionSimulation();
+				}
+				
+				SimulationManager simman = new SimulationManager(numberOfRuns,fac , numberOfAgents,exporter);
 				rand = new Random(Integer.parseInt(seedField.getText()));
 				seedField.setText("" + rand.nextInt());
 				simman.start();
