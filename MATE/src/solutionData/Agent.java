@@ -3,9 +3,6 @@ package solutionData;
 import java.util.ArrayList;
 import java.util.List;
 
-import mate.Brain;
-import mate.Brain.BrainModuleType;
-import optimalExploration.MovingPlan;
 import tree.INode;
 import tree.Node;
 import tree.TreeFactory;
@@ -20,17 +17,15 @@ public class Agent implements IAgent {
 	private ArrayList<Node> leafs;
 	public Traversal traversal;
 	
-	public Brain brainModule;
 	
-	
+	/* (non-Javadoc)
+	 * @see solutionData.IAgnet#getLeafs()
+	 */
+	@Override
 	public ArrayList<Node> getLeafs() {
 		return leafs;
 	}
-	public Agent(Node root, BrainModuleType brainType) {
-		this(root);
-		this.brainModule = new Brain(this, brainType);
-		
-	}
+
 	public Agent() {
 		setId();
 		path = new ArrayList<Node>();
@@ -55,35 +50,43 @@ public class Agent implements IAgent {
 		this.energy = energy;
 		
 	}
-
-	public Agent(Node root, BrainModuleType brainType, Traversal traversal) {
-		this(root, brainType);
-		this.traversal = traversal;
-	}
 	
-	public Brain getBrainModule() {
-		return brainModule;
-	}
-	public void setBrainModule(Brain brainModule) {
-		this.brainModule = brainModule;
-	}
-	
+	/* (non-Javadoc)
+	 * @see solutionData.IAgnet#getRoot()
+	 */
+	@Override
 	public INode getRoot() {
 		return root;
 	}
 
+	/* (non-Javadoc)
+	 * @see solutionData.IAgnet#getTree()
+	 */
+	@Override
 	public Node getTree() {
 		return TreeFactory.createTree(root, path);
 	}
 
+	/* (non-Javadoc)
+	 * @see solutionData.IAgnet#getId()
+	 */
+	@Override
 	public int getId() {
 		return id;
 	}
 	
+	/* (non-Javadoc)
+	 * @see solutionData.IAgnet#activeNode()
+	 */
+	@Override
 	public Node activeNode() {
 		return path.get(path.size()-1);
 	}
 
+	/* (non-Javadoc)
+	 * @see solutionData.IAgnet#enoughEnergy()
+	 */
+	@Override
 	public boolean enoughEnergy() {
 		if (energy > 0) {
 			return true;
@@ -94,20 +97,36 @@ public class Agent implements IAgent {
 
 	
 
+	/* (non-Javadoc)
+	 * @see solutionData.IAgnet#addNode(tree.Node)
+	 */
+	@Override
 	public void addNode(Node nodeToVisit) {
 		if (!path.contains(nodeToVisit)) {
 			path.add(nodeToVisit);
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see solutionData.IAgnet#removeNode(tree.INode)
+	 */
+	@Override
 	public void removeNode(INode nodeToRemove) {
 		path.remove(nodeToRemove);
 	}
 
+	/* (non-Javadoc)
+	 * @see solutionData.IAgnet#getNodesToVisit()
+	 */
+	@Override
 	public ArrayList<Node> getNodesToVisit() {
 		return path;
 	}
 
+	/* (non-Javadoc)
+	 * @see solutionData.IAgnet#addNodes(java.util.List)
+	 */
+	@Override
 	public void addNodes(List<Node> nodes) {
 		path.addAll(nodes);
 	}
@@ -115,11 +134,19 @@ public class Agent implements IAgent {
 	
 	/* 
 	 */
+	/* (non-Javadoc)
+	 * @see solutionData.IAgnet#getStepsCount()
+	 */
+	@Override
 	public int getStepsCount() {
 		
 		return getNodesToVisit().size();
 	}
 
+	/* (non-Javadoc)
+	 * @see solutionData.IAgnet#getPosition()
+	 */
+	@Override
 	public Node getPosition() {
 		if (path.size() == 0) {
 			return null;
@@ -129,12 +156,11 @@ public class Agent implements IAgent {
 		}
 	}
 	
-	public MovingPlan calculateMove() {
-		Node nextNode = brainModule.getNextNode();
-		MovingPlan nextStep = new MovingPlan(nextNode ,this);
-		return nextStep;
-	}
 
+	/* (non-Javadoc)
+	 * @see solutionData.IAgnet#moveAgent(tree.Node)
+	 */
+	@Override
 	public void moveAgent(Node newNode){
 		activeNode().getRobPos().moveAgentTo(this, newNode);
 		path.add(newNode);

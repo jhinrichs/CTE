@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import solutionData.Agent;
+import solutionData.IAgent;
 import solutionData.Traversal;
 import tree.Node;
 import tree.TreeDataCalculator;
@@ -57,7 +58,7 @@ public class LeftWalker {
 	/**
 	 * @param a
 	 */
-	private void cleanAgentPath(Agent a) {
+	private void cleanAgentPath(IAgent a) {
 		int size= a.getNodesToVisit().size();
 		
 		for(int i = size-1; i >=0; i--) {

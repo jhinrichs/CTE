@@ -23,6 +23,12 @@ public class RobPosTree {
 	private int distanceToParent = 0;
 	int agentsInTree = 0;
 
+	public void finalize() {
+		parentRobPos = null;
+		robPosChildren = null;
+		agentsAtNode = null;
+	}
+	
 	public RobPosTree(Node origin, Node parent, int distanceToParent) {
 		this.origin = origin;
 		this.setParent(parent);

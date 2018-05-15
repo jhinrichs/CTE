@@ -13,12 +13,6 @@ public class MovingPlanList {
 		// TODO Auto-generated constructor stub
 	}
 
-	public void calculateMoves(List<IAgent> agents) {
-		for (IAgent agent : agents) {
-			plan.add(agent.calculateMove());
-		}
-	}
-
 	public List<MovingPlan> getPlan() {
 		return plan;
 	}

@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.List;
 
 import drawTree.TreePainter;
-import mate.MateAgent;
 import solutionData.Agent;
 import solutionData.IAgent;
 import solutionData.RobPosTree;
@@ -22,7 +21,7 @@ public class CollectiveExploration {
 	private int numberOfRobots = 0;
 	private List<IAgent> agents = new ArrayList<IAgent>();
 
-	TreeDataCalculator treeData;
+	private TreeDataCalculator treeData;
 
 	private Traversal solution;
 

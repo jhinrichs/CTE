@@ -8,6 +8,8 @@ import java.util.UUID;
 
 import javax.swing.tree.TreeNode;
 
+import org.openxmlformats.schemas.spreadsheetml.x2006.main.CalcChainDocument;
+
 import optimalExploration.CollectiveExploration;
 import solutionData.IAgent;
 import solutionData.RobPosTree;
@@ -379,6 +381,19 @@ public class Node implements INode {
 
 	public void setTreeCode(String createedTreeCode) {
 		treeCode = createedTreeCode;
+	}
+	
+
+	public void finalize() {
+		
+		for(Node child : getChildren()){
+			children.remove(child);
+			child.finalize();
+		}
+		parent= null;
+		treeData = null;
+		robPos.finalize();
+		robPos = null;
 	}
 
 }

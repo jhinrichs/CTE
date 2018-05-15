@@ -3,22 +3,37 @@ package solutionData;
 import java.util.ArrayList;
 import java.util.List;
 
-import optimalExploration.MovingPlan;
+import tree.INode;
 import tree.Node;
 
 public interface IAgent {
 
+	ArrayList<Node> getLeafs();
+
+	INode getRoot();
+
+	Node getTree();
 
 	int getId();
-	void moveAgent(Node nodeToGo);
-	int getStepsCount();
+
+	Node activeNode();
+
+	boolean enoughEnergy();
+
+	void addNode(Node nodeToVisit);
+
+	void removeNode(INode nodeToRemove);
+
 	ArrayList<Node> getNodesToVisit();
-	ArrayList<Node> getLeafs();
+
+	void addNodes(List<Node> nodes);
+
+	/* 
+	 */
+	int getStepsCount();
+
 	Node getPosition();
-	void addNode(Node node);
-	void addNodes(List<Node> subList);
-	Node getTree();
-	MovingPlan calculateMove();
-	
-	
+
+	void moveAgent(Node newNode);
+
 }

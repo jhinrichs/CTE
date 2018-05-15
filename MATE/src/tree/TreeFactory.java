@@ -147,11 +147,11 @@ public class TreeFactory {
 	}
 
 	private int quadratischeVerteilung() {
-		return (int) (minBranches + Math.pow(numberGenerator.nextDouble(), 2) * (maxBranches +1));
+		return (int) (minBranches + Math.pow(numberGenerator.nextDouble(), 2) * (maxBranches - minBranches+1));
 	}
 
 	private int wurzelverteilung() {
-		return (int) (minBranches + Math.sqrt(numberGenerator.nextDouble()) * (maxBranches +1));
+		return (int) (minBranches + Math.sqrt(numberGenerator.nextDouble()) * (maxBranches - minBranches +1) );
 	}
 
 	/**

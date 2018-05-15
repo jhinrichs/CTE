@@ -13,6 +13,7 @@ import reporting.ExportData;
 import reporting.NKExport;
 import solutionData.Agent;
 import solutionData.IAgent;
+import solutionData.IAgent;
 import solutionData.SolutionManager;
 import solutionData.Traversal;
 import tree.INode;
@@ -98,7 +99,7 @@ public class ProgrammManager {
 
 	private static Traversal createTempPaint(int agent) {
 		Traversal tempPaint = new Traversal(recentTraversal.getRoot(), 2);
-		Agent a = new Agent(recentTraversal.getRoot());
+		IAgent a = new Agent(recentTraversal.getRoot());
 		a.addNodes(recentTraversal.getRoot().getAllNodes());
 		tempPaint.addAgent(a, 0);
 		tempPaint.addAgent(recentTraversal.getAgents().get(agent), 1);
@@ -303,9 +304,8 @@ public class ProgrammManager {
 
 	public static void runSimulationThreaded(TreeFactory treeFactory, int[] numberOfAgents, int numberOfRuns) {
 
-		SimulationManager simulationManager = new SimulationManager(numberOfRuns, treeFactory, numberOfAgents);
+		new SimulationManager(numberOfRuns, treeFactory, numberOfAgents).start();
 	
-		simulationManager.start();
 	}
 
 

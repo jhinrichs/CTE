@@ -1,8 +1,10 @@
 package treeExploration;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 
 import gui.GuiBuilder;
+import gui.SmallSimulator;
 import optimalExploration.CollectiveExploration;
 import optimalExploration.LeftWalker;
 import reporting.ExportData;
@@ -37,8 +39,9 @@ public class Simulator extends Thread {
 		if (!finished) {
 
 			long startTime = System.currentTimeMillis();
-			System.out.println(
-					"starting thread number " + threadnumber + " with " + tree.numberOfNodesInTree + " nodes ");
+//			System.out.println(
+//					"starting thread number " + threadnumber + " with " + tree.numberOfNodesInTree + " nodes ");
+			
 			threadnumber++;
 			getLeftie();
 			getCTE();
@@ -46,10 +49,9 @@ public class Simulator extends Thread {
 			long usedTime = stoptime - startTime;
 			calculateFactor();
 
-			// System.out.println("finished thread number " + threadnumber + " with " +
-			// tree.getTreeNodeCount()
-			// + " Nodes in " + usedTime + " Seconds ... active Threads = " + activeThreads
-			// + " Remaining runs : " + (worker.size()-lastStarted));
+			 System.out.println("finished thread number " + threadnumber + " with " +
+			 tree.getTreeNodeCount()
+			 + " Nodes in " + usedTime + " Seconds");
 			setFinished();
 		}
 
@@ -63,10 +65,10 @@ public class Simulator extends Thread {
 	private void calculateFactor() {
 		factor = (double) CTEData.numberOfSteps / (double) leftWalkerData.numberOfSteps;
 
-		System.out.println(CTEData.numberOfAgents + " Agents and " + CTEData.numberOfNodes + " Nodes: CTE = "
-				+ CTEData.numberOfSteps + " Steps --- Leftie = " + leftWalkerData.numberOfSteps
-				+ " Steps. ---: real Factor= " + factor + " | Theoretical Factor = "
-				+ (double) numberOfAgents / Math.log((double) numberOfAgents));
+//		System.out.println(CTEData.numberOfAgents + " Agents and " + CTEData.numberOfNodes + " Nodes: CTE = "
+//				+ CTEData.numberOfSteps + " Steps --- Leftie = " + leftWalkerData.numberOfSteps
+//				+ " Steps. ---: real Factor= " + factor + " | Theoretical Factor = "
+//				+ (double) numberOfAgents / Math.log((double) numberOfAgents));
 
 	}
 

@@ -47,7 +47,7 @@ public class Traversal {
 		this.root = tree;
 		agents = new ArrayList<IAgent>();
 		for (int i = 0; i < numberOfRobots; i++) {
-			Agent a = new Agent(root);
+			IAgent a = new Agent(root);
 			addAgent(a, i);
 		}
 	}

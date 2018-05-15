@@ -1,40 +1,27 @@
 package gui;
 
-import java.awt.Color;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.Random;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.StyledDocument;
 
 import tree.TreeFactory;
-import treeExploration.ProgrammManager;
+import tree.Verteilungsfunktionen;
 import treeExploration.SimulationManager;
 
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
-import tree.Verteilungsfunktionen;
-
-public class GuiBuilder {
+public class SmallSimulator {
 
 	/**
 	 * Launch the application.
@@ -54,13 +41,9 @@ public class GuiBuilder {
 	public JFrame frame;
 	private JTextField seedField;
 	private JTextField maxDepthField;
-	private JTextField textField_2;
 	private JTextField maxChildrenField;
-	private JTextField leafFactorField;
 	private JTextField minChildrenField;
 	private JTextField minDepthField;
-	public JButton btnCreateTree;
-	public JCheckBox bigNodesCheckBox;
 	private int maxDepth;
 	private int minDepth;
 	private int maxBranches;
@@ -70,27 +53,35 @@ public class GuiBuilder {
 	private int minNodes;
 	private int[] numberOfAgents;
 	private int numberOfRuns;
-	public JPanel treeInlayPanel;
 	public JSpinner spinner;
-	public JSpinner stepSpinner;
-	public JSpinner stepSpinner_2;
-	public JComboBox pickedAlgorithm;
 	public JComboBox Verteilungsfunktion;
-	public JTextPane outputWindow;
 
 	Random rand = new Random();
 	int seed = rand.nextInt();
 	private JTextField maxNodesField;
 
 	private JTextField minNodesField;
-	private JTextField numberOfAgentsField;
 	private JTextField NumberOfRunsTextfield;
 	private JTextField MultiAgentsRunsField;
+	public JTextPane outputWindow;
 
+	public static SmallSimulator myWindow = null;
+	public static SmallSimulator getSmallWindow() {
+		if(myWindow == null) {
+			myWindow = new SmallSimulator();
+		}
+		return myWindow;
+	}
+	
+	
+	public static void main(String[] args) {
+		getSmallWindow();
+	}
+	
 	/**
 	 * Create the application.
 	 */
-	public GuiBuilder() {
+	public SmallSimulator() {
 		initialize();
 		frame.setVisible(true);
 	}
@@ -100,16 +91,9 @@ public class GuiBuilder {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 1484, 963);
+		frame.setBounds(100, 100, 655, 586);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-		treeInlayPanel = new JPanel();
-
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(156, 11, 1302, 868);
-		frame.getContentPane().add(scrollPane);
-
-		scrollPane.setViewportView(treeInlayPanel);
 
 		JPanel treeSpecifier = treeSpecificator();
 
@@ -140,137 +124,9 @@ public class GuiBuilder {
 		minChildrenField.setText("0");
 		minChildrenField.setColumns(10);
 
-		JTextPane txtpnPlaceholder = new JTextPane();
-		txtpnPlaceholder.setBounds(10, 336, 120, 20);
-		treeSpecifier.add(txtpnPlaceholder);
-		txtpnPlaceholder.setToolTipText(
-				"gives a probability that the node is a leaf. And the tree ends. Even with minimum children but a leaffactor, the node can be a leaf. ");
-		txtpnPlaceholder.setText("leafFactor");
-		txtpnPlaceholder.setOpaque(false);
-
-		leafFactorField = new JTextField();
-		leafFactorField.setBounds(10, 355, 120, 20);
-		treeSpecifier.add(leafFactorField);
-		leafFactorField.setToolTipText("Enter a double value here. Seperated with \".\" instead of \",\"");
-		leafFactorField.setText("0,7");
-		leafFactorField.setColumns(10);
-
-		bigNodesCheckBox = new JCheckBox("Big numbered Nodes");
-		bigNodesCheckBox.setSelected(true);
-		bigNodesCheckBox.setBounds(6, 890, 140, 23);
-		frame.getContentPane().add(bigNodesCheckBox);
-
-		JButton btnShowAgent = new JButton("Show Agent");
-		btnShowAgent.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				paintSingleAgentsPath((Integer) spinner.getValue());
-			}
-		});
-		btnShowAgent.setBounds(765, 890, 106, 23);
-		frame.getContentPane().add(btnShowAgent);
-
-		JButton btnNewButton = new JButton("Show all Paths");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				treeInlayPanel.removeAll();
-				treeInlayPanel.repaint();
-				ProgrammManager.paintAllAgents();
-				// frame.setVisible(true);
-			}
-		});
-		btnNewButton.setBounds(649, 890, 106, 23);
-		frame.getContentPane().add(btnNewButton);
-
-		JButton btnShowStepNumber = new JButton("Show Step");
-		btnShowStepNumber.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				int value = (Integer) stepSpinner.getValue();
-				paintStep(value);
-			}
-		});
-		btnShowStepNumber.setBounds(921, 890, 95, 23);
-		frame.getContentPane().add(btnShowStepNumber);
-
-		stepSpinner = new JSpinner();
-		stepSpinner.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent arg0) {
-				int value = (Integer) stepSpinner.getValue();
-				paintStep(value);
-			}
-		});
-		stepSpinner.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				int value = (Integer) stepSpinner.getValue();
-				paintStep(value);
-			}
-		});
-		stepSpinner.setBounds(1011, 891, 42, 20);
-		frame.getContentPane().add(stepSpinner);
-
-		JButton btnShowSteps = new JButton("Show Steps");
-		btnShowSteps.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				paintSteps((int) (stepSpinner_2.getValue()));
-			}
-		});
-		btnShowSteps.setBounds(1063, 890, 95, 23);
-		frame.getContentPane().add(btnShowSteps);
-
-		stepSpinner_2 = new JSpinner();
-		stepSpinner_2.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				int value = (Integer) stepSpinner_2.getValue();
-				paintSteps(value);
-			}
-		});
-		stepSpinner_2.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent arg0) {
-				int value = (Integer) stepSpinner_2.getValue();
-				paintSteps(value);
-			}
-		});
-		stepSpinner_2.setBounds(1153, 891, 42, 20);
-		frame.getContentPane().add(stepSpinner_2);
-
-		JCheckBox chckbxPlay = new JCheckBox("Play");
-
-		chckbxPlay.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				Thread animator = new Animator(chckbxPlay);
-				animator.start();
-			}
-		});
-		chckbxPlay.setBounds(1201, 890, 45, 23);
-		frame.getContentPane().add(chckbxPlay);
-
-		JButton btnShowTree = new JButton("Show Tree");
-		btnShowTree.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-
-				treeInlayPanel.removeAll();
-				treeInlayPanel.repaint();
-				ProgrammManager.paintTree(treeInlayPanel, bigNodesCheckBox.isSelected());
-				frame.setVisible(true);
-
-			}
-		});
-		btnShowTree.setBounds(1247, 890, 106, 23);
-		frame.getContentPane().add(btnShowTree);
-
-		JButton exportButton = new JButton("export");
-
-		exportButton.setBounds(1363, 890, 95, 23);
-		frame.getContentPane().add(exportButton);
-
-		JSpinner spinner = new JSpinner();
-		spinner.setBounds(869, 891, 42, 20);
-		frame.getContentPane().add(spinner);
-
 		JPanel panel = new JPanel();
 		panel.setBackground(SystemColor.controlHighlight);
-		panel.setBounds(6, 601, 140, 135);
+		panel.setBounds(6, 394, 140, 135);
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
 
@@ -308,7 +164,8 @@ public class GuiBuilder {
 		panel.add(runSimulationButton);
 		
 		outputWindow = new JTextPane();
-		outputWindow.setBounds(6, 747, 139, 132);
+		outputWindow.setEditable(false);
+		outputWindow.setBounds(156, 11, 473, 518);
 		frame.getContentPane().add(outputWindow);
 		runSimulationButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -329,7 +186,7 @@ public class GuiBuilder {
 	private JPanel treeSpecificator() {
 		JPanel treeSpecifier = new JPanel();
 		treeSpecifier.setBackground(SystemColor.controlHighlight);
-		treeSpecifier.setBounds(6, 11, 140, 579);
+		treeSpecifier.setBounds(6, 11, 140, 372);
 		frame.getContentPane().add(treeSpecifier);
 		treeSpecifier.setLayout(null);
 
@@ -430,134 +287,16 @@ public class GuiBuilder {
 		minNodesText.setOpaque(false);
 		minNodesText.setBounds(10, 201, 120, 20);
 		treeSpecifier.add(minNodesText);
-
-		numberOfAgentsField = new JTextField();
-		numberOfAgentsField.setToolTipText("");
-		numberOfAgentsField.setText("5");
-		numberOfAgentsField.setColumns(10);
-		numberOfAgentsField.setBounds(10, 433, 120, 20);
-		treeSpecifier.add(numberOfAgentsField);
-
-		JTextPane txtpnNumberOfAgents = new JTextPane();
-		txtpnNumberOfAgents.setToolTipText(
-				"gives a probability that the node is a leaf. And the tree ends. Even with minimum children but a leaffactor, the node can be a leaf. ");
-		txtpnNumberOfAgents.setText("Number of Agents");
-		txtpnNumberOfAgents.setOpaque(false);
-		txtpnNumberOfAgents.setBounds(10, 414, 120, 20);
-		treeSpecifier.add(txtpnNumberOfAgents);
-		btnCreateTree = new JButton("create tree");
-		btnCreateTree.setBounds(10, 492, 120, 23);
-		treeSpecifier.add(btnCreateTree);
-
-		JButton btnNewButton_1 = new JButton("Use Tree Code");
-		btnNewButton_1.setBounds(10, 526, 120, 20);
-		treeSpecifier.add(btnNewButton_1);
-
-		textField_2 = new JTextField();
-		textField_2.setBounds(10, 548, 120, 20);
-		treeSpecifier.add(textField_2);
-		textField_2.setBackground(Color.WHITE);
-		textField_2.setColumns(10);
-
-		pickedAlgorithm = new JComboBox();
-		pickedAlgorithm.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent arg0) {
-
-					startAlgo();
-				
-			}
-		});
-
-		pickedAlgorithm.setModel(new DefaultComboBoxModel(implementedAlgorithms.values()));
-		pickedAlgorithm.setSelectedIndex(0);
-		pickedAlgorithm.setBounds(10, 464, 120, 22);
-		treeSpecifier.add(pickedAlgorithm);
 		
 		Verteilungsfunktion = new JComboBox();
 		Verteilungsfunktion.setModel(new DefaultComboBoxModel(Verteilungsfunktionen.values()));
 		Verteilungsfunktion.setSelectedIndex(0);
-		Verteilungsfunktion.setBounds(10, 386, 120, 22);
+		Verteilungsfunktion.setBounds(10, 341, 120, 22);
 		treeSpecifier.add(Verteilungsfunktion);
-
-		btnCreateTree.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-
-				try {
-					validateData();
-					createTree();
-
-					startAlgo();
-					paintAllPaths();
-
-				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(frame,
-							"Cannot create Tree due to one ore more values are incorrect. Please correct "
-									+ e2.getMessage().substring(16));
-				}
-
-			}
-
-			private void createTree() {
-				ProgrammManager.createTree(seed, maxDepth, minDepth, maxBranches, minBranches, maxNodes, minNodes,
-						leafFactor,(Verteilungsfunktionen) Verteilungsfunktion.getSelectedItem());
-				rand = new Random(Integer.parseInt(seedField.getText()));
-				seedField.setText("" + rand.nextInt());
-			}
-
-		});
 
 		return treeSpecifier;
 	}
 
-	public enum implementedAlgorithms {
-		CTE, LeftWalker;
-
-	}
-
-	private void startAlgo() {
-		if (pickedAlgorithm.getSelectedIndex() == implementedAlgorithms.CTE.ordinal()) {
-			ProgrammManager.calculateCTE();
-		} else {
-			ProgrammManager.calculateLeftWalker();
-		}
-	}
-
-	private void startCTE() {
-		// TODO Auto-generated method stub
-
-	}
-
-	private void paintStep(int i) {
-		treeInlayPanel.removeAll();
-		treeInlayPanel.repaint();
-		ProgrammManager.paintStep(i);
-		frame.setVisible(true);
-	}
-
-	private void paintSteps(int i) {
-		treeInlayPanel.removeAll();
-		treeInlayPanel.repaint();
-		ProgrammManager.paintSteps(i);
-		frame.setVisible(true);
-	}
-
-	private void paintSingleAgentsPath(int i) {
-		treeInlayPanel.removeAll();
-		treeInlayPanel.repaint();
-		ProgrammManager.paintAgentPaths(i);
-		frame.setVisible(true);
-	}
-
-	public void paintAllPaths() {
-		treeInlayPanel.removeAll();
-		treeInlayPanel.repaint();
-		ProgrammManager.paintAllAgents();
-		frame.setVisible(true);
-	}
-
-	public int getNumberOfAgents() {
-		return Integer.parseInt(numberOfAgentsField.getText());
-	}
 
 	private void validateData() {
 		maxDepth = Integer.parseInt(maxDepthField.getText());
@@ -566,8 +305,6 @@ public class GuiBuilder {
 		minBranches = Integer.parseInt(minChildrenField.getText());
 		maxNodes = Integer.parseInt(maxNodesField.getText());
 		minNodes = Integer.parseInt(minNodesField.getText());
-
-		leafFactor = Double.parseDouble(leafFactorField.getText().replace(",", "."));
 
 		numberOfRuns = Integer.parseInt(NumberOfRunsTextfield.getText());
 		numberOfAgents = convertNumberOfAgents();
@@ -580,5 +317,22 @@ public class GuiBuilder {
 			numberOfAgents[i] = Integer.parseInt(tempString[i]);
 		}
 		return numberOfAgents;
+	}
+	
+	
+	
+
+	//  Add some text
+
+
+
+	public void writeLine(String string) {
+
+		StyledDocument doc = outputWindow.getStyledDocument();
+		try
+		{
+		    doc.insertString(0, string +" \n",null);
+		}
+		catch(Exception e) { System.out.println(e); }
 	}
 }
