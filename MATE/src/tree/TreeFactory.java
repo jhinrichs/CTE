@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import jdk.nashorn.internal.runtime.arrays.NumericElements;
+
 public class TreeFactory {
 
 	public long seed;
@@ -98,6 +100,57 @@ public class TreeFactory {
 		return root;
 	}
 
+	
+	public Node createTree2() {
+		lastSeed = numberGenerator.nextLong();
+		numberGenerator = new Random(lastSeed);
+		numberOfNodes = getNumberOfNodes();
+		Node.setIdCount(0);
+		Node root = new Node(null);
+		root.setTreeCode(createTreeCode());
+		root.numberOfNodesInTree = numberOfNodes;
+		// List to save all leafs
+		List<Node> leafs = new ArrayList<Node>();
+		List<Node> allLeafs = new ArrayList<Node>();
+		allLeafs.add(root);
+		System.out.println("create new Tree with " + numberOfNodes + " nodes");
+
+		while (Node.getIdCount() < numberOfNodes) {
+
+			if (leafs.isEmpty()) {
+				int rand = numberGenerator.nextInt(allLeafs.size());
+				Node temp = allLeafs.get(rand);
+				leafs.add(temp);
+				allLeafs.remove(rand);
+			}
+			// leafs.add(getRandomLeaf(root));
+			// add nodes current leaf until number of calculated nodes is reached
+			while (Node.getIdCount() < numberOfNodes && !leafs.isEmpty()) {
+				
+				Node parent = leafs.get(0);
+				int numberOfChildren = getNumberofChildren();
+
+				if (numberOfChildren == 0) {
+					// wenn numer == 0 bedeuted dass, das es sich um ein Leaf handelt.
+					allLeafs.add(parent);
+				} 
+
+				while (numberOfChildren > 0 && Node.getIdCount() < numberOfNodes) {
+					Node newNode = new Node(parent);
+					leafs.add(newNode);
+					numberOfChildren--;
+				}
+				// remove the parent Node because it already got all children
+				leafs.remove(0);
+				// Collections.shuffle(leafs);
+			}
+		}
+
+		// System.out.println("Number of node = " + Node.getIdCount());
+
+		return root;
+	}
+	
 	// returns a value beetween the min and max nodes value
 	private int getNumberOfNodes() {
 		return numberGenerator.nextInt((maxNodes+ 1) - minNodes) + minNodes;
@@ -139,7 +192,16 @@ public class TreeFactory {
 	}
 
 	private int random() {
-		return minBranches + numberGenerator.nextInt(quadratischeVerteilung() + wurzelverteilung());
+		switch (numberGenerator.nextInt(3)){
+		case 0:
+			return gleichverteilt();
+		case 1: 
+			return quadratischeVerteilung();
+		case 2:
+			return wurzelverteilung();
+		}
+		return maxBranches;
+		
 	}
 
 	private int gleichverteilt() {

@@ -9,11 +9,11 @@ import tree.Node;
 import tree.TreeFactory;
 
 public class SimulationManager extends Thread {
-	int maximumThreads = 1;
+	int maximumThreads = 12;
 	int threads = 0;
 	private ArrayList<Simulator> activeWorker = new ArrayList();
 	private ArrayList<Simulator> unfinishedWorker = new ArrayList();
-	private NKExport exporter;
+	public NKExport exporter;
 	public GuiBuilder mainWindow;
 	public int finishedThreads = 0;
 
@@ -55,15 +55,17 @@ public class SimulationManager extends Thread {
 				Simulator sim = new Simulator(tree, numberOfAgents[j]);
 				unfinishedWorker.add(sim);
 				startThreads();
-				while(activeWorker.size() < maximumThreads) {
+				while (!unfinishedWorker.isEmpty()) {
 					try {
 						sleep(100);
+						startThreads();
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					checkIfFinished();
 				}
+				exporter.save();
 			}
 			
 			
@@ -80,9 +82,12 @@ public class SimulationManager extends Thread {
 			}
 			checkIfFinished();
 		}
-		System.out.println("Simulation finished");		
+		System.out.println("Simulation finished ############################################################");		
 		
+		exporter.save();
 		
+
+		SimulationQueue.startNextSimulation();
 	}
 
 	private void checkIfFinished() { // evtl. Problem da veränderung der Liste während auf der liste geabrietet
@@ -100,7 +105,7 @@ public class SimulationManager extends Thread {
 
 			if (unfinishedWorker.isEmpty() && activeWorker.isEmpty() && finishedInitialization) {
 				isFinished = true;
-				exporter.save();
+
 			}
 			
 		}

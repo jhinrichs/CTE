@@ -27,6 +27,7 @@ import tree.Node;
 import tree.TreeFactory;
 import treeExploration.ProgrammManager;
 import treeExploration.SimulationManager;
+import treeExploration.SimulationQueue;
 
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
@@ -78,8 +79,7 @@ public class GuiBuilder {
 	public JSpinner stepSpinner_2;
 	public JComboBox pickedAlgorithm;
 	public JComboBox Verteilungsfunktion;
-	public JTextPane outputWindow;
-	public NKExport exporter;
+
 	Random rand = new Random();
 	int seed = rand.nextInt();
 	private JTextField maxNodesField;
@@ -309,9 +309,17 @@ public class GuiBuilder {
 		runSimulationButton.setBounds(10, 104, 120, 23);
 		panel.add(runSimulationButton);
 		
-		outputWindow = new JTextPane();
-		outputWindow.setBounds(6, 747, 139, 132);
-		frame.getContentPane().add(outputWindow);
+		JButton btnStop = new JButton("Stop");
+		btnStop.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+//				if(exporter != null) {
+//					exporter.save();
+//				}
+			}
+		});
+		btnStop.setBackground(new Color(204, 0, 51));
+		btnStop.setBounds(31, 747, 89, 23);
+		frame.getContentPane().add(btnStop);
 		runSimulationButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				validateData();
@@ -321,15 +329,9 @@ public class GuiBuilder {
 				TreeFactory fac = new TreeFactory(seed, maxDepth, minDepth, maxBranches, minBranches, maxNodes,
 						minNodes, leafFactor, (Verteilungsfunktionen) Verteilungsfunktion.getSelectedItem());
 				
-				if(exporter == null) {
-					exporter = new NKExport(fac, numberOfAgents, numberOfRuns);
-					exporter.initializeWriteSolutionSimulation();
-				}
-				
-				SimulationManager simman = new SimulationManager(numberOfRuns,fac , numberOfAgents,exporter);
+				SimulationQueue.queuSimulation(numberOfRuns,fac , numberOfAgents);
 				rand = new Random(Integer.parseInt(seedField.getText()));
 				seedField.setText("" + rand.nextInt());
-				simman.start();
 			}
 		});
 

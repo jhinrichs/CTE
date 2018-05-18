@@ -41,7 +41,7 @@ public class Simulator extends Thread {
 			long startTime = System.currentTimeMillis();
 //			System.out.println(
 //					"starting thread number " + threadnumber + " with " + tree.numberOfNodesInTree + " nodes ");
-			System.out.println("Starting thread #" + threadnumber);
+			System.out.println("Starting thread #" + threadnumber  + " with " + tree.getTreeNodeCount() + " Nodes");
 			threadnumber++;
 			getLeftie();
 			getCTE();
