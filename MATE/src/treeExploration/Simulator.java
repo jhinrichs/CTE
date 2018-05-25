@@ -17,20 +17,22 @@ public class Simulator extends Thread {
 
 	private static int threads =0;
 
-	int threadnumber;
-	Node tree;
+	public int threadnumber;
+	public Node tree;
 	int numberOfAgents;
 	ExportData leftWalkerData;
 	ExportData CTEData;
 	double factor;
 	boolean finished = false;
+	public TreeFactory fac;
 	
 
-	public Simulator(Node tree, int numberOfAgents) {
+	public Simulator(Node tree, int numberOfAgents, TreeFactory fac) {
 		this.tree = tree;
 		this.numberOfAgents = numberOfAgents;
 		threadnumber = threads;
 		threads++;
+		this.fac=fac;
 	}
 	
 

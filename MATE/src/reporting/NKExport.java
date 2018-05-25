@@ -229,31 +229,37 @@ public class NKExport {
 		}
 	}
 	
+
 	int treeCodeColumn = 1;
-	int numberOfNodesColumn =2;
-	int agentsColumn = 3;
-	int CTEStepsColumn = 4;
-	int leftieStepsColumn = 5;
-	int factorColumn = 6;
+	int minChildColumn = 3;
+	int maxChildColumn =2;
+	int numberOfNodesColumn =4;
+	int agentsColumn = 5;
+	int CTEStepsColumn = 6;
+	int leftieStepsColumn = 7;
+
 	
-	public void writeSolutionsSimulator(ExportData CTE, ExportData leftie, double factor) {
+	public void writeSolutionsSimulator(TreeFactory fac,ExportData CTE, ExportData leftie, double factor) {
 		
 		writer.write(actualRow, treeCodeColumn, CTE.treeCode);
+		writer.write(actualRow, minChildColumn, fac.minBranches);
+		writer.write(actualRow, maxChildColumn, fac.maxBranches);
 		writer.write(actualRow, numberOfNodesColumn, CTE.numberOfNodes);
 		writer.write(actualRow, agentsColumn, CTE.numberOfAgents);
 		writer.write(actualRow, CTEStepsColumn, CTE.numberOfSteps);
 		writer.write(actualRow, leftieStepsColumn, leftie.numberOfSteps);
-		writer.write(actualRow, factorColumn, ""+factor);
+
 		actualRow++;	
 	}
 	public void initializeWriteSolutionSimulation() {
 
 		writer.write(actualRow, treeCodeColumn, "Treecode");
+		writer.write(actualRow, minChildColumn, "MinChild");
+		writer.write(actualRow, maxChildColumn, "MaxChild");
 		writer.write(actualRow, numberOfNodesColumn, "Number of Nodes");
 		writer.write(actualRow, agentsColumn, "Number of Agents");
 		writer.write(actualRow, CTEStepsColumn, "CTE Steps");
 		writer.write(actualRow, leftieStepsColumn, "Leftie Steps");
-		writer.write(actualRow, factorColumn, "Overhead");
 		actualRow++;
 	}
 

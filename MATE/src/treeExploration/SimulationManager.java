@@ -4,20 +4,24 @@ import java.util.ArrayList;
 
 import gui.GuiBuilder;
 import gui.SmallSimulator;
+import gui.simulationPopUp;
 import reporting.NKExport;
 import tree.Node;
 import tree.TreeFactory;
 
 public class SimulationManager extends Thread {
-	int maximumThreads = 12;
-	int threads = 0;
+	int maximumThreads = 6;
+	int activeNodes=0;
+	int maximumNodes = 10100100; // 10 millionen knoten gesamtleistung... --> ca 5gb ram
+//	int threads = 0;
 	private ArrayList<Simulator> activeWorker = new ArrayList();
 	private ArrayList<Simulator> unfinishedWorker = new ArrayList();
 	public NKExport exporter;
 	public GuiBuilder mainWindow;
-	public int finishedThreads = 0;
+	public static int finishedThreads = 0;
+	public int progress =1;
 
-	int lastStarted = 0;
+	public Simulator lastStarted;
 
 	int numberOfRuns;
 	private TreeFactory fac;
@@ -25,6 +29,7 @@ public class SimulationManager extends Thread {
 
 	public boolean finishedInitialization;
 	private boolean isFinished;
+	private NKExport exportAll;
 
 	public SimulationManager(int numberOfRuns, TreeFactory treeFactory, int[] numberOfAgents) {
 		exporter = new NKExport(treeFactory, numberOfAgents, numberOfRuns);
@@ -33,9 +38,10 @@ public class SimulationManager extends Thread {
 		this.numberOfRuns = numberOfRuns;
 		this.fac = treeFactory;
 	}
-	public SimulationManager(int numberOfRuns, TreeFactory treeFactory, int[] numberOfAgents, NKExport exporter) {
+	public SimulationManager(int numberOfRuns, TreeFactory treeFactory, int[] numberOfAgents, NKExport exporter, NKExport exAll) {
 		this.exporter = exporter;
 		exporter.addRun(treeFactory, numberOfAgents, numberOfRuns);
+		exportAll= exAll;
 		this.numberOfAgents = numberOfAgents;
 		this.numberOfRuns = numberOfRuns;
 		this.fac = treeFactory;
@@ -48,23 +54,27 @@ public class SimulationManager extends Thread {
 //		SmallSimulator.getSmallWindow().writeLine("Start Simulation");
 		System.out.println("Start Simulation");
 		for (int i = 0; i < numberOfRuns; i++) {
+			System.gc();
 			System.out.println("Start tree with " + fac.numberOfNodes);
 			Node tree = fac.createTree();
 			
 			for (int j = 0; j < numberOfAgents.length; j++) {
-				Simulator sim = new Simulator(tree, numberOfAgents[j]);
+				Simulator sim = new Simulator(tree, numberOfAgents[j], fac);
 				unfinishedWorker.add(sim);
-				startThreads();
-				while (!unfinishedWorker.isEmpty()) {
-					try {
-						sleep(100);
-						startThreads();
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					checkIfFinished();
+				
+					
 				}
+			startThreads();
+			while (!unfinishedWorker.isEmpty() || !activeWorker.isEmpty()) {
+				try {
+					sleep(100);
+					startThreads();
+					checkIfFinished();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				exportAll.save();
 				exporter.save();
 			}
 			
@@ -84,6 +94,7 @@ public class SimulationManager extends Thread {
 		}
 		System.out.println("Simulation finished ############################################################");		
 		
+		exportAll.save();
 		exporter.save();
 		
 
@@ -96,10 +107,14 @@ public class SimulationManager extends Thread {
 			for (int i = activeWorker.size()-1;i>=0;i--) {
 				if (activeWorker.get(i).finished) {
 					Simulator sim =activeWorker.get(i);
-					exporter.writeSolutionsSimulator(sim.CTEData, sim.leftWalkerData, sim.factor);
+					exporter.writeSolutionsSimulator(sim.fac,sim.CTEData, sim.leftWalkerData, sim.factor);
+					exportAll.writeSolutionsSimulator(sim.fac,sim.CTEData, sim.leftWalkerData, sim.factor);
 					activeWorker.remove(activeWorker.get(i));
-					
+					activeNodes -=sim.tree.getNumberOfNodesInTree();
 					finishedThreads++;
+					progress++;
+//					System.out.println("Active Nodes: - " + activeNodes);
+					updateWindow();
 				}
 			}
 
@@ -114,15 +129,26 @@ public class SimulationManager extends Thread {
 
 	private void startThreads() {
 
-		while (!unfinishedWorker.isEmpty() && activeWorker.size() < maximumThreads) {
+		
+		while (!unfinishedWorker.isEmpty() && activeNodes+ unfinishedWorker.get(0).tree.getNumberOfNodesInTree() < maximumNodes && activeWorker.size()<=maximumThreads) {
 
 			Simulator sim = unfinishedWorker.get(0);
 			unfinishedWorker.remove(sim);
 			activeWorker.add(sim);
 			sim.start();
-
+			lastStarted=sim;
+			activeNodes += sim.tree.getNumberOfNodesInTree();
+			System.out.println("Active Nodes: " + activeNodes);
+			updateWindow();
 		}
 
+	}
+	private void updateWindow() {
+		simulationPopUp.updateValues(activeWorker.size(),activeNodes,lastStarted, finishedThreads, getProgress());
+	}
+	private int getProgress() {
+		int allSimulations = numberOfRuns*numberOfAgents.length;
+		return 100*progress/allSimulations;
 	}
 
 }

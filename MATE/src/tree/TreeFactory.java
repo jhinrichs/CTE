@@ -57,7 +57,7 @@ public class TreeFactory {
 		Node.setIdCount(0);
 		Node root = new Node(null);
 		root.setTreeCode(createTreeCode());
-		root.numberOfNodesInTree = numberOfNodes;
+		root.setNumberOfNodesInTree(numberOfNodes);
 		// List to save all leafs
 		List<Node> leafs = new ArrayList<Node>();
 		List<Node> allLeafs = new ArrayList<Node>();
@@ -108,7 +108,7 @@ public class TreeFactory {
 		Node.setIdCount(0);
 		Node root = new Node(null);
 		root.setTreeCode(createTreeCode());
-		root.numberOfNodesInTree = numberOfNodes;
+		root.setNumberOfNodesInTree(numberOfNodes);
 		// List to save all leafs
 		List<Node> leafs = new ArrayList<Node>();
 		List<Node> allLeafs = new ArrayList<Node>();

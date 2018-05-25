@@ -36,6 +36,9 @@ import java.beans.PropertyChangeEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import tree.Verteilungsfunktionen;
+import javax.swing.JTabbedPane;
+
+
 
 public class GuiBuilder {
 
@@ -53,7 +56,7 @@ public class GuiBuilder {
 	// }
 	// });
 	// }
-
+	private GuiBuilder gui;
 	public JFrame frame;
 	private JTextField seedField;
 	private JTextField maxDepthField;
@@ -73,21 +76,21 @@ public class GuiBuilder {
 	private int minNodes;
 	private int[] numberOfAgents;
 	private int numberOfRuns;
-	public JPanel treeInlayPanel;
 	public JSpinner spinner;
 	public JSpinner stepSpinner;
 	public JSpinner stepSpinner_2;
 	public JComboBox pickedAlgorithm;
 	public JComboBox Verteilungsfunktion;
 
+	public simulationPopUp simulation;
+	public JPanel treeInlayPanel;
+	
 	Random rand = new Random();
 	int seed = rand.nextInt();
 	private JTextField maxNodesField;
 
 	private JTextField minNodesField;
 	private JTextField numberOfAgentsField;
-	private JTextField NumberOfRunsTextfield;
-	private JTextField MultiAgentsRunsField;
 
 	/**
 	 * Create the application.
@@ -95,8 +98,10 @@ public class GuiBuilder {
 	public GuiBuilder() {
 		initialize();
 		frame.setVisible(true);
+		gui = this;
 	}
 
+	
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -105,13 +110,7 @@ public class GuiBuilder {
 		frame.setBounds(100, 100, 1484, 963);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-		treeInlayPanel = new JPanel();
-
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(156, 11, 1302, 868);
-		frame.getContentPane().add(scrollPane);
-
-		scrollPane.setViewportView(treeInlayPanel);
+		
 
 		JPanel treeSpecifier = treeSpecificator();
 
@@ -269,71 +268,47 @@ public class GuiBuilder {
 		JSpinner spinner = new JSpinner();
 		spinner.setBounds(869, 891, 42, 20);
 		frame.getContentPane().add(spinner);
-
-		JPanel panel = new JPanel();
-		panel.setBackground(SystemColor.controlHighlight);
-		panel.setBounds(6, 601, 140, 135);
-		frame.getContentPane().add(panel);
-		panel.setLayout(null);
-
-		MultiAgentsRunsField = new JTextField();
-		MultiAgentsRunsField.setBounds(10, 73, 120, 20);
-		panel.add(MultiAgentsRunsField);
-		MultiAgentsRunsField.setToolTipText("");
-		MultiAgentsRunsField.setText("10;50;100;250;500;750;1000;1500;3000;5000;7500;10000;15000;30000;50000");
-		MultiAgentsRunsField.setColumns(10);
-
-		JTextPane txtpnMultipleAgentsRuns = new JTextPane();
-		txtpnMultipleAgentsRuns.setBounds(10, 53, 120, 20);
-		panel.add(txtpnMultipleAgentsRuns);
-		txtpnMultipleAgentsRuns.setToolTipText("multiple integer Values that calculate for each run on each tree");
-		txtpnMultipleAgentsRuns.setText("multiple Agents Runs");
-		txtpnMultipleAgentsRuns.setOpaque(false);
-
-		JTextPane txtpnNumberOfRuns = new JTextPane();
-		txtpnNumberOfRuns.setBounds(10, 11, 120, 20);
-		panel.add(txtpnNumberOfRuns);
-		txtpnNumberOfRuns
-				.setToolTipText("gives the number of runs that are done for specified tree and  agent settings.");
-		txtpnNumberOfRuns.setText("Number of Runs");
-		txtpnNumberOfRuns.setOpaque(false);
-
-		NumberOfRunsTextfield = new JTextField();
-		NumberOfRunsTextfield.setBounds(10, 30, 120, 20);
-		panel.add(NumberOfRunsTextfield);
-		NumberOfRunsTextfield.setToolTipText("");
-		NumberOfRunsTextfield.setText("3");
-		NumberOfRunsTextfield.setColumns(10);
-
-		JButton runSimulationButton = new JButton("run Simulation");
-		runSimulationButton.setBounds(10, 104, 120, 23);
-		panel.add(runSimulationButton);
 		
-		JButton btnStop = new JButton("Stop");
-		btnStop.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-//				if(exporter != null) {
-//					exporter.save();
-//				}
-			}
-		});
-		btnStop.setBackground(new Color(204, 0, 51));
-		btnStop.setBounds(31, 747, 89, 23);
-		frame.getContentPane().add(btnStop);
-		runSimulationButton.addActionListener(new ActionListener() {
+		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.setBounds(156, 11, 1302, 868);
+		frame.getContentPane().add(tabbedPane);
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(156, 11, 1302, 868);
+		
+		
+		ActionListener runSimulationButton = new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				validateData();
-//				TreeFactory fac = new TreeFactory(seed, maxDepth, minDepth, maxBranches, minBranches, maxNodes,
-//						minNodes, leafFactor, (Verteilungsfunktionen) Verteilungsfunktion.getSelectedItem());
-				//ProgrammManager.runSimulationThreaded(fac, numberOfAgents, numberOfRuns);
+
 				TreeFactory fac = new TreeFactory(seed, maxDepth, minDepth, maxBranches, minBranches, maxNodes,
 						minNodes, leafFactor, (Verteilungsfunktionen) Verteilungsfunktion.getSelectedItem());
 				
-				SimulationQueue.queuSimulation(numberOfRuns,fac , numberOfAgents);
+				SimulationQueue.queuSimulation(numberOfRuns,fac , numberOfAgents, gui);
 				rand = new Random(Integer.parseInt(seedField.getText()));
 				seedField.setText("" + rand.nextInt());
 			}
-		});
+};
+
+ActionListener btnStop= new ActionListener() {
+	public void actionPerformed(ActionEvent arg0) {
+		SimulationQueue.stopSimulations();
+	}
+};
+		simulation = new simulationPopUp(btnStop,runSimulationButton);
+		
+		
+		
+		tabbedPane.addTab("Simulation", simulation);
+		
+		
+		treeInlayPanel = new JPanel();
+		
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(156, 11, 1302, 868);
+		
+				scrollPane.setViewportView(treeInlayPanel);
+				
+						tabbedPane.addTab("Tree Vision", scrollPane);
 
 	}
 
@@ -580,16 +555,43 @@ public class GuiBuilder {
 
 		leafFactor = Double.parseDouble(leafFactorField.getText().replace(",", "."));
 
-		numberOfRuns = Integer.parseInt(NumberOfRunsTextfield.getText());
+		numberOfRuns = Integer.parseInt(simulation.numberOfRunsField.getText());
 		numberOfAgents = convertNumberOfAgents();
 	}
 
 	private int[] convertNumberOfAgents() {
-		String tempString[] = MultiAgentsRunsField.getText().split(";");
+		String tempString[] = simulation.multiAgentsField.getText().split(";");
 		int[] numberOfAgents = new int[tempString.length];
 		for (int i = 0; i < tempString.length; i++) {
 			numberOfAgents[i] = Integer.parseInt(tempString[i]);
 		}
 		return numberOfAgents;
+	}
+
+	public boolean isInfiniteLoop() {
+
+		return simulation.isInfinite.isSelected();
+	}
+
+	public void setNewValues() {
+
+		minBranches = rand.nextInt(simulation.getminChildMax())+simulation.getminChildMin();
+
+		maxBranches = rand.nextInt(simulation.getmaxChildMax())+simulation.getmaxChildMin();
+		while(maxBranches<=minBranches) {
+			maxBranches = rand.nextInt(simulation.getmaxChildMax())+simulation.getmaxChildMin();
+		}
+		
+		minNodes = rand.nextInt(simulation.getminNodesMax())+simulation.getminNodesMin();
+		
+		maxNodes = rand.nextInt(simulation.getmaxNodesMax())+simulation.getmaxNodesMin();
+		while(maxNodes<=minNodes) {
+			maxNodes = rand.nextInt(simulation.getmaxNodesMax())+simulation.getmaxNodesMin();
+		}
+		
+		minChildrenField.setText(""+minBranches);
+		maxChildrenField.setText(""+maxBranches);
+		minNodesField.setText(""+minNodes);
+		maxNodesField.setText(""+maxNodes);
 	}
 }

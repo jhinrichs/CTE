@@ -23,7 +23,7 @@ public class Node implements INode {
 	public TreeDataCalculator treeData;
 	private RobPosTree robPos;
 	private String treeCode;
-	public int numberOfNodesInTree = 0;
+	private int numberOfNodesInTree = 0;
 
 	public static int getIdCount() {
 		return idCount;
@@ -394,6 +394,14 @@ public class Node implements INode {
 		treeData = null;
 		robPos.finalize();
 		robPos = null;
+	}
+
+	public int getNumberOfNodesInTree() {
+		return numberOfNodesInTree;
+	}
+
+	public void setNumberOfNodesInTree(int numberOfNodesInTree) {
+		this.numberOfNodesInTree = numberOfNodesInTree;
 	}
 
 }
