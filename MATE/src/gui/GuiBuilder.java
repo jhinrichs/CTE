@@ -86,7 +86,7 @@ public class GuiBuilder {
 	public JPanel treeInlayPanel;
 	
 	Random rand = new Random();
-	int seed = rand.nextInt();
+	long seed = rand.nextLong();
 	private JTextField maxNodesField;
 
 	private JTextField minNodesField;
@@ -336,7 +336,7 @@ ActionListener btnStop= new ActionListener() {
 			@Override
 			public void changedUpdate(DocumentEvent e) {
 				try {
-					seed = Integer.parseInt(seedField.getText());
+					seed = Long.parseLong(seedField.getText());
 				} catch (Exception e2) {
 					seed = 0;
 				}
@@ -486,8 +486,8 @@ ActionListener btnStop= new ActionListener() {
 			private void createTree() {
 				ProgrammManager.createTree(seed, maxDepth, minDepth, maxBranches, minBranches, maxNodes, minNodes,
 						leafFactor,(Verteilungsfunktionen) Verteilungsfunktion.getSelectedItem());
-				rand = new Random(Integer.parseInt(seedField.getText()));
-				seedField.setText("" + rand.nextInt());
+				rand = new Random(Long.parseLong(seedField.getText()));
+				seedField.setText("" + rand.nextLong());
 			}
 
 		});

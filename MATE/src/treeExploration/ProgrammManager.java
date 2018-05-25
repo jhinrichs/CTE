@@ -148,7 +148,7 @@ public class ProgrammManager {
 		mainWindow.frame.setVisible(true);
 	}
 
-	public static void createTree(int seed, int maxDepth, int minDepth, int maxBranches, int minBranches, int maxNodes,
+	public static void createTree(long seed, int maxDepth, int minDepth, int maxBranches, int minBranches, int maxNodes,
 			int minNodes, double leafFactor, Verteilungsfunktionen verteilung) {
 
 		TreeFactory treeCreator = new TreeFactory(seed, maxDepth, minDepth, maxBranches, minBranches, maxNodes,
