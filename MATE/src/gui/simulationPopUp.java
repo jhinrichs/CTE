@@ -321,12 +321,12 @@ public static JProgressBar progressBar;
 	public int getmaxNodesMax() {
 		return Integer.parseInt(maxNodesMaxField.getText());
 	}
-	public static void updateValues(int activeThreads, int activeNodes, Simulator simulator, int finishedThreads, int numberOfSimulations) {
+	public static void updateValues(int activeThreads, int activeNodes, Simulator simulator, int finishedThreads, int progress) {
 		txtActiveThreads.setText(activeThreads+"");
 		txtUsedNodes.setText(""+activeNodes);
 		txtLastStartedNodes.setText(""+ simulator.threadnumber);
 		txtLastStartedNodes.setText((""+simulator.tree.getNumberOfNodesInTree()));
 		txtFinishedThreads.setText(""+ finishedThreads);
-		progressBar.setValue(numberOfSimulations);
+		progressBar.setValue(progress);
 	}
 }

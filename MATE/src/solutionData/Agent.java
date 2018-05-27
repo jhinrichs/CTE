@@ -48,6 +48,7 @@ public class Agent implements IAgent {
 	public Agent(Node root, int energy) {
 		this(root);
 		this.energy = energy;
+		path.add(root);
 		
 	}
 	
@@ -168,7 +169,17 @@ public class Agent implements IAgent {
 		if(newNode.isLeaf()) {
 			leafs.add(newNode);
 		}
-		
+	}
+	public void moveAgentLeftWalker(Node n){
+		if(n==null) {
+			System.out.println("Node is Null");
+		}
+		path.add(n);
+		n.setVisited(true);
+		if(n.isLeaf()) {
+			leafs.add(n);
+		}
+		energy--;
 	}
 
 }

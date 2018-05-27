@@ -265,9 +265,15 @@ public class GuiBuilder {
 		exportButton.setBounds(1363, 890, 95, 23);
 		frame.getContentPane().add(exportButton);
 
-		JSpinner spinner = new JSpinner();
+		spinner = new JSpinner();
 		spinner.setBounds(869, 891, 42, 20);
 		frame.getContentPane().add(spinner);
+		spinner.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				int value = (Integer) spinner.getValue();
+				paintSingleAgentsPath(value);
+			}
+		});
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(156, 11, 1302, 868);
@@ -284,7 +290,7 @@ public class GuiBuilder {
 						minNodes, leafFactor, (Verteilungsfunktionen) Verteilungsfunktion.getSelectedItem());
 				
 				SimulationQueue.queuSimulation(numberOfRuns,fac , numberOfAgents, gui);
-				rand = new Random(Integer.parseInt(seedField.getText()));
+				rand = new Random(Long.parseLong(seedField.getText()));
 				seedField.setText("" + rand.nextInt());
 			}
 };
@@ -398,14 +404,14 @@ ActionListener btnStop= new ActionListener() {
 
 		maxNodesField = new JTextField();
 		maxNodesField.setToolTipText("Enter an Integer value here");
-		maxNodesField.setText("1000");
+		maxNodesField.setText("100");
 		maxNodesField.setColumns(10);
 		maxNodesField.setBounds(10, 177, 120, 20);
 		treeSpecifier.add(maxNodesField);
 
 		minNodesField = new JTextField();
 		minNodesField.setToolTipText("Enter an Integer value here");
-		minNodesField.setText("100");
+		minNodesField.setText("50");
 		minNodesField.setColumns(10);
 		minNodesField.setBounds(10, 220, 120, 20);
 		treeSpecifier.add(minNodesField);
@@ -582,11 +588,11 @@ ActionListener btnStop= new ActionListener() {
 			maxBranches = rand.nextInt(simulation.getmaxChildMax())+simulation.getmaxChildMin();
 		}
 		
-		minNodes = rand.nextInt(simulation.getminNodesMax())+simulation.getminNodesMin();
+		minNodes = rand.nextInt(simulation.getminNodesMax()-simulation.getminNodesMin())+simulation.getminNodesMin();
 		
-		maxNodes = rand.nextInt(simulation.getmaxNodesMax())+simulation.getmaxNodesMin();
+		maxNodes = rand.nextInt(simulation.getmaxNodesMax()-simulation.getmaxNodesMin())+simulation.getmaxNodesMin();
 		while(maxNodes<=minNodes) {
-			maxNodes = rand.nextInt(simulation.getmaxNodesMax())+simulation.getmaxNodesMin();
+			maxNodes = rand.nextInt(simulation.getmaxNodesMax()-simulation.getmaxNodesMin())+simulation.getmaxNodesMin();
 		}
 		
 		minChildrenField.setText(""+minBranches);

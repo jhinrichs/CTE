@@ -34,17 +34,19 @@ public class LeftWalker {
 	}
 
 	private boolean computeOpt() {
-//		System.out.println("Start calculating LeftWalker Solution");
-//		System.out.println("Tree Depth = " + treeData.getDepth() + ", Number of Nodes = " + treeData.getNumberOfNodes()
-//				+ ", number of robots = " + numberOfRobots);
+		// System.out.println("Start calculating LeftWalker Solution");
+		// System.out.println("Tree Depth = " + treeData.getDepth() + ", Number of Nodes
+		// = " + treeData.getNumberOfNodes()
+		// + ", number of robots = " + numberOfRobots);
 		optimumSolution = new Traversal(tree, numberOfRobots);
 		int energy = Integer.max(treeData.getDepth(), (treeData.getNumberOfNodes() - 1) / numberOfRobots);
-//		System.out.println("Maximale Energie = max(TreeDepth, (numberOfNodes -1)/number of robots) = " + energy);
+		// System.out.println("Maximale Energie = max(TreeDepth, (numberOfNodes
+		// -1)/number of robots) = " + energy);
 
 		for (int i = 0; i < numberOfRobots; i++) {
 
-			Agent a = new Agent(tree,2* energy);
-			
+			Agent a = new Agent(tree, 2 * energy);
+
 			leftWalker(tree, a);
 			cleanAgentPath(a);
 			optimumSolution.addAgent(a, i);
@@ -59,13 +61,12 @@ public class LeftWalker {
 	 * @param a
 	 */
 	private void cleanAgentPath(IAgent a) {
-		int size= a.getNodesToVisit().size();
-		
-		for(int i = size-1; i >=0; i--) {
-			if(!a.getNodesToVisit().get(i).isLeaf()) {
+		int size = a.getNodesToVisit().size();
+
+		for (int i = size - 1; i >= 0; i--) {
+			if (!a.getNodesToVisit().get(i).isLeaf()) {
 				a.getNodesToVisit().remove(i);
-			}
-			else {
+			} else {
 				return;
 			}
 		}
@@ -102,7 +103,7 @@ public class LeftWalker {
 
 	}
 
-	private void leftWalker(Node root, Agent a) {
+	private void leftWalker2(Node root, Agent a) {
 		a.addNode(root);
 		a.energy -= 1;
 		while (!root.checkIfFinished() && a.enoughEnergy()) {
@@ -123,6 +124,36 @@ public class LeftWalker {
 				}
 			}
 		}
+	}
+
+	private void leftWalker(Node n, Agent a) {
+		if (a.energy <= 0) {
+			goToRoot(a,n);
+
+		} else {
+			Node nextNode = getNextNode(n);
+			a.moveAgentLeftWalker(nextNode);
+			leftWalker(nextNode, a);
+
+		}
+	}
+
+	private void goToRoot(Agent a, Node n) {
+		if(!n.isRoot()) {
+			a.moveAgentLeftWalker(n.getParent());
+			goToRoot(a, n.getParent());
+		}
+		
+	}
+
+	private Node getNextNode(Node n) {
+		for (Node child : n.getChildren()) {
+			if (!child.checkIfFinished()) {
+				return child;
+			}
+		}
+		return n.getParent();
+
 	}
 
 }

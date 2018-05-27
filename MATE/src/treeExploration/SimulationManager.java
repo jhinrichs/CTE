@@ -10,7 +10,7 @@ import tree.Node;
 import tree.TreeFactory;
 
 public class SimulationManager extends Thread {
-	int maximumThreads = 6;
+	int maximumThreads = 1;
 	int activeNodes=0;
 	int maximumNodes = 10100100; // 10 millionen knoten gesamtleistung... --> ca 5gb ram
 //	int threads = 0;
@@ -54,10 +54,9 @@ public class SimulationManager extends Thread {
 //		SmallSimulator.getSmallWindow().writeLine("Start Simulation");
 		System.out.println("Start Simulation");
 		for (int i = 0; i < numberOfRuns; i++) {
-			System.gc();
-			System.out.println("Start tree with " + fac.numberOfNodes);
+
 			Node tree = fac.createTree();
-			
+			System.out.println("Start tree with " + tree.getNumberOfNodesInTree());
 			for (int j = 0; j < numberOfAgents.length; j++) {
 				Simulator sim = new Simulator(tree, numberOfAgents[j], fac);
 				unfinishedWorker.add(sim);
@@ -130,7 +129,7 @@ public class SimulationManager extends Thread {
 	private void startThreads() {
 
 		
-		while (!unfinishedWorker.isEmpty() && activeNodes+ unfinishedWorker.get(0).tree.getNumberOfNodesInTree() < maximumNodes && activeWorker.size()<=maximumThreads) {
+		while (!unfinishedWorker.isEmpty() && activeNodes+ unfinishedWorker.get(0).tree.getNumberOfNodesInTree() < maximumNodes && activeWorker.size()<maximumThreads) {
 
 			Simulator sim = unfinishedWorker.get(0);
 			unfinishedWorker.remove(sim);

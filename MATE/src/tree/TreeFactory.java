@@ -50,7 +50,7 @@ public class TreeFactory {
 				minNodes, branchingfactor, verteilung);
 	}
 
-	public Node createTree() {
+	public Node createTree() {		// randomisierter
 		lastSeed = numberGenerator.nextLong();
 		numberGenerator = new Random(lastSeed);
 		numberOfNodes = getNumberOfNodes();
@@ -62,7 +62,10 @@ public class TreeFactory {
 		List<Node> leafs = new ArrayList<Node>();
 		List<Node> allLeafs = new ArrayList<Node>();
 		allLeafs.add(root);
-		System.out.println("create new Tree with " + numberOfNodes + " nodes");
+		System.out.println("create new Tree with " + numberOfNodes + " nodes: min= "+minNodes +" max= " +maxNodes);
+		if(numberOfNodes>maxNodes) {
+			System.out.println("nodes bigger than max nodes");
+		}
 
 		while (Node.getIdCount() < numberOfNodes) {
 
@@ -101,7 +104,7 @@ public class TreeFactory {
 	}
 
 	
-	public Node createTree2() {
+	public Node createTree2() {	//gleichverteilter
 		lastSeed = numberGenerator.nextLong();
 		numberGenerator = new Random(lastSeed);
 		numberOfNodes = getNumberOfNodes();
@@ -161,6 +164,7 @@ public class TreeFactory {
 		List<Node> leafList = n.getLeafList(null);
 
 		if (leafList.isEmpty()) {
+			
 			return n;
 		} else {
 			int nextNode = numberGenerator.nextInt(leafList.size());
@@ -225,6 +229,7 @@ public class TreeFactory {
 	 */
 	public static Node copyTree(Node root) {
 		Node newTree = new Node(null, root.getId());
+		newTree.setNumberOfNodesInTree(root.getNumberOfNodesInTree());
 		newTree.setTreeCode(root.getTreeCode());
 		if (root.isLeaf()) {
 			return newTree;
