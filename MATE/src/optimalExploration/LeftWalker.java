@@ -35,20 +35,17 @@ public class LeftWalker {
 
 	private boolean computeOpt() {
 		// System.out.println("Start calculating LeftWalker Solution");
-		// System.out.println("Tree Depth = " + treeData.getDepth() + ", Number of Nodes
-		// = " + treeData.getNumberOfNodes()
-		// + ", number of robots = " + numberOfRobots);
+		 System.out.println("Tree Depth = " + treeData.getDepth() + ", Number of Nodes = " + treeData.getNumberOfNodes() + ", number of robots = " + numberOfRobots);
 		optimumSolution = new Traversal(tree, numberOfRobots);
-		int energy = Integer.max(treeData.getDepth(), (treeData.getNumberOfNodes() - 1) / numberOfRobots);
-		// System.out.println("Maximale Energie = max(TreeDepth, (numberOfNodes
-		// -1)/number of robots) = " + energy);
-
+		int energy = Integer.max(treeData.getDepth(), ((treeData.getNumberOfNodes() - 1) / numberOfRobots)+1);
+		System.out.println("Maximale Energie = max(TreeDepth, (numberOfNodes -1)/number of robots) = " + energy);
+		Node lastFound = tree;
 		for (int i = 0; i < numberOfRobots; i++) {
 
 			Agent a = new Agent(tree, 2 * energy);
-
-			leftWalker(tree, a);
-			cleanAgentPath(a);
+			a.moveToNode(lastFound);
+			lastFound = leftWalker(lastFound, a);
+//			cleanAgentPath(a);
 			optimumSolution.addAgent(a, i);
 		}
 		if (optimumSolution.isValidSolution()) {
@@ -126,24 +123,28 @@ public class LeftWalker {
 		}
 	}
 
-	private void leftWalker(Node n, Agent a) {
+	private Node leftWalker(Node n, Agent a) {
 		if (a.energy <= 0) {
-			goToRoot(a,n);
+			goToRoot(a, n);
+			return n;
 
 		} else {
 			Node nextNode = getNextNode(n);
-			a.moveAgentLeftWalker(nextNode);
-			leftWalker(nextNode, a);
-
+			if (nextNode != null) {
+				a.moveAgentLeftWalker(nextNode);
+				return leftWalker(nextNode, a);
+			}
+			else return n;
 		}
+
 	}
 
 	private void goToRoot(Agent a, Node n) {
-		if(!n.isRoot()) {
+		if (!n.isRoot()) {
 			a.moveAgentLeftWalker(n.getParent());
 			goToRoot(a, n.getParent());
 		}
-		
+
 	}
 
 	private Node getNextNode(Node n) {

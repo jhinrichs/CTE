@@ -3,6 +3,7 @@ package solutionData;
 import java.util.ArrayList;
 import java.util.List;
 
+import sun.management.resources.agent;
 import tree.INode;
 import tree.Node;
 import tree.TreeFactory;
@@ -16,9 +17,10 @@ public class Agent implements IAgent {
 	private ArrayList<Node> path;
 	private ArrayList<Node> leafs;
 	public Traversal traversal;
-	
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see solutionData.IAgnet#getLeafs()
 	 */
 	@Override
@@ -49,10 +51,12 @@ public class Agent implements IAgent {
 		this(root);
 		this.energy = energy;
 		path.add(root);
-		
+
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see solutionData.IAgnet#getRoot()
 	 */
 	@Override
@@ -60,7 +64,9 @@ public class Agent implements IAgent {
 		return root;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see solutionData.IAgnet#getTree()
 	 */
 	@Override
@@ -68,23 +74,29 @@ public class Agent implements IAgent {
 		return TreeFactory.createTree(root, path);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see solutionData.IAgnet#getId()
 	 */
 	@Override
 	public int getId() {
 		return id;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see solutionData.IAgnet#activeNode()
 	 */
 	@Override
 	public Node activeNode() {
-		return path.get(path.size()-1);
+		return path.get(path.size() - 1);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see solutionData.IAgnet#enoughEnergy()
 	 */
 	@Override
@@ -96,9 +108,9 @@ public class Agent implements IAgent {
 		}
 	}
 
-	
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see solutionData.IAgnet#addNode(tree.Node)
 	 */
 	@Override
@@ -108,7 +120,9 @@ public class Agent implements IAgent {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see solutionData.IAgnet#removeNode(tree.INode)
 	 */
 	@Override
@@ -116,7 +130,9 @@ public class Agent implements IAgent {
 		path.remove(nodeToRemove);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see solutionData.IAgnet#getNodesToVisit()
 	 */
 	@Override
@@ -124,7 +140,9 @@ public class Agent implements IAgent {
 		return path;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see solutionData.IAgnet#addNodes(java.util.List)
 	 */
 	@Override
@@ -132,19 +150,22 @@ public class Agent implements IAgent {
 		path.addAll(nodes);
 	}
 
-	
 	/* 
 	 */
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see solutionData.IAgnet#getStepsCount()
 	 */
 	@Override
 	public int getStepsCount() {
-		
+
 		return getNodesToVisit().size();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see solutionData.IAgnet#getPosition()
 	 */
 	@Override
@@ -152,34 +173,47 @@ public class Agent implements IAgent {
 		if (path.size() == 0) {
 			return null;
 		} else {
-			
-			return path.get(path.size()-1);
+
+			return path.get(path.size() - 1);
 		}
 	}
-	
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see solutionData.IAgnet#moveAgent(tree.Node)
 	 */
 	@Override
-	public void moveAgent(Node newNode){
+	public void moveAgent(Node newNode) {
+		if (newNode == null) {
+			System.out.println("Node is Null 2");
+		}
 		activeNode().getRobPos().moveAgentTo(this, newNode);
 		path.add(newNode);
 		newNode.setVisited(true);
-		if(newNode.isLeaf()) {
+		if (newNode.isLeaf()) {
 			leafs.add(newNode);
 		}
 	}
-	public void moveAgentLeftWalker(Node n){
-		if(n==null) {
+
+	public void moveAgentLeftWalker(Node n) {
+		if (n == null) {
 			System.out.println("Node is Null");
+		} else {
+			path.add(n);
+			n.setVisited(true);
+			if (n.isLeaf()) {
+				leafs.add(n);
+			}
+			energy--;
 		}
-		path.add(n);
-		n.setVisited(true);
-		if(n.isLeaf()) {
-			leafs.add(n);
+	}
+
+	public void moveToNode(Node lastFound) {
+		if (!lastFound.isRoot()) {
+			moveToNode(lastFound.getParent());
+			this.moveAgent(lastFound);
 		}
-		energy--;
 	}
 
 }
