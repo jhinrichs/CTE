@@ -14,7 +14,7 @@ public class LeftWalker {
 
 	public Node tree;
 	private int numberOfRobots = 0;
-
+private Node lastFound;
 	TreeDataCalculator treeData;
 
 	private Traversal optimumSolution;
@@ -39,12 +39,14 @@ public class LeftWalker {
 		optimumSolution = new Traversal(tree, numberOfRobots);
 		int energy = Integer.max(treeData.getDepth(), ((treeData.getNumberOfNodes() - 1) / numberOfRobots)+1);
 		System.out.println("Maximale Energie = max(TreeDepth, (numberOfNodes -1)/number of robots) = " + energy);
-		Node lastFound = tree;
+		lastFound = tree;
 		for (int i = 0; i < numberOfRobots; i++) {
 
 			Agent a = new Agent(tree, 2 * energy);
 			a.moveToNode(lastFound);
-			lastFound = leftWalker(lastFound, a);
+			while(a.enoughEnergy() && !tree.checkIfFinished()) {
+			leftWalker(a);
+			}
 //			cleanAgentPath(a);
 			optimumSolution.addAgent(a, i);
 		}
@@ -69,36 +71,36 @@ public class LeftWalker {
 		}
 	}
 
-	/**
-	 * @deprecated
-	 * @param root
-	 * @param energy
-	 * @return
-	 */
-	@SuppressWarnings("unused")
-	private List<Node> leftWalker(Node root, int energy) {
-		List<Node> nodesToVisit = new ArrayList<Node>();
-		while (!root.checkIfFinished() && energy / 2 > 0) {
-
-			for (Node child : root.getChildren()) {
-				// if not finished continue to traverse the tree to its leaf
-				if (!child.checkIfFinished() && energy / 2 > 0 && !child.isLeaf()) {
-
-					nodesToVisit.addAll(leftWalker(child, energy - 1));
-					energy -= nodesToVisit.size();
-				}
-				// if child is a leaf add this child to visitlist.
-				if (child.isLeaf() && energy / 2 > 0) {
-					nodesToVisit.add(child);
-					child.setFinished(true);
-				}
-
-			}
-		}
-		nodesToVisit.add(root);
-		return nodesToVisit;
-
-	}
+//	/**
+//	 * @deprecated
+//	 * @param root
+//	 * @param energy
+//	 * @return
+//	 */
+//	@SuppressWarnings("unused")
+//	private List<Node> leftWalker(Node root, int energy) {
+//		List<Node> nodesToVisit = new ArrayList<Node>();
+//		while (!root.checkIfFinished() && energy / 2 > 0) {
+//
+//			for (Node child : root.getChildren()) {
+//				// if not finished continue to traverse the tree to its leaf
+//				if (!child.checkIfFinished() && energy / 2 > 0 && !child.isLeaf()) {
+//
+//					nodesToVisit.addAll(leftWalker(child, energy - 1));
+//					energy -= nodesToVisit.size();
+//				}
+//				// if child is a leaf add this child to visitlist.
+//				if (child.isLeaf() && energy / 2 > 0) {
+//					nodesToVisit.add(child);
+//					child.setFinished(true);
+//				}
+//
+//			}
+//		}
+//		nodesToVisit.add(root);
+//		return nodesToVisit;
+//
+//	}
 
 	private void leftWalker2(Node root, Agent a) {
 		a.addNode(root);
@@ -110,7 +112,7 @@ public class LeftWalker {
 
 					// if not finished continue to traverse the tree to its leaf
 					if (!child.isLeaf()) {
-						leftWalker(child, a);
+						leftWalker(a);
 
 					} // if child is a leaf add this child to visitlist.
 					else {
@@ -123,26 +125,24 @@ public class LeftWalker {
 		}
 	}
 
-	private Node leftWalker(Node n, Agent a) {
+	private void leftWalker(Agent a) {
 		if (a.energy <= 0) {
-			goToRoot(a, n);
-			return n;
+			lastFound= a.getPosition();
+			goToRoot(a);			
 
 		} else {
-			Node nextNode = getNextNode(n);
+			Node nextNode = getNextNode(a.getPosition());
 			if (nextNode != null) {
 				a.moveAgentLeftWalker(nextNode);
-				return leftWalker(nextNode, a);
 			}
-			else return n;
+			
 		}
 
 	}
 
-	private void goToRoot(Agent a, Node n) {
-		if (!n.isRoot()) {
-			a.moveAgentLeftWalker(n.getParent());
-			goToRoot(a, n.getParent());
+	private void goToRoot(Agent a) {
+		while (!a.getPosition().isRoot()) {
+			a.moveAgentLeftWalker(a.getPosition().getParent());
 		}
 
 	}

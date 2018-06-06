@@ -17,7 +17,8 @@ public class TreeDataCalculator {
 	 * @return count of all nodes in given Tree
 	 */
 	public int getNumberOfNodes() {
-		if(!isCalculated){calculateTreeData(tree);
+		while(!isCalculated){
+			calculateTreeData(tree);
 			isCalculated =true;
 		}
 		return numberOfNodes;

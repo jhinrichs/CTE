@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import javax.swing.JCheckBox;
+
 import jdk.nashorn.internal.runtime.arrays.NumericElements;
 
 public class TreeFactory {
@@ -19,6 +21,7 @@ public class TreeFactory {
 	public int maxNodes;
 	public int minNodes;
 	public int numberOfNodes;
+	public boolean randomisiert=false;
 
 	public Verteilungsfunktionen verteilung;
 
@@ -26,7 +29,7 @@ public class TreeFactory {
 	public String function;
 
 	public TreeFactory(long seed, int maxDepth, int minDepth, int maxBranches, int minBranches, int maxNodes,
-			int minNodes, double branchingfactor, Verteilungsfunktionen verteilung) {
+			int minNodes, double branchingfactor, Verteilungsfunktionen verteilung, boolean randomized) {
 		this.seed = seed;
 		this.lastSeed = seed;
 		this.branchingfactor = branchingfactor;
@@ -37,20 +40,30 @@ public class TreeFactory {
 		this.minBranches = minBranches;
 		this.minDepth = minDepth;
 		this.verteilung = verteilung;
+		randomisiert = randomized;
 
 		this.numberGenerator = new Random(seed);
 	}
 
 	public TreeFactory(long seed) {
-		this(seed, 10, 5, 5, 0, 50000, 100, 0.4, Verteilungsfunktionen.quadratisch);
+		this(seed, 10, 5, 5, 0, 50000, 100, 0.4, Verteilungsfunktionen.quadratisch, true);
 	}
 
 	public TreeFactory getNewFactory() {
 		return new TreeFactory(numberGenerator.nextLong(), maxDepth, minDepth, maxBranches, minBranches, maxNodes,
-				minNodes, branchingfactor, verteilung);
+				minNodes, branchingfactor, verteilung, randomisiert);
 	}
 
-	public Node createTree() {		// randomisierter
+	public Node createTree() {
+		if(randomisiert) {
+			return createTreeRand();
+		}
+		else {
+			return createTreeEqual();
+		}
+	}
+	
+	public Node createTreeRand() {		// randomisierter
 		lastSeed = numberGenerator.nextLong();
 		numberGenerator = new Random(lastSeed);
 		numberOfNodes = getNumberOfNodes();
@@ -104,7 +117,7 @@ public class TreeFactory {
 	}
 
 	
-	public Node createTree2() {	//gleichverteilter
+	public Node createTreeEqual() {	//gleichverteilter
 		lastSeed = numberGenerator.nextLong();
 		numberGenerator = new Random(lastSeed);
 		numberOfNodes = getNumberOfNodes();

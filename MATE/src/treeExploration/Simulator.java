@@ -39,7 +39,9 @@ public class Simulator extends Thread {
 	@Override
 	public void run() {
 		if (!finished) {
-
+//if(tree.getTreeNodeCount() == 1) {
+//	System.out.println("tree with 1 node?");
+//}
 			long startTime = System.currentTimeMillis();
 //			System.out.println(
 //					"starting thread number " + threadnumber + " with " + tree.numberOfNodesInTree + " nodes ");

@@ -149,19 +149,19 @@ public class ProgrammManager {
 	}
 
 	public static void createTree(long seed, int maxDepth, int minDepth, int maxBranches, int minBranches, int maxNodes,
-			int minNodes, double leafFactor, Verteilungsfunktionen verteilung) {
+			int minNodes, double leafFactor, Verteilungsfunktionen verteilung, boolean randomized) {
 
 		TreeFactory treeCreator = new TreeFactory(seed, maxDepth, minDepth, maxBranches, minBranches, maxNodes,
-				minNodes, leafFactor, verteilung);
+				minNodes, leafFactor, verteilung,randomized);
 		tree = treeCreator.createTree();
 
 	}
 
 	public static TreeFactory createTreeFactory(int seed, int maxDepth, int minDepth, int maxBranches, int minBranches,
-			int maxNodes, int minNodes, double leafFactor, Verteilungsfunktionen verteilung) {
+			int maxNodes, int minNodes, double leafFactor, Verteilungsfunktionen verteilung, Boolean randomized) {
 
 		return new TreeFactory(seed, maxDepth, minDepth, maxBranches, minBranches, maxNodes, minNodes, leafFactor,
-				verteilung);
+				verteilung, randomized);
 	}
 
 	private static void printTraversals(Traversal bestPath) {

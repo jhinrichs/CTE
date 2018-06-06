@@ -174,7 +174,7 @@ public class SmallSimulator {
 //						minNodes, leafFactor, (Verteilungsfunktionen) Verteilungsfunktion.getSelectedItem());
 				//ProgrammManager.runSimulationThreaded(fac, numberOfAgents, numberOfRuns);
 				SimulationManager simman = new SimulationManager(numberOfRuns, new TreeFactory(seed, maxDepth, minDepth, maxBranches, minBranches, maxNodes,
-						minNodes, leafFactor, (Verteilungsfunktionen) Verteilungsfunktion.getSelectedItem()), numberOfAgents);
+						minNodes, leafFactor, (Verteilungsfunktionen) Verteilungsfunktion.getSelectedItem(),false), numberOfAgents);
 				rand = new Random(Integer.parseInt(seedField.getText()));
 				seedField.setText("" + rand.nextInt());
 				simman.start();

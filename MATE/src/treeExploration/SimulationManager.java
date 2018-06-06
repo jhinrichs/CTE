@@ -12,7 +12,7 @@ import tree.TreeFactory;
 public class SimulationManager extends Thread {
 	int maximumThreads = 1;
 	int activeNodes=0;
-	int maximumNodes = 10100100; // 10 millionen knoten gesamtleistung... --> ca 5gb ram
+	int maximumNodes = 8100100; // 10 millionen knoten gesamtleistung... --> ca 5gb ram
 //	int threads = 0;
 	private ArrayList<Simulator> activeWorker = new ArrayList();
 	private ArrayList<Simulator> unfinishedWorker = new ArrayList();

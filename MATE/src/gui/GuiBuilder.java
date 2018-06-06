@@ -59,12 +59,9 @@ public class GuiBuilder {
 	private GuiBuilder gui;
 	public JFrame frame;
 	private JTextField seedField;
-	private JTextField maxDepthField;
 	private JTextField textField_2;
 	private JTextField maxChildrenField;
-	private JTextField leafFactorField;
 	private JTextField minChildrenField;
-	private JTextField minDepthField;
 	public JButton btnCreateTree;
 	public JCheckBox bigNodesCheckBox;
 	private int maxDepth;
@@ -81,6 +78,7 @@ public class GuiBuilder {
 	public JSpinner stepSpinner_2;
 	public JComboBox pickedAlgorithm;
 	public JComboBox Verteilungsfunktion;
+	private JCheckBox chckbxRandomisiert;
 
 	public simulationPopUp simulation;
 	public JPanel treeInlayPanel;
@@ -115,46 +113,39 @@ public class GuiBuilder {
 		JPanel treeSpecifier = treeSpecificator();
 
 		JTextPane txtfield123 = new JTextPane();
-		txtfield123.setBounds(10, 251, 120, 20);
+		txtfield123.setBounds(10, 78, 120, 20);
 		treeSpecifier.add(txtfield123);
 		txtfield123.setText("max Children per Node");
 		txtfield123.setOpaque(false);
 
 		maxChildrenField = new JTextField();
-		maxChildrenField.setBounds(10, 270, 120, 20);
+		maxChildrenField.setBounds(10, 97, 120, 20);
 		treeSpecifier.add(maxChildrenField);
 		maxChildrenField.setToolTipText("Enter an Integer value here");
 		maxChildrenField.setText("4");
 		maxChildrenField.setColumns(10);
 
 		JTextPane txtpnPlaceholder_1 = new JTextPane();
-		txtpnPlaceholder_1.setBounds(10, 291, 120, 20);
+		txtpnPlaceholder_1.setBounds(10, 118, 120, 20);
 		treeSpecifier.add(txtpnPlaceholder_1);
 		txtpnPlaceholder_1.setToolTipText("minimum number of children per Node");
 		txtpnPlaceholder_1.setText("minChildren");
 		txtpnPlaceholder_1.setOpaque(false);
 
 		minChildrenField = new JTextField();
-		minChildrenField.setBounds(10, 310, 120, 20);
+		minChildrenField.setBounds(10, 137, 120, 20);
 		treeSpecifier.add(minChildrenField);
 		minChildrenField.setToolTipText("Enter an Integer value here");
 		minChildrenField.setText("0");
 		minChildrenField.setColumns(10);
 
 		JTextPane txtpnPlaceholder = new JTextPane();
-		txtpnPlaceholder.setBounds(10, 336, 120, 20);
+		txtpnPlaceholder.setBounds(10, 251, 120, 20);
 		treeSpecifier.add(txtpnPlaceholder);
 		txtpnPlaceholder.setToolTipText(
 				"gives a probability that the node is a leaf. And the tree ends. Even with minimum children but a leaffactor, the node can be a leaf. ");
-		txtpnPlaceholder.setText("leafFactor");
+		txtpnPlaceholder.setText("Verteilungsfunktion");
 		txtpnPlaceholder.setOpaque(false);
-
-		leafFactorField = new JTextField();
-		leafFactorField.setBounds(10, 355, 120, 20);
-		treeSpecifier.add(leafFactorField);
-		leafFactorField.setToolTipText("Enter a double value here. Seperated with \".\" instead of \",\"");
-		leafFactorField.setText("0,7");
-		leafFactorField.setColumns(10);
 
 		bigNodesCheckBox = new JCheckBox("Big numbered Nodes");
 		bigNodesCheckBox.setSelected(true);
@@ -287,7 +278,7 @@ public class GuiBuilder {
 				validateData();
 
 				TreeFactory fac = new TreeFactory(seed, maxDepth, minDepth, maxBranches, minBranches, maxNodes,
-						minNodes, leafFactor, (Verteilungsfunktionen) Verteilungsfunktion.getSelectedItem());
+						minNodes, leafFactor, (Verteilungsfunktionen) Verteilungsfunktion.getSelectedItem(),chckbxRandomisiert.isSelected());
 				
 				SimulationQueue.queuSimulation(numberOfRuns,fac , numberOfAgents, gui);
 				rand = new Random(Long.parseLong(seedField.getText()));
@@ -315,13 +306,18 @@ ActionListener btnStop= new ActionListener() {
 				scrollPane.setViewportView(treeInlayPanel);
 				
 						tabbedPane.addTab("Tree Vision", scrollPane);
+						
+						chckbxRandomisiert = new JCheckBox("Randomisiert");
+						chckbxRandomisiert.setSelected(true);
+						chckbxRandomisiert.setBounds(6, 496, 140, 23);
+						frame.getContentPane().add(chckbxRandomisiert);
 
 	}
 
 	private JPanel treeSpecificator() {
 		JPanel treeSpecifier = new JPanel();
 		treeSpecifier.setBackground(SystemColor.controlHighlight);
-		treeSpecifier.setBounds(6, 11, 140, 579);
+		treeSpecifier.setBounds(6, 11, 140, 482);
 		frame.getContentPane().add(treeSpecifier);
 		treeSpecifier.setLayout(null);
 
@@ -367,34 +363,6 @@ ActionListener btnStop= new ActionListener() {
 		txtpnTreeSpecifications.setBounds(10, 0, 120, 20);
 		treeSpecifier.add(txtpnTreeSpecifications);
 
-		JTextPane textfield124124 = new JTextPane();
-		textfield124124.setToolTipText("maximum depth of the tree ");
-		textfield124124.setText("maxDepth");
-		textfield124124.setOpaque(false);
-		textfield124124.setBounds(10, 71, 120, 20);
-		treeSpecifier.add(textfield124124);
-
-		maxDepthField = new JTextField();
-		maxDepthField.setToolTipText("Enter an Integer value here");
-		maxDepthField.setText("30");
-		maxDepthField.setColumns(10);
-		maxDepthField.setBounds(10, 90, 120, 20);
-		treeSpecifier.add(maxDepthField);
-
-		JTextPane txtpn124124 = new JTextPane();
-		txtpn124124.setToolTipText("minimum depth of the tree");
-		txtpn124124.setText("minDepth");
-		txtpn124124.setOpaque(false);
-		txtpn124124.setBounds(10, 114, 120, 20);
-		treeSpecifier.add(txtpn124124);
-
-		minDepthField = new JTextField();
-		minDepthField.setToolTipText("Enter an Integer value here");
-		minDepthField.setText("5");
-		minDepthField.setColumns(10);
-		minDepthField.setBounds(10, 133, 120, 20);
-		treeSpecifier.add(minDepthField);
-
 		JTextPane txtpnMaxnodes = new JTextPane();
 		txtpnMaxnodes.setToolTipText("The tree creator will stop after this many nodes are created. ");
 		txtpnMaxnodes.setText("maxNodes");
@@ -427,7 +395,7 @@ ActionListener btnStop= new ActionListener() {
 		numberOfAgentsField.setToolTipText("");
 		numberOfAgentsField.setText("5");
 		numberOfAgentsField.setColumns(10);
-		numberOfAgentsField.setBounds(10, 433, 120, 20);
+		numberOfAgentsField.setBounds(10, 329, 120, 20);
 		treeSpecifier.add(numberOfAgentsField);
 
 		JTextPane txtpnNumberOfAgents = new JTextPane();
@@ -435,18 +403,18 @@ ActionListener btnStop= new ActionListener() {
 				"gives a probability that the node is a leaf. And the tree ends. Even with minimum children but a leaffactor, the node can be a leaf. ");
 		txtpnNumberOfAgents.setText("Number of Agents");
 		txtpnNumberOfAgents.setOpaque(false);
-		txtpnNumberOfAgents.setBounds(10, 414, 120, 20);
+		txtpnNumberOfAgents.setBounds(10, 310, 120, 20);
 		treeSpecifier.add(txtpnNumberOfAgents);
 		btnCreateTree = new JButton("create tree");
-		btnCreateTree.setBounds(10, 492, 120, 23);
+		btnCreateTree.setBounds(10, 388, 120, 23);
 		treeSpecifier.add(btnCreateTree);
 
 		JButton btnNewButton_1 = new JButton("Use Tree Code");
-		btnNewButton_1.setBounds(10, 526, 120, 20);
+		btnNewButton_1.setBounds(10, 422, 120, 20);
 		treeSpecifier.add(btnNewButton_1);
 
 		textField_2 = new JTextField();
-		textField_2.setBounds(10, 548, 120, 20);
+		textField_2.setBounds(10, 444, 120, 20);
 		treeSpecifier.add(textField_2);
 		textField_2.setBackground(Color.WHITE);
 		textField_2.setColumns(10);
@@ -462,13 +430,13 @@ ActionListener btnStop= new ActionListener() {
 
 		pickedAlgorithm.setModel(new DefaultComboBoxModel(implementedAlgorithms.values()));
 		pickedAlgorithm.setSelectedIndex(0);
-		pickedAlgorithm.setBounds(10, 464, 120, 22);
+		pickedAlgorithm.setBounds(10, 360, 120, 22);
 		treeSpecifier.add(pickedAlgorithm);
 		
 		Verteilungsfunktion = new JComboBox();
 		Verteilungsfunktion.setModel(new DefaultComboBoxModel(Verteilungsfunktionen.values()));
 		Verteilungsfunktion.setSelectedIndex(0);
-		Verteilungsfunktion.setBounds(10, 386, 120, 22);
+		Verteilungsfunktion.setBounds(10, 282, 120, 22);
 		treeSpecifier.add(Verteilungsfunktion);
 
 		btnCreateTree.addActionListener(new ActionListener() {
@@ -491,7 +459,7 @@ ActionListener btnStop= new ActionListener() {
 
 			private void createTree() {
 				ProgrammManager.createTree(seed, maxDepth, minDepth, maxBranches, minBranches, maxNodes, minNodes,
-						leafFactor,(Verteilungsfunktionen) Verteilungsfunktion.getSelectedItem());
+						leafFactor,(Verteilungsfunktionen) Verteilungsfunktion.getSelectedItem(),chckbxRandomisiert.isSelected());
 				rand = new Random(Long.parseLong(seedField.getText()));
 				seedField.setText("" + rand.nextLong());
 			}
@@ -552,14 +520,14 @@ ActionListener btnStop= new ActionListener() {
 	}
 
 	private void validateData() {
-		maxDepth = Integer.parseInt(maxDepthField.getText());
-		minDepth = Integer.parseInt(minDepthField.getText());
+//		maxDepth = Integer.parseInt(maxDepthField.getText());
+//		minDepth = Integer.parseInt(minDepthField.getText());
 		maxBranches = Integer.parseInt(maxChildrenField.getText());
 		minBranches = Integer.parseInt(minChildrenField.getText());
 		maxNodes = Integer.parseInt(maxNodesField.getText());
 		minNodes = Integer.parseInt(minNodesField.getText());
 
-		leafFactor = Double.parseDouble(leafFactorField.getText().replace(",", "."));
+//		leafFactor = Double.parseDouble(leafFactorField.getText().replace(",", "."));
 
 		numberOfRuns = Integer.parseInt(simulation.numberOfRunsField.getText());
 		numberOfAgents = convertNumberOfAgents();
