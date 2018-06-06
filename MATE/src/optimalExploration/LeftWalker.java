@@ -44,10 +44,10 @@ private Node lastFound;
 
 			Agent a = new Agent(tree, 2 * energy);
 			a.moveToNode(lastFound);
-			while(a.enoughEnergy() && !tree.checkIfFinished()) {
+			while(a.energy>=0 && !tree.checkIfFinished()) {
 			leftWalker(a);
 			}
-//			cleanAgentPath(a);
+			cleanAgentPath(a);
 			optimumSolution.addAgent(a, i);
 		}
 		if (optimumSolution.isValidSolution()) {
